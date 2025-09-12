@@ -1,0 +1,8 @@
+<div class="header">
+  @if (backButtonVisible) {
+    <button (click)="backButton()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  }
+  <p [ngStyle]="{ 'margin-left': backButtonVisible ? '0' : '20px' }">{{ title }}</p>
+</div>

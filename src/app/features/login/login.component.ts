@@ -34,7 +34,7 @@ export class LoginComponent {
           tap((res) => {
             if (res.data?.token) {
               localStorage.setItem('authToken', res.data.token);
-              this.router.navigate(['/dashboard']);
+              this.router.navigate(['']);
             } else {
               console.error('Token not found in response');
             }

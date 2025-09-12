@@ -7,7 +7,7 @@
     "build:uat": "ng build --configuration uat",
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "prepare": "husky install",
+    "prepare": "husky init",
     "lint": "eslint . --ext .ts,.html",
     "lint:fix": "eslint . --ext .ts,.html --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\""

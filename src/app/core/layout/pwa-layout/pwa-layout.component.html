@@ -1,0 +1,9 @@
+<div class="main-page">
+  <app-pwa-header [title]="title"></app-pwa-header>
+
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-bottom-nav (titleChange)="onTitleChange($event)"></app-bottom-nav>
+</div>

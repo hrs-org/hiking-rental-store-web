@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StorePageComponent } from './store-page.component';
+import { ReturnComponent } from './return.component';
 
-describe('StorePageComponent', () => {
-  let component: StorePageComponent;
-  let fixture: ComponentFixture<StorePageComponent>;
+describe('ReturnComponent', () => {
+  let component: ReturnComponent;
+  let fixture: ComponentFixture<ReturnComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StorePageComponent],
+      imports: [ReturnComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StorePageComponent);
+    fixture = TestBed.createComponent(ReturnComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
