@@ -13,4 +13,8 @@ export class AuthService {
       context: new HttpContext().set(SKIP_AUTH, true),
     });
   }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('authToken');
+  }
 }
