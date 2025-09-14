@@ -4,13 +4,19 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "build": "ng build",
     "build:uat": "ng build --configuration uat",
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "test:ci": "ng test --no-watch --code-coverage --browsers=ChromeHeadless",
+    "test:coverage": "ng test --code-coverage --no-watch --browsers=ChromeHeadless",
     "prepare": "husky init",
     "lint": "eslint . --ext .ts,.html",
     "lint:fix": "eslint . --ext .ts,.html --fix",
-    "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\""
+    "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,css,json,md}\"",
+    "audit:security": "npm audit --audit-level=moderate"
   },
   "lint-staged": {
     "*.{ts,html,scss,css,json,md}": [
