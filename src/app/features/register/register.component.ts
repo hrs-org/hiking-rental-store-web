@@ -20,6 +20,7 @@ export class RegisterComponent {
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     confirmPassword: new FormControl('', [Validators.required]),
   });
+
   onSubmit() {
     if (this.registerForm.valid) {
       const { password, confirmPassword } = this.registerForm.value;
