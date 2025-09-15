@@ -17,11 +17,6 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'login',
-        redirectTo: 'store',
-        pathMatch: 'full',
-      },
-      {
         path: 'store',
         loadComponent: () =>
           import('./features/store/store.component').then((m) => m.StorePageComponent),
@@ -42,11 +37,6 @@ export const routes: Routes = [
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
       },
     ],
-  },
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
   },
   {
     path: 'login',
