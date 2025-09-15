@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -12,26 +13,49 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  private userService = inject(UserService);
   private router = inject(Router);
   registerForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required]),
   });
 
   onSubmit() {
     if (this.registerForm.valid) {
-      const { password, confirmPassword } = this.registerForm.value;
-      if (password !== confirmPassword) {
-        console.error('Passwords do not match');
+      const { password, confirmPassword, firstName, lastName, email } = this.registerForm.value;
+      if (!firstName || !lastName || !email || !password || !confirmPassword) {
+        alert('Please fill all the fields');
         return;
       }
+      if (password !== confirmPassword) {
+        alert('Password do not match');
+        return;
+      }
+      this.userService
+        .register({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+        })
+        .subscribe({
+          next: () => {
+            alert('Registration successful! Please login.');
+            this.router.navigate(['login']);
+          },
+          error: (err) => {
+            console.error('Registration failed', err);
+            alert('Registration failed. Please try again.');
+          },
+        });
     }
   }
 
+  // Navigate back to login page
   goBack() {
-    this.router.navigate(['register']);
+    this.router.navigate(['login']);
   }
 }
