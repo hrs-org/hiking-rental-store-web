@@ -1,1 +1,14 @@
-<p>settings works!</p>
+<button
+  class="tile warn"
+  type="button"
+  [disabled]="logoutLoading"
+  [attr.aria-busy]="logoutLoading"
+  (click)="logout()"
+>
+  @if (!logoutLoading) {
+    Logout
+  } @else {
+    <span class="spinner"></span>
+    Logging out…
+  }
+</button>
