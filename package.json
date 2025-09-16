@@ -12,7 +12,7 @@
     "test:ci": "ng test --no-watch --code-coverage --browsers=ChromeHeadless",
     "test:coverage": "ng test --code-coverage --no-watch --browsers=ChromeHeadless",
     "test:watch": "ng test --code-coverage",
-    "prepare": "husky init",
+    "prepare": "husky",
     "lint": "eslint . --ext .ts,.html",
     "lint:fix": "eslint . --ext .ts,.html --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
@@ -29,6 +29,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^19.2.14",
     "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
