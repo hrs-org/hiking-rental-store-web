@@ -6,3 +6,4 @@ if [ "$branch" = "main" || "$branch" = "develop" ]; then
 fi
 
 npx lint-staged
+npm run format:check
