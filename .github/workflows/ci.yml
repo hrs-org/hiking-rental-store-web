@@ -38,13 +38,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Cache node modules
+      - name: Cache npm packages
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-${{ env.CACHE_VERSION }}-
+            ${{ runner.os }}-npm-${{ env.CACHE_VERSION }}-
 
       - name: Install dependencies
         run: npm ci
@@ -78,6 +78,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - name: Build application
         run: |
@@ -116,6 +117,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - name: Run unit tests with coverage
         run: npm run test:ci
@@ -159,6 +161,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - name: Run ESLint
         run: npm run lint
@@ -198,6 +201,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - name: Download test results
         uses: actions/download-artifact@v4
@@ -231,6 +235,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - name: Run npm audit
         run: |
