@@ -22,16 +22,11 @@ export class SettingsComponent {
       .subscribe({
         next: (res) => {
           if (res?.success) {
-            alert(res.message);
             localStorage.removeItem('authToken');
             this.router.navigate(['/login']);
           } else {
             alert('logout failed, please try again.');
           }
-        },
-        error: (err) => {
-          console.error('Logout error:', err);
-          alert('An error occurred during logout. Please try again.');
         },
       });
   }
