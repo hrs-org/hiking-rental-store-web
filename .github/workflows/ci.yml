@@ -19,8 +19,8 @@ env:
   NODE_VERSION: '18.20.4'
   CACHE_VERSION: v1
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_PROJECT_KEY: feri-nus-iss_hiking-rental-store-web
-  SONAR_ORGANIZATION: feri-nus-iss
+  SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+  SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
 
 jobs:
   install:
