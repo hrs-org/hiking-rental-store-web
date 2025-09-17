@@ -14,7 +14,7 @@ RUN npm ci --ignore-scripts
 COPY . .
 
 # Build the application
-RUN npm run build:prod
+RUN npm run build:uat
 
 # Production stage
 FROM nginx:alpine
