@@ -19,8 +19,8 @@ env:
   NODE_VERSION: '18.20.4'
   CACHE_VERSION: v1
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
-  SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
+  SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY || 'hrs_hiking-rental-store-web' }}
+  SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION || 'hrs-org' }}
 
 jobs:
   install:
@@ -241,9 +241,16 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
+        if: vars.SONAR_PROJECT_KEY != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+            -Dsonar.projectName="Hiking Rental Store Web"
+            -Dsonar.projectVersion=1.0
 
   security-scan:
     name: Security Scan
