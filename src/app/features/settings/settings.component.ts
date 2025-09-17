@@ -2,9 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-settings',
+  imports: [MatButtonModule],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
 })

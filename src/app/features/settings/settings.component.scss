@@ -1,68 +1,10 @@
-.settings {
-  padding: 16px;
-}
-
-h2 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.tile {
-  width: 100%;
+.container {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 16px;
-  margin: 8px 0;
-  border: 1px solid #eaeaea;
-  border-radius: 12px;
-  background: #fff;
-  cursor: pointer;
-
-  transition:
-    transform 0.05s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
-  &:active {
-    transform: scale(0.997);
-  }
-  &:hover {
-    background: #fafafa;
-    border-color: #e2e2e2;
-  }
-
-  min-height: 56px;
-
-  .tile-left {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-
-    mat-icon {
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
-      line-height: 22px;
-      color: #666;
-    }
-
-    span {
-      font-size: 16px;
-      color: #222;
-    }
-  }
-
-  .chevron {
-    color: #b5b5b5;
-  }
+  height: 100%;
 }
-
-.tile.warn {
-  border-color: #fde2e2;
-  background: #fff7f7;
-  span {
-    color: #c62828;
-  }
+.mat-mdc-unelevated-button.btn-danger {
+  background-color: #d21919; /* Primary color */
+  color: white;
 }

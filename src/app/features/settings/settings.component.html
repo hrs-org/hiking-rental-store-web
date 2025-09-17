@@ -1,14 +1,3 @@
-<button
-  class="tile warn"
-  type="button"
-  [disabled]="logoutLoading"
-  [attr.aria-busy]="logoutLoading"
-  (click)="logout()"
->
-  @if (!logoutLoading) {
-    Logout
-  } @else {
-    <span class="spinner"></span>
-    Logging out…
-  }
-</button>
+<div class="container">
+  <button class="btn-danger" mat-flat-button (click)="logout()">logout</button>
+</div>
