@@ -1,0 +1,422 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [develop]
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+  pull-requests: write
+  checks: write
+
+env:
+  NODE_VERSION: '18.20.4'
+  CACHE_VERSION: v1
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+  SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
+jobs:
+  install:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    if: github.event_name != 'release'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache npm packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-${{ env.CACHE_VERSION }}-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: install
+    if: github.event_name != 'release'
+    strategy:
+      matrix:
+        environment: [uat, production]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and Dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache-version: ${{ env.CACHE_VERSION }}
+
+      - name: Build application
+        run: |
+          if [ "${{ matrix.environment }}" = "production" ]; then
+            npm run build:prod
+          else
+            npm run build:uat
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.environment }}
+          path: dist/
+          retention-days: 1
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: install
+    if: github.event_name != 'release'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and Dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache-version: ${{ env.CACHE_VERSION }}
+
+      - name: Run unit tests with coverage
+        run: npm run test:ci
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            coverage/
+            test-results.xml
+          retention-days: 1
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          file: ./coverage/lcov.info
+          flags: frontend
+          name: angular-coverage
+          fail_ci_if_error: false
+
+  lint-and-format:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    needs: install
+    if: github.event_name != 'release'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and Dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache-version: ${{ env.CACHE_VERSION }}
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check Prettier formatting
+        run: npm run format:check
+
+      - name: Upload lint results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: lint-results
+          path: |
+            eslint-report.json
+            eslint-report.html
+          retention-days: 30
+
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    needs: [install, test]
+    if: github.event_name != 'release'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js and Dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache-version: ${{ env.CACHE_VERSION }}
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: ./
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@master
+        if: vars.SONAR_PROJECT_KEY != ''
+        with:
+          args: >
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+            -Dsonar.projectName="Hiking Rental Store Web"
+            -Dsonar.projectVersion=1.0
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: install
+    if: github.event_name != 'release'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and Dependencies
+        uses: ./.github/actions/setup-node-deps
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache-version: ${{ env.CACHE_VERSION }}
+
+      - name: Run npm audit
+        run: |
+          npm run audit:security > security-audit.txt 2>&1 || true
+          echo "Security audit completed. Check security-audit.txt for results."
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --file=package.json
+
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-scan-results
+          path: |
+            security-audit.txt
+            snyk.sarif
+          retention-days: 30
+
+  docker-build:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: [build, test, code-quality, security-scan, lint-and-format]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-uat
+          path: dist/
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/hrs-web:develop
+            ${{ env.DOCKER_USERNAME }}/hrs-web:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  lighthouse:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Pull and run Docker image
+        run: |
+          docker pull ${{ env.DOCKER_USERNAME }}/hrs-web:${{ github.sha }}
+          docker run -d -p 4200:80 --name hrs-web \
+            ${{ env.DOCKER_USERNAME }}/hrs-web:${{ github.sha }}
+
+          # Wait for application to start
+          echo "Waiting for application to start..."
+          sleep 15
+
+          echo "Testing application availability:"
+          curl -f http://localhost:4200 || echo "Application not yet available"
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:4200
+            http://localhost:4200/login
+            http://localhost:4200/store
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        continue-on-error: true
+
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-results
+          path: |
+            .lighthouseci/
+          retention-days: 30
+
+      - name: Stop application
+        if: always()
+        run: docker stop hrs-web
+
+  dast:
+    name: DAST Security Scan
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Pull and run Docker image
+        run: |
+          docker pull ${{ env.DOCKER_USERNAME }}/hrs-web:${{ github.sha }}
+          docker run -d -p 4200:80 --name hrs-web \
+            ${{ env.DOCKER_USERNAME }}/hrs-web:${{ github.sha }}
+
+          # Wait for application to start and verify it's healthy
+          echo "Waiting for application to start..."
+          sleep 15
+
+          echo "Checking container status:"
+          docker ps -a
+
+          echo "Testing application endpoints:"
+          curl -f http://localhost:4200 || echo "Application not available"
+          curl -I http://localhost:4200/login || echo "Login page not available"
+          curl -I http://localhost:4200/store || echo "Store page not available"
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@1e1871e84428617b969d4a1f981a8255630d54b0 # v0.10.0
+        with:
+          target: 'http://localhost:4200'
+          cmd_options: '-a -j -l WARN -T 10 -I'
+        continue-on-error: true
+
+      - name: Upload DAST scan results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dast-scan-results
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+            report_xml.xml
+          retention-days: 30
+
+      - name: Stop application
+        if: always()
+        run: docker stop hrs-web
+
+  production-build:
+    name: Production Docker Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for production
+        run: npm run build:prod
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build and push production Docker image
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/hrs-web:latest
+            ${{ env.DOCKER_USERNAME }}/hrs-web:${{ steps.version.outputs.VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Production release summary
+        run: |
+          echo "🚀 Production release completed!"
+          echo "🏷️ New tags created:"
+          echo "   - hrs-web:latest"
+          echo "   - hrs-web:${{ steps.version.outputs.VERSION }}"
+          echo "🔧 Environment: production"
+          echo "� Built with production configuration"
