@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BottomNavComponent } from './bottom-nav.component';
 
@@ -8,7 +10,8 @@ describe('BottomNavComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BottomNavComponent],
+      imports: [BottomNavComponent, NoopAnimationsModule],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BottomNavComponent);
