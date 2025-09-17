@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.mat-mdc-unelevated-button.btn-danger {
+  background-color: #d21919; /* Primary color */
+  color: white;
+}
