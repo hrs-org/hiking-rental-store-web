@@ -1,0 +1,36 @@
+name: 'Setup Node.js and Dependencies'
+description: 'Sets up Node.js, restores node_modules cache, and installs dependencies if needed'
+
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '18.20.4'
+  cache-version:
+    description: 'Cache version for cache key'
+    required: false
+    default: 'v1'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Restore node_modules
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node_modules-${{ inputs.cache-version }}-${{ hashFiles('**/package-lock.json') }}
+
+    - name: Install dependencies if cache miss
+      shell: bash
+      run: |
+        if [ ! -d "node_modules" ] || [ ! -f "node_modules/.bin/ng" ]; then
+          echo "Cache miss or Angular CLI not found, installing dependencies..."
+          npm ci
+        else
+          echo "Dependencies restored from cache"
+        fi
