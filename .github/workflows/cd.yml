@@ -1,0 +1,51 @@
+name: Web CD UAT
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+
+env:
+  NODE_VERSION: '18.20.4'
+
+jobs:
+  deploy-uat:
+    name: Build & Deploy to Azure Static Web App (UAT)
+    runs-on: ubuntu-latest
+    environment: uat
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rewrite environment.uat.ts
+        run: |
+          echo "Using API URL: ${{ secrets.API_URL }}"
+          cat > src/environments/environment.uat.ts << 'EOF'
+          export const environment = {
+            production: true,
+            apiUrl: '${{ secrets.API_URL }}'
+          };
+          EOF
+
+      - name: Build Angular app (UAT)
+        run: npm run build:uat
+
+      - name: Deploy to Azure Static Web App
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: 'upload'
+          app_location: 'dist/hiking-rental-store-web'
+          skip_app_build: true
