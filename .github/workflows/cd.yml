@@ -83,6 +83,9 @@ jobs:
           }
           EOF
 
+      - name: Clean build output
+        run: rm -rf dist/
+
       - name: Build Angular app (UAT)
         run: npm run build:uat
 
