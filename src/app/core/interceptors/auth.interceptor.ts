@@ -9,17 +9,19 @@ import { ApiResponse } from '../models/api-response';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  if (req.context.get(SKIP_AUTH)) {
-    return next(req); // skip auth header
-  }
-
-  const token = localStorage.getItem('authToken');
+  
   let apiReq = req;
-  if (environment.production) {
+  if (environment.apiUrl && !req.url.startsWith('http')) {
     apiReq = req.clone({
       url: `${environment.apiUrl}${req.url}`,
     });
   }
+
+  if (apiReq.context.get(SKIP_AUTH)) {
+    return next(apiReq);
+  }
+
+  const token = localStorage.getItem('authToken');
 
   if (token) {
     apiReq = apiReq.clone({
