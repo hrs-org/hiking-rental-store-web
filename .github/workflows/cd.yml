@@ -83,9 +83,12 @@ jobs:
           }
           EOF
 
-      - name: Write routes.json for Azure Static Web Apps
+      - name: Build Angular app (UAT)
+        run: npm run build:uat
+
+      - name: Write routes.json to build output
         run: |
-          cat > routes.json << EOF
+          cat > dist/hiking-rental-store-web/browser/routes.json << EOF
           {
             "routes": [
               {
@@ -96,9 +99,6 @@ jobs:
             ]
           }
           EOF
-
-      - name: Build Angular app (UAT)
-        run: npm run build:uat
 
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
