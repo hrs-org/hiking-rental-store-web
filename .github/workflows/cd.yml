@@ -100,6 +100,9 @@ jobs:
           }
           EOF
 
+      - name: List build output
+        run: ls -l dist/hiking-rental-store-web/browser/
+
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
         with:
