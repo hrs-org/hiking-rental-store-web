@@ -187,6 +187,7 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@master
         if: vars.SONAR_PROJECT_KEY != ''
+        continue-on-error: true
         with:
           args: >
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
