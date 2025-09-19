@@ -38,6 +38,51 @@ jobs:
           };
           EOF
 
+      - name: Rewrite ngsw-config.json with API URL from secret
+        run: |
+          cat > ngsw-config.json << EOF
+          {
+            "\$schema": "./node_modules/@angular/service-worker/config/schema.json",
+            "index": "/index.html",
+            "assetGroups": [
+              {
+                "name": "app",
+                "installMode": "prefetch",
+                "resources": {
+                  "files": [
+                    "/favicon.ico",
+                    "/index.csr.html",
+                    "/index.html",
+                    "/manifest.webmanifest",
+                    "/*.css",
+                    "/*.js"
+                  ]
+                }
+              },
+              {
+                "name": "assets",
+                "installMode": "lazy",
+                "updateMode": "prefetch",
+                "resources": {
+                  "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+                }
+              }
+            ],
+            "dataGroups": [
+              {
+                "name": "api",
+                "urls": ["${{ secrets.API_URL }}/**"],
+                "cacheConfig": {
+                  "strategy": "freshness",
+                  "maxSize": 100,
+                  "maxAge": "1h",
+                  "timeout": "10s"
+                }
+              }
+            ]
+          }
+          EOF
+
       - name: Build Angular app (UAT)
         run: npm run build:uat
 
