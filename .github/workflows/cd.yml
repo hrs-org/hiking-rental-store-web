@@ -96,9 +96,9 @@ jobs:
             "routes": [
               {
                 "route": "/api/*",
-                "allowedRoles": ["anonymous"],
-                "rewrite": "${{ secrets.API_URL }}/api/:*"
-              }
+                "allowedRoles": [ "anonymous" ]
+              },
+              { "route": "/*", "serve": "/index.html" }
             ]
           }
           EOF
