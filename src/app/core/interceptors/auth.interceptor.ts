@@ -9,7 +9,7 @@ import { ApiResponse } from '../models/api-response';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  
+
   let apiReq = req;
   if (environment.apiUrl && !req.url.startsWith('http')) {
     apiReq = req.clone({
