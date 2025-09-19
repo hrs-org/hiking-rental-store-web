@@ -5,14 +5,14 @@ import { SKIP_AUTH } from '../tokens/auth.token';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   let apiReq = req;
-  if (environment.production) {
+  if (environment.apiUrl && !req.url.startsWith('http')) {
     apiReq = req.clone({
       url: `${environment.apiUrl}${req.url}`,
     });
   }
 
   if (apiReq.context.get(SKIP_AUTH)) {
-    return next(apiReq); // skip auth header
+    return next(apiReq);
   }
 
   const token = localStorage.getItem('authToken');
