@@ -83,6 +83,20 @@ jobs:
           }
           EOF
 
+      - name: Write routes.json for Azure Static Web Apps
+        run: |
+          cat > routes.json << EOF
+          {
+            "routes": [
+              {
+                "route": "/api/*",
+                "allowedRoles": ["anonymous"],
+                "rewrite": "${{ secrets.API_URL }}/api/:*"
+              }
+            ]
+          }
+          EOF
+
       - name: Build Angular app (UAT)
         run: npm run build:uat
 
