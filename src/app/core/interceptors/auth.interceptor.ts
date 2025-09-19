@@ -1,9 +1,15 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { catchError, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { SKIP_AUTH } from '../tokens/auth.token';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
+import { LoginResponse } from '../models/auth/auth';
+import { ApiResponse } from '../models/api-response';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+
   let apiReq = req;
   if (environment.apiUrl && !req.url.startsWith('http')) {
     apiReq = req.clone({
@@ -26,8 +32,29 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(apiReq).pipe(
     catchError((err) => {
       if (err.status === 401) {
-        localStorage.removeItem('authToken');
-        window.location.href = '/login';
+        return authService.refreshToken().pipe(
+          switchMap((refreshRes: ApiResponse<LoginResponse>) => {
+            const newToken = refreshRes?.data?.token;
+            if (newToken) {
+              localStorage.setItem('authToken', newToken);
+
+              const retryReq = apiReq.clone({
+                setHeaders: { Authorization: `Bearer ${newToken}` },
+              });
+              return next(retryReq);
+            } else {
+              localStorage.removeItem('authToken');
+              window.location.href = '/login';
+              return throwError(() => err);
+            }
+          }),
+          catchError(() => {
+            // Refresh failed
+            localStorage.removeItem('authToken');
+            window.location.href = '/login';
+            return throwError(() => err);
+          }),
+        );
       }
       return throwError(() => err);
     }),
