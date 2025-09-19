@@ -19,7 +19,7 @@ import { loadUser } from '../../store/user/user.actions';
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
-  private store = inject(Store); // Inject the NgRx store
+  private store = inject(Store);
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
