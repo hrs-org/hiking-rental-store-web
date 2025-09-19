@@ -38,8 +38,73 @@ jobs:
           };
           EOF
 
+      - name: Rewrite ngsw-config.json with API URL from secret
+        run: |
+          cat > ngsw-config.json << EOF
+          {
+            "\$schema": "./node_modules/@angular/service-worker/config/schema.json",
+            "index": "/index.html",
+            "assetGroups": [
+              {
+                "name": "app",
+                "installMode": "prefetch",
+                "resources": {
+                  "files": [
+                    "/favicon.ico",
+                    "/index.csr.html",
+                    "/index.html",
+                    "/manifest.webmanifest",
+                    "/*.css",
+                    "/*.js"
+                  ]
+                }
+              },
+              {
+                "name": "assets",
+                "installMode": "lazy",
+                "updateMode": "prefetch",
+                "resources": {
+                  "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+                }
+              }
+            ],
+            "dataGroups": [
+              {
+                "name": "api",
+                "urls": ["${{ secrets.API_URL }}/**"],
+                "cacheConfig": {
+                  "strategy": "freshness",
+                  "maxSize": 100,
+                  "maxAge": "1h",
+                  "timeout": "10s"
+                }
+              }
+            ]
+          }
+          EOF
+
+      - name: Clean build output
+        run: rm -rf dist/
+
       - name: Build Angular app (UAT)
         run: npm run build:uat
+
+      - name: Write routes.json to build output
+        run: |
+          cat > dist/hiking-rental-store-web/browser/routes.json << EOF
+          {
+            "routes": [
+              {
+                "route": "/api/*",
+                "allowedRoles": [ "anonymous" ]
+              },
+              { "route": "/*", "serve": "/index.html" }
+            ]
+          }
+          EOF
+
+      - name: List build output
+        run: ls -l dist/hiking-rental-store-web/browser/
 
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
@@ -47,5 +112,5 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: 'upload'
-          app_location: 'dist/hiking-rental-store-web'
+          app_location: 'dist/hiking-rental-store-web/browser'
           skip_app_build: true
