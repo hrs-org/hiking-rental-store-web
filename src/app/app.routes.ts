@@ -50,7 +50,7 @@ export const routes: Routes = [
   {
     path: 'employees-management',
     loadComponent: () =>
-      import('./features/settings/employees-management/employees-management.component').then(
+      import('./features/employees-management/employees-management.component').then(
         (m) => m.em_managementPageComponent,
       ),
   },
