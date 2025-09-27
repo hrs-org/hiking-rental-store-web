@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from '../../core/models/user/user';
 
-export const loadUser = createAction('[User] Load User', props<{ userId: number }>());
+export const loadUser = createAction('[User] Load User');
 
 export const loadUserSuccess = createAction('[User] Load User Success', props<{ user: User }>());
 

@@ -5,6 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
 
 @Component({
   selector: 'app-register',
@@ -14,48 +16,65 @@ import { UserService } from '../../core/services/user.service';
 })
 export class RegisterComponent {
   private userService = inject(UserService);
+  private bottomSheet = inject(MatBottomSheet);
   private router = inject(Router);
+
   registerForm = new FormGroup({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    confirmPassword: new FormControl('', [Validators.required]),
+    confirmPassword: new FormControl('', Validators.required),
   });
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      const { password, confirmPassword, firstName, lastName, email } = this.registerForm.value;
-      if (!firstName || !lastName || !email || !password || !confirmPassword) {
-        alert('Please fill all the fields');
-        return;
-      }
-      if (password !== confirmPassword) {
-        alert('Password do not match');
-        return;
-      }
-      this.userService
-        .register({
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
-        })
-        .subscribe({
-          next: () => {
-            alert('Registration successful! Please login.');
-            this.router.navigate(['login']);
-          },
-          error: (err) => {
-            console.error('Registration failed', err);
-            alert('Registration failed. Please try again.');
-          },
-        });
-    }
+  private openInfoSheet(title: string, description: string, callback?: () => void) {
+    this.bottomSheet
+      .open(InfoBottomSheetComponent, {
+        data: {
+          title,
+          description,
+          isConfirm: false,
+          confirmButtonText: 'OK',
+        },
+      })
+      .afterDismissed()
+      .subscribe(() => {
+        if (callback) callback();
+      });
   }
 
-  // Navigate back to login page
-  goBack() {
+  onSubmit() {
+    if (!this.registerForm.valid) {
+      this.registerForm.markAsDirty();
+      this.registerForm.markAsTouched();
+      return;
+    }
+
+    const { password, confirmPassword, firstName, lastName, email } = this.registerForm.value;
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      this.openInfoSheet(
+        'Incomplete Form',
+        'Please fill out all required fields before submitting the form.',
+      );
+      return;
+    }
+    if (password !== confirmPassword) {
+      this.openInfoSheet(
+        'Password Mismatch',
+        'The passwords you entered do not match. Please try again.',
+      );
+      return;
+    }
+    this.userService.register({ firstName, lastName, email, password }).subscribe(() => {
+      this.openInfoSheet(
+        'Registration Successful',
+        'You can now log in with your credentials.',
+        () => this.navigateToLogin(),
+      );
+    });
+  }
+
+  navigateToLogin() {
     this.router.navigate(['login']);
   }
 }
