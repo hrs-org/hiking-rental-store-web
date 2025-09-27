@@ -12,8 +12,8 @@ export class UserEffects {
   loadUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadUser),
-      mergeMap(({ userId }) =>
-        this.authService.getUserById(userId).pipe(
+      mergeMap(() =>
+        this.authService.getActiveUser().pipe(
           map((res) => {
             if (res.data) {
               return loadUserSuccess({ user: res.data });

@@ -13,7 +13,7 @@
     "test:coverage": "ng test --code-coverage --no-watch --browsers=ChromeHeadless",
     "test:watch": "ng test --code-coverage",
     "prepare": "husky",
-    "lint": "eslint . --ext .ts,.html",
+    "lint": "eslint . --ext .ts,.js,.html",
     "lint:fix": "eslint . --ext .ts,.html --fix",
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,css,json,md}\"",
@@ -53,8 +53,8 @@
     "@angular/compiler-cli": "^19.2.0",
     "@ngrx/eslint-plugin": "^19.2.1",
     "@types/jasmine": "~5.1.0",
-    "angular-eslint": "20.2.0",
-    "eslint": "^9.33.0",
+    "angular-eslint": "^20.2.0",
+    "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
@@ -67,6 +67,6 @@
     "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
     "typescript": "~5.7.2",
-    "typescript-eslint": "8.40.0"
+    "typescript-eslint": "^8.40.0"
   }
 }

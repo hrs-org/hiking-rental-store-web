@@ -5,9 +5,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 import { Store } from '@ngrx/store';
 import { loadUser } from '../../store/user/user.actions';
+import { selectUser } from '../../store/user/user.selector';
 
 @Component({
   selector: 'app-login',
@@ -26,15 +28,6 @@ export class LoginComponent {
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
-  isTokenExpired(token: string): boolean {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.exp * 1000 < Date.now();
-    } catch {
-      return true;
-    }
-  }
-
   onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
@@ -48,11 +41,16 @@ export class LoginComponent {
             if (res.data?.token) {
               localStorage.setItem('authToken', res.data.token);
               if (res.data.userId) {
-                this.store.dispatch(loadUser({ userId: res.data.userId }));
+                this.store.dispatch(loadUser());
+                this.store
+                  .select(selectUser)
+                  .pipe(take(1))
+                  .subscribe((user) => {
+                    if (user) {
+                      this.router.navigate(['']);
+                    }
+                  });
               }
-              this.router.navigate(['']);
-            } else {
-              console.error('Token not found in response');
             }
           }),
         )
