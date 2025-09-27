@@ -4,10 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-settings',
-  imports: [MatButtonModule, MatCardModule],
+  imports: [MatButtonModule, MatCardModule, CommonModule],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   standalone: true,
@@ -18,7 +19,7 @@ export class SettingsComponent {
 
   userName = 'John Doe';
   userEmail = 'john.doe@example.com';
-  userRole: 'admin' | 'user' = 'admin';
+  userRole = 'admin';
   get userInitials(): string {
     return this.userName
       .split(' ')

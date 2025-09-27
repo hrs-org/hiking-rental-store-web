@@ -1,5 +1,23 @@
-<div class="bg-decoration"></div>
-<div class="bg-decoration"></div>
-<div class="bg-decoration"></div>
+<div class="container">
+  <h2>Employee Management</h2>
 
-<p>employees manage</p>
+  <div *ngIf="loading" class="loading">Loading employees...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div class="employee-grid" *ngIf="!loading && employees.length > 0">
+    <mat-card *ngFor="let emp of employees" class="employee-card">
+      <mat-card-title>{{ emp.firstName }} {{ emp.lastName }}</mat-card-title>
+      <mat-card-content>
+        <p>ID: {{ emp.id }}</p>
+        <p>Email: {{ emp.email }}</p>
+        <p>Role: {{ emp.role }}</p>
+        <p></p>
+      </mat-card-content>
+      <button mat-raised-button color="primary" (click)="onEmployeeClick(emp)">Update Info</button>
+    </mat-card>
+  </div>
+  <button class="fab" mat-fab color="primary" (click)="onCreateEmployee()">+</button>
+  <div *ngIf="!loading && employees.length === 0 && !errorMessage" class="no-data">
+    No employees found.
+  </div>
+</div>

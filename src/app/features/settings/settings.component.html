@@ -5,7 +5,12 @@
       <div class="user-email">{{ userEmail }}</div>
     </div>
   </mat-card>
-  <button mat-flat-button (click)="goToEmployeesManagement()" class="employees-management-btn">
+  <button
+    mat-flat-button
+    *ngIf="userRole === 'admin'"
+    (click)="goToEmployeesManagement()"
+    class="employees-management-btn"
+  >
     User Management Control
   </button>
   <div class="spacer"></div>
