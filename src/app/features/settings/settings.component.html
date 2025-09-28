@@ -3,11 +3,12 @@
     <div class="user-details">
       <div class="user-name">{{ userName }}</div>
       <div class="user-email">{{ userEmail }}</div>
+      <div class="user-role">{{ userRole }}</div>
     </div>
   </mat-card>
   <button
     mat-flat-button
-    *ngIf="userRole === 'admin'"
+    *ngIf="userRole === 'Admin' || userRole === 'Manager'"
     (click)="goToEmployeesManagement()"
     class="employees-management-btn"
   >

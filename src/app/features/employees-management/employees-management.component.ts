@@ -1,17 +1,23 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { EmployeeEditDialogComponent } from './employee-edit-dialog.component';
+import { UserService } from '../../core/services/user.service';
+import { PwaHeaderComponent } from '../../shared/components/pwa-header/pwa-header.component';
 import { EmployeeCreateDialogComponent } from './employee-create-dialog.component';
+import { EmployeeEditDialogComponent } from './employee-edit-dialog.component';
+import { Store } from '@ngrx/store';
+import { selectUser } from '../../store/user/user.selector';
 export interface Employee {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
   role: string;
+}
+export interface CreateDialogData extends Employee {
+  userRole: string;
 }
 export type DialogResult =
   | { action: 'update'; employee: Employee; feedback: Employee }
@@ -20,48 +26,67 @@ export type DialogResult =
 @Component({
   selector: 'app-em-management-page',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatDialogModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatDialogModule, PwaHeaderComponent],
   templateUrl: './employees-management.component.html',
   styleUrls: ['./employees-management.component.scss'],
 })
 export class em_managementPageComponent implements OnInit {
+  private store = inject(Store);
+
+  user$ = this.store.select(selectUser);
   employees: Employee[] = [];
   loading = true;
   errorMessage = '';
+  title = 'Employee Management';
 
-  private http = inject(HttpClient);
+  userRole = 'user';
+
+  private userService = inject(UserService);
   private dialog = inject(MatDialog);
 
   ngOnInit(): void {
-    this.loadEmployees();
+    this.user$.subscribe((user) => {
+      if (user) {
+        this.userRole = user.role;
+      }
+    });
+    this.loadEmployeesandManager();
   }
 
-  loadEmployees() {
-    this.http.get<Employee[]>('https://localhost:5001/api/users/employees').subscribe({
-      next: (data) => {
-        this.employees = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        if (err.status === 404) {
-          this.errorMessage = '';
+  loadEmployeesandManager() {
+    if (this.userRole == 'Admin') {
+      this.userService.loadManagers().subscribe({
+        next: (response) => {
+          this.employees = response.data || [];
+        },
+      });
+      this.userService.loadEmployees().subscribe({
+        next: (response) => {
+          this.employees = [...this.employees, ...(response.data || [])];
+        },
+      });
+      this.loading = false;
+    }
+    if (this.userRole == 'Manager') {
+      this.userService.loadEmployees().subscribe({
+        next: (response) => {
+          this.employees = response.data || [];
           this.loading = false;
-        } else {
-          console.error('Failed to load employees', err);
-          this.errorMessage = err.status
-            ? `Unable to load employees. (Error ${err.status})`
-            : 'Unable to load employees. (Unknown error)';
-          this.loading = false;
-        }
-      },
-    });
+        },
+      });
+    }
   }
   onCreateEmployee() {
     const dialogRef = this.dialog.open(EmployeeCreateDialogComponent, {
       width: '400px',
-      data: { firstName: '', lastName: '', email: '', role: '' } as Employee,
+      data: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        role: '',
+        userRole: this.userRole, // ✅ ส่ง role ของคนที่ login อยู่
+      } as CreateDialogData,
     });
-
     dialogRef.afterClosed().subscribe((newEmployee: Employee | undefined) => {
       if (!newEmployee) return;
       this.employees.push(newEmployee);
@@ -72,7 +97,7 @@ export class em_managementPageComponent implements OnInit {
   onEmployeeClick(emp: Employee) {
     const dialogRef = this.dialog.open(EmployeeEditDialogComponent, {
       width: '400px',
-      data: { ...emp },
+      data: { ...emp, userRole: this.userRole },
     });
 
     dialogRef.afterClosed().subscribe((result: DialogResult | undefined) => {
@@ -87,5 +112,8 @@ export class em_managementPageComponent implements OnInit {
         this.employees = this.employees.filter((e) => e.id !== deleted.id);
       }
     });
+  }
+  backbutton() {
+    window.history.back();
   }
 }

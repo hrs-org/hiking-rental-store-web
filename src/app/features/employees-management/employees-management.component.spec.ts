@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { em_managementPageComponent } from './employees-management.component';
 
-describe('StorePageComponent', () => {
+describe('EmployeesManagementComponent', () => {
   let component: em_managementPageComponent;
   let fixture: ComponentFixture<em_managementPageComponent>;
 

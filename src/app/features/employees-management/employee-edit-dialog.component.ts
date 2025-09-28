@@ -1,17 +1,29 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 import { Employee } from './employees-management.component';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../core/services/user.service';
 
+interface EditDialogData extends Employee {
+  userRole: string;
+}
 @Component({
   selector: 'app-employee-edit-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+  ],
   template: `
     <h2 mat-dialog-title>Edit Employee</h2>
     <div mat-dialog-content>
@@ -30,10 +42,20 @@ import { HttpClient } from '@angular/common/http';
         <input matInput [(ngModel)]="data.email" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Role</mat-label>
-        <input matInput [(ngModel)]="data.role" />
-      </mat-form-field>
+      <ng-container [ngSwitch]="userRole">
+        <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Admin'">
+          <mat-label>Role</mat-label>
+          <mat-select [(ngModel)]="data.role">
+            <mat-option value="Manager">Manager</mat-option>
+            <mat-option value="Employee">Employee</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Manager'">
+          <mat-label>Role</mat-label>
+          <input matInput [(ngModel)]="data.role" disabled />
+        </mat-form-field>
+      </ng-container>
     </div>
     <div class="dialog-actions">
       <div class="left">
@@ -70,11 +92,19 @@ import { HttpClient } from '@angular/common/http';
     `,
   ],
 })
-export class EmployeeEditDialogComponent {
+export class EmployeeEditDialogComponent implements OnInit {
   public dialogRef = inject(MatDialogRef<EmployeeEditDialogComponent>);
-  public data = inject<Employee>(MAT_DIALOG_DATA);
+  public data: EditDialogData = inject(MAT_DIALOG_DATA);
   private http = inject(HttpClient);
-
+  private userService = inject(UserService);
+  get userRole() {
+    return this.data.userRole;
+  }
+  ngOnInit(): void {
+    if (this.data.userRole === 'Manager') {
+      this.data.role = 'Employee';
+    }
+  }
   onCancel(): void {
     this.dialogRef.close();
   }

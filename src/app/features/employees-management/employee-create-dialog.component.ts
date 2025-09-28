@@ -1,17 +1,29 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 import { Employee } from './employees-management.component';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../core/services/user.service';
 
+interface CreateDialogData extends Employee {
+  userRole: string; // Added to determine the role of the user creating the employee
+}
 @Component({
   selector: 'app-employee-create-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+  ],
   template: `
     <h2 mat-dialog-title>Create Employee</h2>
     <div mat-dialog-content>
@@ -30,10 +42,20 @@ import { HttpClient } from '@angular/common/http';
         <input matInput [(ngModel)]="data.email" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Role</mat-label>
-        <input matInput [(ngModel)]="data.role" />
-      </mat-form-field>
+      <ng-container [ngSwitch]="userRole">
+        <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Admin'">
+          <mat-label>Role</mat-label>
+          <mat-select [(ngModel)]="data.role">
+            <mat-option value="Manager">Manager</mat-option>
+            <mat-option value="Employee">Employee</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Manager'">
+          <mat-label>Role</mat-label>
+          <input matInput [(ngModel)]="data.role" disabled />
+        </mat-form-field>
+      </ng-container>
     </div>
 
     <div mat-dialog-actions align="end">
@@ -50,28 +72,37 @@ import { HttpClient } from '@angular/common/http';
     `,
   ],
 })
-export class EmployeeCreateDialogComponent {
+export class EmployeeCreateDialogComponent implements OnInit {
+  private userService = inject(UserService);
+
   public dialogRef = inject(MatDialogRef<EmployeeCreateDialogComponent>);
-  public data: Employee = inject(MAT_DIALOG_DATA);
+  public data: CreateDialogData = inject(MAT_DIALOG_DATA);
+  // public data: Employee = inject(MAT_DIALOG_DATA);
+
+  get userRole() {
+    return this.data.userRole;
+  }
+  private http = inject(HttpClient);
+  ngOnInit(): void {
+    if (this.data.userRole === 'Manager') {
+      this.data.role = 'Employee';
+    }
+  }
 
   onCancel(): void {
     this.dialogRef.close();
   }
-  private http = inject(HttpClient);
+
   onCreate(): void {
     if (!this.data) return;
-    this.http
-      .post<Employee>('https://localhost:5001/api/users/employees/add', this.data, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .subscribe({
-        next: (saved) => {
-          this.dialogRef.close(saved);
-        },
-        error: (err) => {
-          console.error('Failed to create employee', err);
-          alert(err.error?.errors[0] || 'Failed to create employee, please try again.');
-        },
-      });
+    this.userService.CreateEmployee(this.data).subscribe({
+      next: (saved) => {
+        this.dialogRef.close(saved);
+      },
+      error: (err) => {
+        console.error('Failed to create employee', err);
+        alert(err.error?.errors?.[0] || 'Failed to create employee, please try again.');
+      },
+    });
   }
 }
