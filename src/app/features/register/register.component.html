@@ -13,10 +13,16 @@
       </mat-label>
       <input
         class="form-input"
+        [class.error]="hasError('firstName')"
         formControlName="firstName"
         required
         placeholder="Enter your first name"
       />
+      @if (hasError('firstName')) {
+        <div class="error-message">
+          {{ getErrorMessage('firstName') }}
+        </div>
+      }
     </div>
 
     <div class="form-group">
@@ -26,10 +32,16 @@
       </mat-label>
       <input
         class="form-input"
+        [class.error]="hasError('lastName')"
         formControlName="lastName"
         required
         placeholder="Enter your last name"
       />
+      @if (hasError('lastName')) {
+        <div class="error-message">
+          {{ getErrorMessage('lastName') }}
+        </div>
+      }
     </div>
 
     <div class="form-group">
@@ -39,11 +51,17 @@
       </mat-label>
       <input
         class="form-input"
+        [class.error]="hasError('email')"
         formControlName="email"
         type="email"
         required
         placeholder="Enter your email"
       />
+      @if (hasError('email')) {
+        <div class="error-message">
+          {{ getErrorMessage('email') }}
+        </div>
+      }
     </div>
 
     <div class="form-group">
@@ -51,13 +69,31 @@
         Password
         <span class="asterisk">*</span>
       </mat-label>
-      <input
-        class="form-input"
-        type="password"
-        formControlName="password"
-        required
-        placeholder="Minimum 8 characters"
-      />
+      <div class="password-input-container">
+        <input
+          class="form-input password-input"
+          [class.error]="hasError('password')"
+          [type]="hidePassword ? 'password' : 'text'"
+          formControlName="password"
+          required
+          placeholder="Minimum 8 characters"
+        />
+        <button
+          type="button"
+          class="password-toggle-btn"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'"
+        >
+          <mat-icon>
+            {{ hidePassword ? 'visibility_off' : 'visibility' }}
+          </mat-icon>
+        </button>
+      </div>
+      @if (hasError('password')) {
+        <div class="error-message">
+          {{ getErrorMessage('password') }}
+        </div>
+      }
     </div>
 
     <div class="form-group">
@@ -65,19 +101,66 @@
         Confirm Password
         <span class="asterisk">*</span>
       </mat-label>
-      <input
-        class="form-input"
-        type="password"
-        formControlName="confirmPassword"
-        required
-        placeholder="Confirm your password"
-      />
+      <div class="password-input-container">
+        <input
+          class="form-input password-input"
+          [class.error]="hasError('confirmPassword')"
+          [class.password-mismatch]="getPasswordMatchError()"
+          [type]="hideConfirmPassword ? 'password' : 'text'"
+          formControlName="confirmPassword"
+          required
+          placeholder="Confirm your password"
+        />
+        <button
+          type="button"
+          class="password-toggle-btn"
+          (click)="toggleConfirmPasswordVisibility()"
+          [attr.aria-label]="hideConfirmPassword ? 'Show password' : 'Hide password'"
+        >
+          <mat-icon>
+            {{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}
+          </mat-icon>
+        </button>
+      </div>
+      @if (hasError('confirmPassword')) {
+        <div class="error-message">
+          {{ getErrorMessage('confirmPassword') }}
+        </div>
+      }
+      @if (getPasswordMatchError()) {
+        <div class="error-message">
+          {{ getPasswordMatchError() }}
+        </div>
+      }
     </div>
 
     <br />
 
-    <button class="register-btn" color="primary" type="submit">Register</button>
+    <button
+      class="register-btn"
+      [class.loading]="isLoading"
+      [disabled]="isLoading"
+      color="primary"
+      type="submit"
+    >
+      @if (!isLoading) {
+        <span>Register</span>
+      }
+      @if (isLoading) {
+        <span class="loading-content">
+          <div class="spinner"></div>
+          Registering...
+        </span>
+      }
+    </button>
   </form>
 
-  <a href="#" class="back-link" (click)="navigateToLogin()">← Back To Login</a>
+  <a
+    href="#"
+    class="back-link"
+    [class.disabled]="isLoading"
+    (click)="!isLoading && navigateToLogin(); $event.preventDefault()"
+  >
+    ← Back To Login
+  </a>
 </div>
