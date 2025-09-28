@@ -113,7 +113,4 @@ export class em_managementPageComponent implements OnInit {
       }
     });
   }
-  backbutton() {
-    window.history.back();
-  }
 }
