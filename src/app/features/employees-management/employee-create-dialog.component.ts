@@ -96,11 +96,11 @@ export class EmployeeCreateDialogComponent implements OnInit {
   onCreate(): void {
     if (!this.data) return;
     this.userService.CreateEmployee(this.data).subscribe({
-      next: (saved) => {
-        this.dialogRef.close(saved);
+      next: (response) => {
+        this.dialogRef.close(response);
       },
       error: (err) => {
-        console.error('Failed to create employee', err);
+        console.error('Failed to create employee', err.error.errors);
         alert(err.error?.errors?.[0] || 'Failed to create employee, please try again.');
       },
     });

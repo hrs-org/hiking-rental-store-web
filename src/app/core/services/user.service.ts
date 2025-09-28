@@ -25,10 +25,10 @@ export class UserService {
     return this.http.get<ApiResponse<Employee[]>>(MANAGERS);
   }
   UpdateEmployee(emp: Employee) {
-    return this.http.put<ApiResponse<Employee>>(`${EMPLOYEES}/${emp.id}`, emp);
+    return this.http.put<ApiResponse<Employee>>(EMPLOYEES, emp);
   }
   CreateEmployee(emp: Employee) {
-    return this.http.post<ApiResponse<Employee>>(EMPLOYEES, emp);
+    return this.http.post<ApiResponse<Employee>>(`${EMPLOYEES}/add`, emp);
   }
   DeleteEmployee(empId: number) {
     return this.http.delete<ApiResponse<null>>(`${EMPLOYEES}/${empId}`);

@@ -7,7 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { Employee } from './employees-management.component';
-import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../core/services/user.service';
 
 interface EditDialogData extends Employee {
@@ -95,7 +94,6 @@ interface EditDialogData extends Employee {
 export class EmployeeEditDialogComponent implements OnInit {
   public dialogRef = inject(MatDialogRef<EmployeeEditDialogComponent>);
   public data: EditDialogData = inject(MAT_DIALOG_DATA);
-  private http = inject(HttpClient);
   private userService = inject(UserService);
   get userRole() {
     return this.data.userRole;
@@ -111,36 +109,28 @@ export class EmployeeEditDialogComponent implements OnInit {
 
   onSave(): void {
     const updated = this.data;
-    this.http
-      .put<Employee>('https://localhost:5001/api/users/employees', updated, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .subscribe({
-        next: (saved) => {
-          this.dialogRef.close({ action: 'update', employee: this.data, feedback: saved });
-        },
-        error: (err) => {
-          console.error('Failed to update employee', err);
-          alert(err.error?.errors[0] || 'Failed to update employee, please try again.');
-        },
-      });
+    this.userService.UpdateEmployee(updated).subscribe({
+      next: (response) => {
+        this.dialogRef.close({ action: 'update', employee: this.data, feedback: response.data });
+      },
+      error: (err) => {
+        console.error('Failed to update employee', err);
+        alert(err.error?.errors[0] || 'Failed to update employee, please try again.');
+      },
+    });
   }
 
   onDelete(): void {
     if (confirm(`Are you sure you want to delete ${this.data.firstName} ${this.data.lastName}?`)) {
-      this.http
-        .delete(`https://localhost:5001/api/users/employees/${this.data.id}`, {
-          headers: { accept: '*/*' },
-        })
-        .subscribe({
-          next: () => {
-            this.dialogRef.close({ action: 'delete', employee: this.data });
-          },
-          error: (err) => {
-            console.error('Failed to delete employee', err);
-            alert(err.error?.errors[0] || 'Failed to delete employee, please try again.');
-          },
-        });
+      this.userService.DeleteEmployee(this.data.id).subscribe({
+        next: () => {
+          this.dialogRef.close({ action: 'delete', employee: this.data });
+        },
+        error: (err) => {
+          console.error('Failed to delete employee', err);
+          alert(err.error?.errors[0] || 'Failed to delete employee, please try again.');
+        },
+      });
     }
   }
 }

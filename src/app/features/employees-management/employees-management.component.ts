@@ -58,14 +58,14 @@ export class em_managementPageComponent implements OnInit {
       this.userService.loadManagers().subscribe({
         next: (response) => {
           this.employees = response.data || [];
+          this.userService.loadEmployees().subscribe({
+            next: (response) => {
+              this.employees = [...this.employees, ...(response.data || [])];
+              this.loading = false;
+            },
+          });
         },
       });
-      this.userService.loadEmployees().subscribe({
-        next: (response) => {
-          this.employees = [...this.employees, ...(response.data || [])];
-        },
-      });
-      this.loading = false;
     }
     if (this.userRole == 'Manager') {
       this.userService.loadEmployees().subscribe({
@@ -89,7 +89,7 @@ export class em_managementPageComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((newEmployee: Employee | undefined) => {
       if (!newEmployee) return;
-      this.employees.push(newEmployee);
+      this.employees.unshift(newEmployee);
       this.errorMessage = '';
     });
   }
