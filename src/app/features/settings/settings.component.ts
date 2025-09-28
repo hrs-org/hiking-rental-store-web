@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { finalize } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -15,7 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SettingsComponent {
   private router = inject(Router);
-  private http = inject(HttpClient);
+  private authService = inject(AuthService);
 
   userName = 'John Doe';
   userEmail = 'john.doe@example.com';
@@ -35,18 +34,9 @@ export class SettingsComponent {
 
   logout() {
     this.logoutLoading = true;
-    this.http
-      .post<{ success: boolean; message: string }>('/api/auth/logout', {})
-      .pipe(finalize(() => (this.logoutLoading = false)))
-      .subscribe({
-        next: (res) => {
-          if (res?.success) {
-            localStorage.removeItem('authToken');
-            this.router.navigate(['/login']);
-          } else {
-            alert('logout failed, please try again.');
-          }
-        },
-      });
+    this.authService.logout().subscribe(() => {
+      localStorage.removeItem('authToken');
+      this.router.navigate(['/login']);
+    });
   }
 }

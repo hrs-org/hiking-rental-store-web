@@ -1,0 +1,19 @@
+<div>
+  <h3 class="title">{{ data.title }}</h3>
+  <p>
+    {{ data.description }}
+  </p>
+  <div
+    class="button-container"
+    [ngStyle]="{ 'justify-content': data.isConfirm ? 'space-between' : 'center' }"
+  >
+    @if (data.isConfirm) {
+      <button class="confirm-button" mat-stroked-button color="primary" (click)="dismiss(false)">
+        Cancel
+      </button>
+    }
+    <button class="confirm-button" mat-flat-button color="primary" (click)="dismiss(true)">
+      Ok
+    </button>
+  </div>
+</div>
