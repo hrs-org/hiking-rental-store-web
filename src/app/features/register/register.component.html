@@ -155,12 +155,7 @@
     </button>
   </form>
 
-  <a
-    href="#"
-    class="back-link"
-    [class.disabled]="isLoading"
-    (click)="!isLoading && navigateToLogin(); $event.preventDefault()"
-  >
+  <a href="#" class="back-link" [class.disabled]="isLoading" (click)="handleBackToLogin($event)">
     ← Back To Login
   </a>
 </div>

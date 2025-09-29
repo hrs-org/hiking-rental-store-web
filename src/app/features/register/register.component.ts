@@ -35,6 +35,16 @@ export class RegisterComponent {
     confirmPassword: new FormControl('', Validators.required),
   });
 
+  private setLoadingState(loading: boolean) {
+    this.isLoading = loading;
+
+    if (loading) {
+      this.registerForm.disable();
+    } else {
+      this.registerForm.enable();
+    }
+  }
+
   private openInfoSheet(title: string, description: string, callback?: () => void) {
     this.bottomSheet
       .open(InfoBottomSheetComponent, {
@@ -134,41 +144,40 @@ export class RegisterComponent {
 
     // Detailed form validation
     if (!this.registerForm.valid) {
-      console.log('Form is invalid:', this.registerForm.errors);
       this.markAllFieldsAsTouched();
-      alert('Please fix the errors in the form');
       return;
     }
 
     // Password match verification
     if (!this.passwordsMatch) {
-      console.log('Passwords do not match');
-      alert('Passwords do not match');
       return;
     }
 
-    const { password, confirmPassword, firstName, lastName, email } = this.registerForm.value;
+    const { password, firstName, lastName, email } = this.registerForm.value;
 
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      this.openInfoSheet(
-        'Incomplete Form',
-        'Please fill out all required fields before submitting the form.',
-      );
+    if (!firstName || !lastName || !email || !password) {
       return;
     }
-    if (password !== confirmPassword) {
-      this.openInfoSheet(
-        'Password Mismatch',
-        'The passwords you entered do not match. Please try again.',
-      );
-      return;
-    }
-    this.userService.register({ firstName, lastName, email, password }).subscribe(() => {
-      this.openInfoSheet(
-        'Registration Successful',
-        'You can now log in with your credentials.',
-        () => this.navigateToLogin(),
-      );
+
+    if (this.isLoading) return;
+    this.setLoadingState(true);
+
+    this.userService.register({ firstName, lastName, email, password }).subscribe({
+      next: () => {
+        this.setLoadingState(false);
+        this.openInfoSheet(
+          'Registration Successful',
+          'You can now log in with your credentials.',
+          () => this.navigateToLogin(),
+        );
+      },
+      error: () => {
+        this.setLoadingState(false);
+        this.openInfoSheet(
+          'Registration Failed',
+          'Something went wrong during registration. Please try again.',
+        );
+      },
     });
   }
 
@@ -177,6 +186,13 @@ export class RegisterComponent {
     Object.keys(this.registerForm.controls).forEach((key) => {
       this.registerForm.get(key)?.markAsTouched();
     });
+  }
+
+  handleBackToLogin(event: Event) {
+    event.preventDefault();
+    if (!this.isLoading) {
+      this.navigateToLogin();
+    }
   }
 
   navigateToLogin() {
