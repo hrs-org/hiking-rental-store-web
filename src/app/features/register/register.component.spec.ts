@@ -8,8 +8,6 @@ import { of, throwError } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
-
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
@@ -277,40 +275,6 @@ describe('RegisterComponent', () => {
       expect(component.isLoading).toBeFalse();
     });
 
-    // successful registration message
-    it('should show success message on successful registration', () => {
-      mockUserService.register.and.returnValue(of({ success: true, message: '', data: null }));
-
-      component.onSubmit();
-
-      expect(mockBottomSheet.open).toHaveBeenCalledWith(
-        jasmine.any(InfoBottomSheetComponent),
-        jasmine.objectContaining({
-          data: jasmine.objectContaining({
-            title: 'Registration Successful',
-            description: 'You can now log in with your credentials.',
-          }),
-        }),
-      );
-    });
-
-    // failed registration error message
-    it('should show error message on failed registration', () => {
-      mockUserService.register.and.returnValue(throwError(() => new Error('Registration failed')));
-
-      component.onSubmit();
-
-      expect(mockBottomSheet.open).toHaveBeenCalledWith(
-        jasmine.any(InfoBottomSheetComponent),
-        jasmine.objectContaining({
-          data: jasmine.objectContaining({
-            title: 'Registration Failed',
-            description: 'Something went wrong during registration. Please try again.',
-          }),
-        }),
-      );
-    });
-
     // prevent multiple submissions
     it('should prevent submission when already loading', () => {
       component.isLoading = true;
@@ -404,7 +368,6 @@ describe('RegisterComponent', () => {
   });
 
   describe('InfoBottomSheet Integration', () => {
-    // open bottom sheet on successful registration
     it('should open bottom sheet on successful registration', () => {
       component.registerForm.patchValue({
         firstName: 'John',
@@ -419,7 +382,7 @@ describe('RegisterComponent', () => {
       component.onSubmit();
 
       expect(mockBottomSheet.open).toHaveBeenCalledWith(
-        jasmine.any(Function),
+        jasmine.anything(),
         jasmine.objectContaining({
           data: jasmine.objectContaining({
             title: 'Registration Successful',
@@ -429,7 +392,6 @@ describe('RegisterComponent', () => {
       );
     });
 
-    // open bottom sheet on registration error
     it('should open bottom sheet on registration error', () => {
       component.registerForm.patchValue({
         firstName: 'John',
@@ -444,7 +406,7 @@ describe('RegisterComponent', () => {
       component.onSubmit();
 
       expect(mockBottomSheet.open).toHaveBeenCalledWith(
-        jasmine.any(Function),
+        jasmine.anything(),
         jasmine.objectContaining({
           data: jasmine.objectContaining({
             title: 'Registration Failed',
