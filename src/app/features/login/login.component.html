@@ -1,8 +1,27 @@
-<div>
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<div [class.dark-theme]="isDarkTheme">
+  <button
+    class="theme-toggle-btn"
+    mat-icon-button
+    type="button"
+    (click)="toggleTheme()"
+    [attr.aria-label]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
+  >
+    <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" (keydown)="onKeydown($event)">
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
-      <input matInput formControlName="email" required />
+      <input
+        matInput
+        formControlName="email"
+        required
+        [class.error]="hasError('email')"
+        placeholder="Enter your email"
+      />
+      @if (hasError('email')) {
+        <mat-error>{{ getErrorMessage('email') }}</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -12,28 +31,45 @@
         [type]="hidePassword ? 'password' : 'text'"
         formControlName="password"
         required
+        [class.error]="hasError('password')"
+        placeholder="Enter your password"
       />
       <button
         mat-icon-button
         matSuffix
         type="button"
-        (click)="hidePassword = !hidePassword"
-        [attr.aria-label]="'Hide password'"
+        (click)="togglePasswordVisibility()"
+        [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'"
         [attr.aria-pressed]="!hidePassword"
       >
         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
+      @if (hasError('password')) {
+        <mat-error>{{ getErrorMessage('password') }}</mat-error>
+      }
     </mat-form-field>
 
     <div class="button-group">
-      <button mat-raised-button (click)="onClickRegister()" [disabled]="isLoading">Register</button>
+      <button mat-raised-button type="button" (click)="onClickRegister()" [disabled]="isLoading">
+        Register
+      </button>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
-        <span *ngIf="!isLoading">Login</span>
-        <span *ngIf="isLoading" class="loading-content">
-          <mat-spinner diameter="20"></mat-spinner>
-          Logging in...
-        </span>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="isLoading || !loginForm.valid"
+        [class.loading]="isLoading"
+      >
+        @if (!isLoading) {
+          <span>Login</span>
+        }
+        @if (isLoading) {
+          <span class="loading-content">
+            <mat-spinner diameter="20"></mat-spinner>
+            Logging in...
+          </span>
+        }
       </button>
     </div>
 
@@ -41,6 +77,7 @@
       <a
         routerLink="/forgot-password"
         [class.disabled]="isLoading"
+        [tabindex]="isLoading ? -1 : 0"
         (click)="isLoading && $event.preventDefault()"
       >
         Forgot Password?
