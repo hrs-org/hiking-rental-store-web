@@ -9,6 +9,8 @@ import { EmployeeCreateDialogComponent } from './employee-create-dialog.componen
 import { EmployeeEditDialogComponent } from './employee-edit-dialog.component';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../../store/user/user.selector';
+import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 export interface Employee {
   id: number;
   firstName: string;
@@ -33,6 +35,7 @@ export type DialogResult =
 })
 export class em_managementPageComponent implements OnInit {
   private store = inject(Store);
+  private bottomSheet = inject(MatBottomSheet);
 
   user$ = this.store.select(selectUser);
   employees: Employee[] = [];
@@ -54,6 +57,16 @@ export class em_managementPageComponent implements OnInit {
     this.loadEmployeesandManager();
   }
 
+  loadError() {
+    this.bottomSheet.open(InfoBottomSheetComponent, {
+      data: {
+        title: 'Error',
+        description: 'Unable to load data. Please try again later.',
+        isConfirm: false,
+        confirmButtonText: 'OK',
+      },
+    });
+  }
   loadEmployeesandManager() {
     if (this.userRole == 'Admin') {
       this.userService.loadManagers().subscribe({
@@ -64,7 +77,13 @@ export class em_managementPageComponent implements OnInit {
               this.employees = [...this.employees, ...(response.data || [])];
               this.loading = false;
             },
+            error: () => {
+              this.loadError();
+            },
           });
+        },
+        error: () => {
+          this.loadError();
         },
       });
     }
@@ -73,6 +92,9 @@ export class em_managementPageComponent implements OnInit {
         next: (response) => {
           this.employees = response.data || [];
           this.loading = false;
+        },
+        error: () => {
+          this.loadError();
         },
       });
     }
