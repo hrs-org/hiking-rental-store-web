@@ -27,7 +27,7 @@ interface CreateDialogData extends Employee {
   ],
   template: `
     <h2 mat-dialog-title>Create Employee</h2>
-    <form [formGroup]="registerForm">
+    <form [formGroup]="CreateForm">
       <div mat-dialog-content>
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>First Name</mat-label>
@@ -62,7 +62,7 @@ interface CreateDialogData extends Employee {
 
       <div mat-dialog-actions align="end">
         <button mat-button (click)="onCancel()">Cancel</button>
-        <button mat-button color="primary" (click)="onCreate()" [disabled]="registerForm.invalid">
+        <button mat-button color="primary" (click)="onCreate()" [disabled]="CreateForm.invalid">
           Create
         </button>
       </div>
@@ -84,7 +84,7 @@ export class EmployeeCreateDialogComponent implements OnInit {
   public data: CreateDialogData = inject(MAT_DIALOG_DATA);
   // public data: Employee = inject(MAT_DIALOG_DATA);
 
-  registerForm = new FormGroup({
+  CreateForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -96,8 +96,8 @@ export class EmployeeCreateDialogComponent implements OnInit {
   }
   ngOnInit(): void {
     if (this.data.userRole === 'Manager') {
-      this.registerForm.patchValue({ role: 'Employee' });
-      this.registerForm.get('role')?.disable();
+      this.CreateForm.patchValue({ role: 'Employee' });
+      this.CreateForm.get('role')?.disable();
     }
   }
 
@@ -106,14 +106,14 @@ export class EmployeeCreateDialogComponent implements OnInit {
   }
 
   onCreate(): void {
-    console.log(this.registerForm.value);
-    if (this.registerForm.invalid) {
-      this.registerForm.markAsDirty();
-      this.registerForm.markAsTouched();
+    // console.log(this.CreateForm.value);
+    if (this.CreateForm.invalid) {
+      this.CreateForm.markAsDirty();
+      this.CreateForm.markAsTouched();
       return;
     }
-    const payload = this.registerForm.getRawValue() as Employee;
-    console.log(payload);
+    const payload = this.CreateForm.getRawValue() as Employee;
+    // console.log(payload);
     this.userService.CreateEmployee(payload).subscribe({
       next: (response) => {
         this.dialogRef.close(response);
