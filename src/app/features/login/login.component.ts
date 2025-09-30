@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterModule } from '@angular/router';
-import { take, tap, catchError } from 'rxjs';
+import { take, tap, catchError, finalize } from 'rxjs';
 import { of } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { Store } from '@ngrx/store';
@@ -128,14 +128,14 @@ export class LoginComponent implements OnInit {
             }
           }),
           catchError(() => {
-            this.setLoadingState(false);
             this.showErrorMessage('Login Failed', 'Invalid email or password. Please try again.');
             return of(null);
           }),
+          finalize(() => {
+            this.setLoadingState(false);
+          }),
         )
-        .subscribe(() => {
-          this.setLoadingState(false);
-        });
+        .subscribe();
     }
   }
 
