@@ -59,6 +59,12 @@ h2 {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 }
+.employee-card button[mat-raised-button] {
+  // font-size: 14px;
+  // padding: 6px 12px;
+  // min-width: 120px;
+  border-radius: 12px;
+}
 
 mat-card-title {
   font-weight: bold;
