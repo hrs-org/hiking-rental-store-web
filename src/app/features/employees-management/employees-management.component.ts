@@ -16,6 +16,7 @@ export interface Employee {
   email: string;
   role: string;
 }
+export type CreateEmployeeDto = Omit<Employee, 'id'>;
 export interface CreateDialogData extends Employee {
   userRole: string;
 }
@@ -84,7 +85,7 @@ export class em_managementPageComponent implements OnInit {
         lastName: '',
         email: '',
         role: '',
-        userRole: this.userRole, // ✅ ส่ง role ของคนที่ login อยู่
+        userRole: this.userRole,
       } as CreateDialogData,
     });
     dialogRef.afterClosed().subscribe((newEmployee: Employee | undefined) => {

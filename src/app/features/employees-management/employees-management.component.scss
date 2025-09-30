@@ -1,5 +1,5 @@
 .page-container {
-  padding: 20px;
+  padding: 60px 20px 20px 20px;
   font-family: Arial, sans-serif;
 }
 
@@ -74,7 +74,6 @@ mat-card-title {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  //  justify-content: flex-start;
-  align-items: center;
-  padding: 50px;
+  align-items: stretch;
+  padding: 10px 20px 20px 20px;
 }
