@@ -159,6 +159,7 @@ export class EmployeeEditDialogComponent implements OnInit {
           description: `Are you sure you want to delete ${this.data.firstName} ${this.data.lastName} ID: ${this.data.id} ? `,
           isConfirm: true,
           confirmButtonText: 'Yes',
+          cancelButtonText: 'No',
         },
       })
       .afterDismissed()
