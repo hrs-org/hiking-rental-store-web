@@ -102,6 +102,7 @@ export class EmployeeEditDialogComponent implements OnInit {
   public data: EditDialogData = inject(MAT_DIALOG_DATA);
   private userService = inject(UserService);
   private bottomSheet = inject(MatBottomSheet);
+  private bottomSheetyesno = inject(MatBottomSheet);
   UpdateForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
@@ -113,6 +114,7 @@ export class EmployeeEditDialogComponent implements OnInit {
     return this.data.userRole;
   }
   ngOnInit(): void {
+    this.UpdateForm.patchValue(this.data);
     if (this.data.userRole === 'Manager') {
       this.UpdateForm.patchValue({ role: 'Employee' });
       this.UpdateForm.get('role')?.disable();
@@ -129,6 +131,7 @@ export class EmployeeEditDialogComponent implements OnInit {
       return;
     }
     const updated = this.UpdateForm.getRawValue() as Employee;
+    updated.id = this.data.id;
     this.userService.UpdateEmployee(updated).subscribe({
       next: (response) => {
         this.dialogRef.close({ action: 'update', employee: this.data, feedback: response.data });
@@ -149,16 +152,36 @@ export class EmployeeEditDialogComponent implements OnInit {
   }
 
   onDelete(): void {
-    if (confirm(`Are you sure you want to delete ${this.data.firstName} ${this.data.lastName}?`)) {
-      this.userService.DeleteEmployee(this.data.id).subscribe({
-        next: () => {
-          this.dialogRef.close({ action: 'delete', employee: this.data });
+    this.bottomSheet
+      .open(InfoBottomSheetComponent, {
+        data: {
+          title: 'Confirm Delete',
+          description: `Are you sure you want to delete ${this.data.firstName} ${this.data.lastName} ID: ${this.data.id} ? `,
+          isConfirm: true,
+          confirmButtonText: 'Yes',
         },
-        error: (err) => {
-          console.error('Failed to delete employee', err);
-          alert(err.error?.errors[0] || 'Failed to delete employee, please try again.');
-        },
+      })
+      .afterDismissed()
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.userService.DeleteEmployee(this.data.id).subscribe({
+            next: () => {
+              this.dialogRef.close({ action: 'delete', employee: this.data });
+            },
+            error: (err) => {
+              this.bottomSheet.open(InfoBottomSheetComponent, {
+                data: {
+                  title: 'Error',
+                  description: err.error?.errors?.[0],
+                  isConfirm: false,
+                  confirmButtonText: 'OK',
+                },
+              });
+              console.error('Failed to delete employee', err);
+              // alert(err.error?.errors[0] || 'Failed to delete employee, please try again.');
+            },
+          });
+        }
       });
-    }
   }
 }
