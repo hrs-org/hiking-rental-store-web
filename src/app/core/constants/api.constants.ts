@@ -13,3 +13,7 @@ export const LOGOUT = `${AUTH_PREFIX}/logout`;
 export const USER_PREFIX = `${API_PREFIX}/users`;
 
 export const REGISTER_USER = `${USER_PREFIX}/register`;
+
+//Item endpoints
+export const ITEM_PREFIX = `${API_PREFIX}/items`;
+export const ITEM_ADD = `${ITEM_PREFIX}/add`;
