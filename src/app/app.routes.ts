@@ -48,6 +48,13 @@ export const routes: Routes = [
       import('./features/register/register.component').then((m) => m.RegisterComponent),
   },
   {
+    path: 'verify-email',
+    loadComponent: () =>
+      import('./features/email-verification-result/email-verification-result.component').then(
+        (m) => m.EmailVerificationResultComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

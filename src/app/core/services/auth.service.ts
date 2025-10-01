@@ -1,11 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { LoginRequest, LoginResponse, LogOutResponse } from '../models/auth/auth';
+import { ResendVerificationRequest } from '../models/auth/resend-verification-request';
+import { EmailVerificationRequest } from '../models/auth/email-verification-request';
 import { SKIP_AUTH } from '../tokens/auth.token';
 import { ApiResponse } from '../models/api-response';
 import { User } from '../models/user/user';
-import { ACTIVE_USER, LOGIN, LOGOUT, REFRESH_TOKEN } from '../constants/api.constants';
+import {
+  ACTIVE_USER,
+  LOGIN,
+  LOGOUT,
+  REFRESH_TOKEN,
+  RESEND_VERIFICATION,
+  VERIFY_EMAIL,
+} from '../constants/api.constants';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -33,6 +42,22 @@ export class AuthService {
 
   getActiveUser() {
     return this.http.get<ApiResponse<User>>(ACTIVE_USER);
+  }
+
+  resendVerificationEmail(request: ResendVerificationRequest) {
+    return this.http.post<ApiResponse<boolean>>(RESEND_VERIFICATION, request, {
+      context: new HttpContext().set(SKIP_AUTH, true),
+    });
+  }
+
+  verifyEmail(request: EmailVerificationRequest) {
+    return this.http.post<ApiResponse<{ isVerified: boolean; message: string }>>(
+      VERIFY_EMAIL,
+      request,
+      {
+        context: new HttpContext().set(SKIP_AUTH, true),
+      },
+    );
   }
 
   isTokenExpired(token: string): boolean {

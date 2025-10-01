@@ -1,0 +1,89 @@
+$status-verifying: #2196f3;
+$status-success: #4caf50;
+$status-expired: #ff9800;
+$status-failed: #f44336;
+$status-unknown: #666;
+
+.verification-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.verification-card {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.status-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.message {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.email-display {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-family: monospace;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-button,
+.secondary-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+}
+
+.status-verifying {
+  color: $status-verifying;
+}
+.status-success {
+  color: $status-success;
+}
+.status-expired {
+  color: $status-expired;
+}
+.status-failed {
+  color: $status-failed;
+}
+.status-unknown {
+  color: $status-unknown;
+}
+
+@media (max-width: 768px) {
+  .verification-container {
+    padding: 10px;
+  }
+  .title {
+    font-size: 20px;
+  }
+  .status-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+}
