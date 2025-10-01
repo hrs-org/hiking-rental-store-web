@@ -41,7 +41,9 @@
         [class.loading]="isLoading"
       >
         <span class="loading-content">
-          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+          @if (isLoading) {
+            <mat-spinner diameter="20"></mat-spinner>
+          }
           {{ isLoading ? 'Logging in...' : 'Login' }}
         </span>
       </button>
