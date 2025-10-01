@@ -1,0 +1,32 @@
+<div
+  class="container"
+  tabindex="0"
+  (click)="onItemClick()"
+  (keydown.enter)="onItemClick()"
+  (keydown.space)="onItemClick()"
+>
+  <div class="content">
+    <div class="settings-item">
+      <div class="icon-container icon-container-{{ settingsOption.iconColor }}">
+        <mat-icon class="icon icon-{{ settingsOption.iconColor }}">
+          {{ settingsOption.icon }}
+        </mat-icon>
+      </div>
+      <div class="item">
+        <div class="item-title">
+          {{
+            settingsOption.titleUppercase
+              ? settingsOption.title.toLocaleUpperCase()
+              : settingsOption.title
+          }}
+        </div>
+        <div class="item-desc">{{ settingsOption.desc }}</div>
+      </div>
+    </div>
+    @if (settingsOption.showChevron) {
+      <div class="chevron-icon">
+        <mat-icon>chevron_right</mat-icon>
+      </div>
+    }
+  </div>
+</div>

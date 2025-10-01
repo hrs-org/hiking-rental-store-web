@@ -1,0 +1,22 @@
+<app-pwa-header title="Profile" [backButtonVisible]="true"></app-pwa-header>
+<div class="content">
+  <mat-card appearance="outlined">
+    <mat-card-content class="card-content">
+      @if (user$ | async; as user) {
+        <div class="profile-header">
+          <div class="profile-name">
+            {{ `${user.firstName} ${user.lastName}` }}
+          </div>
+          <div class="profile-role">
+            {{ user.role }}
+          </div>
+        </div>
+        <div class="email">
+          <div class="email-label">Email</div>
+          <div class="email-detail">{{ user.email }}</div>
+        </div>
+        <button mat-flat-button color="primary" (click)="openDialog()">Change Password</button>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

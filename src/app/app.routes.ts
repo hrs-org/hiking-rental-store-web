@@ -39,6 +39,11 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'profile',
+    loadComponent: () =>
+      import('./features/settings/profile/profile.component').then((m) => m.ProfileComponent),
+  },
+  {
     path: 'login',
     loadComponent: () => import('./features/login/login.component').then((m) => m.LoginComponent),
   },

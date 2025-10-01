@@ -1,3 +1,5 @@
 <div class="container">
-  <button class="btn-danger" mat-flat-button (click)="logout()">logout</button>
+  @for (item of settingItems; track $index) {
+    <app-settings-option [settingsOption]="item"></app-settings-option>
+  }
 </div>

@@ -1,11 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { LoginRequest, LoginResponse, LogOutResponse } from '../models/auth/auth';
+import {
+  ChangePasswordRequest,
+  LoginRequest,
+  LoginResponse,
+  LogOutResponse,
+} from '../models/auth/auth';
 import { SKIP_AUTH } from '../tokens/auth.token';
 import { ApiResponse } from '../models/api-response';
 import { User } from '../models/user/user';
-import { ACTIVE_USER, LOGIN, LOGOUT, REFRESH_TOKEN } from '../constants/api.constants';
+import {
+  ACTIVE_USER,
+  CHANGE_PASSWORD,
+  LOGIN,
+  LOGOUT,
+  REFRESH_TOKEN,
+} from '../constants/api.constants';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -33,6 +44,10 @@ export class AuthService {
 
   getActiveUser() {
     return this.http.get<ApiResponse<User>>(ACTIVE_USER);
+  }
+
+  changePassword(request: ChangePasswordRequest) {
+    return this.http.post<ApiResponse<LogOutResponse>>(CHANGE_PASSWORD, request);
   }
 
   isTokenExpired(token: string): boolean {
