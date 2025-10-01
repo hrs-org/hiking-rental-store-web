@@ -1,7 +1,3 @@
-<div class="bg-decoration"></div>
-<div class="bg-decoration"></div>
-<div class="bg-decoration"></div>
-
 <div class="register-container">
   <h1 class="register-title">Register</h1>
 
@@ -104,8 +100,7 @@
       <div class="password-input-container">
         <input
           class="form-input password-input"
-          [class.error]="hasError('confirmPassword')"
-          [class.password-mismatch]="getPasswordMatchError()"
+          [class.error]="hasError('confirmPassword') || getPasswordMatchError()"
           [type]="hideConfirmPassword ? 'password' : 'text'"
           formControlName="confirmPassword"
           required
@@ -136,22 +131,13 @@
 
     <br />
 
-    <button
-      class="register-btn"
-      [class.loading]="isLoading"
-      [disabled]="isLoading"
-      color="primary"
-      type="submit"
-    >
-      @if (!isLoading) {
-        <span>Register</span>
-      }
-      @if (isLoading) {
-        <span class="loading-content">
+    <button class="register-btn" [disabled]="isLoading" type="submit">
+      <span class="loading-content">
+        @if (isLoading) {
           <div class="spinner"></div>
-          Registering...
-        </span>
-      }
+        }
+        {{ isLoading ? 'Registering...' : 'Register' }}
+      </span>
     </button>
   </form>
 
