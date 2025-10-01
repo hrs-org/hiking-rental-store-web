@@ -62,7 +62,7 @@ describe('em_managementPageComponent', () => {
       { id: 2, firstName: 'E', lastName: 'Two', email: 'e2@test.com', role: 'Employee' },
     ];
 
-    mockUserService.loadManagers.and.returnValue(
+    mockUserService.loadEmployees.and.returnValue(
       of({ data: managers, success: true, message: '' }),
     );
     mockUserService.loadEmployees.and.returnValue(
@@ -71,7 +71,6 @@ describe('em_managementPageComponent', () => {
 
     component.loadEmployeesandManager();
 
-    expect(mockUserService.loadManagers).toHaveBeenCalled();
     expect(mockUserService.loadEmployees).toHaveBeenCalled();
   });
 

@@ -5,12 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserService } from '../../core/services/user.service';
 import { PwaHeaderComponent } from '../../shared/components/pwa-header/pwa-header.component';
-import { EmployeeCreateDialogComponent } from './employee-create-dialog.component';
-import { EmployeeEditDialogComponent } from './employee-edit-dialog.component';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../../store/user/user.selector';
-import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { AddEditEmployeesComponent } from './add-edit-employees/add-edit-employees.component';
 export interface Employee {
   id: number;
   firstName: string;
@@ -19,9 +17,6 @@ export interface Employee {
   role: string;
 }
 export type CreateEmployeeDto = Omit<Employee, 'id'>;
-export interface CreateDialogData extends Employee {
-  userRole: string;
-}
 export type DialogResult =
   | { action: 'update'; employee: Employee; feedback: Employee }
   | { action: 'delete'; employee: Employee };
@@ -52,55 +47,21 @@ export class em_managementPageComponent implements OnInit {
     this.user$.subscribe((user) => {
       if (user) {
         this.userRole = user.role;
+        this.loadEmployeesandManager();
       }
     });
-    this.loadEmployeesandManager();
   }
 
-  loadError() {
-    this.bottomSheet.open(InfoBottomSheetComponent, {
-      data: {
-        title: 'Error',
-        description: 'Unable to load data. Please try again later.',
-        isConfirm: false,
-        confirmButtonText: 'OK',
+  loadEmployeesandManager() {
+    this.userService.loadEmployees().subscribe({
+      next: (response) => {
+        this.employees = response.data || [];
+        this.loading = false;
       },
     });
   }
-  loadEmployeesandManager() {
-    if (this.userRole == 'Admin') {
-      this.userService.loadManagers().subscribe({
-        next: (response) => {
-          this.employees = response.data || [];
-          this.userService.loadEmployees().subscribe({
-            next: (response) => {
-              this.employees = [...this.employees, ...(response.data || [])];
-              this.loading = false;
-            },
-            error: () => {
-              this.loadError();
-            },
-          });
-        },
-        error: () => {
-          this.loadError();
-        },
-      });
-    }
-    if (this.userRole == 'Manager') {
-      this.userService.loadEmployees().subscribe({
-        next: (response) => {
-          this.employees = response.data || [];
-          this.loading = false;
-        },
-        error: () => {
-          this.loadError();
-        },
-      });
-    }
-  }
   onCreateEmployee() {
-    const dialogRef = this.dialog.open(EmployeeCreateDialogComponent, {
+    const dialogRef = this.dialog.open(AddEditEmployeesComponent, {
       width: '400px',
       data: {
         firstName: '',
@@ -108,7 +69,8 @@ export class em_managementPageComponent implements OnInit {
         email: '',
         role: '',
         userRole: this.userRole,
-      } as CreateDialogData,
+        fuction: 'Add',
+      },
     });
     dialogRef.afterClosed().subscribe((newEmployee: Employee | undefined) => {
       if (!newEmployee) return;
@@ -118,9 +80,9 @@ export class em_managementPageComponent implements OnInit {
   }
 
   onEmployeeClick(emp: Employee) {
-    const dialogRef = this.dialog.open(EmployeeEditDialogComponent, {
+    const dialogRef = this.dialog.open(AddEditEmployeesComponent, {
       width: '400px',
-      data: { ...emp, userRole: this.userRole },
+      data: { ...emp, userRole: this.userRole, fuction: 'Edit' },
     });
 
     dialogRef.afterClosed().subscribe((result: DialogResult | undefined) => {

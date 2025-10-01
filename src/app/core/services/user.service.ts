@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { SKIP_AUTH } from '../tokens/auth.token';
 import { ApiResponse } from '../models/api-response';
 import { RegisterRequest } from '../models/user/registerUserReq';
-import { EMPLOYEES, MANAGERS, REGISTER_USER } from '../constants/api.constants';
+import { EMPLOYEES, REGISTER_USER } from '../constants/api.constants';
 import { Employee } from '../../features/employees-management/employees-management.component';
 
 @Injectable({ providedIn: 'root' })
@@ -20,9 +20,6 @@ export class UserService {
 
   loadEmployees() {
     return this.http.get<ApiResponse<Employee[]>>(EMPLOYEES);
-  }
-  loadManagers() {
-    return this.http.get<ApiResponse<Employee[]>>(MANAGERS);
   }
   UpdateEmployee(emp: Employee) {
     return this.http.put<ApiResponse<Employee>>(EMPLOYEES, emp);

@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+<form [formGroup]="UpdateForm">
+  <div mat-dialog-content>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>First Name</mat-label>
+      <input matInput formControlName="firstName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Last Name</mat-label>
+      <input matInput formControlName="lastName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+
+    <ng-container [ngSwitch]="userRole">
+      <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Admin'">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="Manager">Manager</mat-option>
+          <mat-option value="Employee">Employee</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Manager'">
+        <mat-label>Role</mat-label>
+        <input matInput formControlName="role" />
+      </mat-form-field>
+    </ng-container>
+  </div>
+  @if (data.fuction === 'Edit') {
+    <div class="dialog-actions">
+      <div class="left">
+        <button mat-button color="warn" (click)="onDelete()">Delete</button>
+      </div>
+      <div class="right">
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-button color="primary" (click)="onSave()" [disabled]="UpdateForm.invalid">
+          Save
+        </button>
+      </div>
+    </div>
+  } @else if (data.fuction === 'Add') {
+    <div mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-button color="primary" (click)="onCreate()" [disabled]="UpdateForm.invalid">
+        Create
+      </button>
+    </div>
+  }
+</form>
