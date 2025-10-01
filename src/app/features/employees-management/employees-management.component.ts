@@ -69,7 +69,7 @@ export class em_managementPageComponent implements OnInit {
         email: '',
         role: '',
         userRole: this.userRole,
-        fuction: 'Add',
+        function: 'Add',
       },
     });
     dialogRef.afterClosed().subscribe((newEmployee: Employee | undefined) => {
@@ -82,7 +82,7 @@ export class em_managementPageComponent implements OnInit {
   onEmployeeClick(emp: Employee) {
     const dialogRef = this.dialog.open(AddEditEmployeesComponent, {
       width: '400px',
-      data: { ...emp, userRole: this.userRole, fuction: 'Edit' },
+      data: { ...emp, userRole: this.userRole, function: 'Edit' },
     });
 
     dialogRef.afterClosed().subscribe((result: DialogResult | undefined) => {

@@ -21,9 +21,9 @@ export class SettingsComponent implements OnInit {
 
   user$ = this.store.select(selectUser);
 
-  userName = 'EX John Doe';
-  userEmail = 'EX john.doe@example.com';
-  userRole = 'admin';
+  userName = '';
+  userEmail = '';
+  userRole = '';
 
   ngOnInit(): void {
     this.user$.subscribe((user) => {

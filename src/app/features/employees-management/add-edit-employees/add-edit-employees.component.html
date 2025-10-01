@@ -31,7 +31,7 @@
       </mat-form-field>
     </ng-container>
   </div>
-  @if (data.fuction === 'Edit') {
+  @if (data.function === 'Edit') {
     <div class="dialog-actions">
       <div class="left">
         <button mat-button color="warn" (click)="onDelete()">Delete</button>
@@ -43,7 +43,7 @@
         </button>
       </div>
     </div>
-  } @else if (data.fuction === 'Add') {
+  } @else if (data.function === 'Add') {
     <div mat-dialog-actions align="end">
       <button mat-button (click)="onCancel()">Cancel</button>
       <button mat-button color="primary" (click)="onCreate()" [disabled]="UpdateForm.invalid">

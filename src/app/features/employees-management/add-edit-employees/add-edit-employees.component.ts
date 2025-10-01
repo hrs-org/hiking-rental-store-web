@@ -13,7 +13,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 interface EditDialogData extends Employee {
   userRole: string;
-  fuction: 'Edit' | 'Add';
+  function: 'Edit' | 'Add';
 }
 @Component({
   selector: 'app-add-edit-employees',
@@ -50,14 +50,14 @@ export class AddEditEmployeesComponent implements OnInit {
       this.UpdateForm.patchValue({ role: 'Employee' });
       this.UpdateForm.get('role')?.disable();
     }
-    this.title = this.data.fuction === 'Edit' ? 'Edit Employee' : 'Create Employee';
+    this.title = this.data.function === 'Edit' ? 'Edit Employee' : 'Create Employee';
   }
   onCancel(): void {
     this.dialogRef.close();
   }
 
   onSave(): void {
-    if (this.data.fuction === 'Edit') {
+    if (this.data.function === 'Edit') {
       if (this.UpdateForm.invalid) {
         this.UpdateForm.markAsDirty();
         this.UpdateForm.markAsTouched();
@@ -74,7 +74,7 @@ export class AddEditEmployeesComponent implements OnInit {
   }
 
   onDelete(): void {
-    if (this.data.fuction === 'Edit') {
+    if (this.data.function === 'Edit') {
       this.bottomSheet
         .open(InfoBottomSheetComponent, {
           data: {

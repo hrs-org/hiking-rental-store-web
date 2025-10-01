@@ -19,7 +19,7 @@ export class InfoBottomSheetComponent {
     title: string;
     description: string;
     isConfirm: boolean;
-    confirmButtonText: string;
+    confirmButtonText?: string;
     cancelButtonText?: string;
   };
   constructor() {

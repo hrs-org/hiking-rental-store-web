@@ -8,7 +8,7 @@
   </mat-card>
   <button
     mat-flat-button
-    *ngIf="userRole === 'Admin' || userRole === 'Manager'"
+    *ngIf="(user$ | async)?.role === 'Admin' || (user$ | async)?.role === 'Manager'"
     (click)="goToEmployeesManagement()"
     class="employees-management-btn"
   >
