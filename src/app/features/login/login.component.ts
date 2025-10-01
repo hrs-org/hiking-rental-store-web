@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,7 +32,7 @@ import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sh
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private store = inject(Store);
@@ -41,7 +41,6 @@ export class LoginComponent implements OnInit {
   hidePassword = true;
   isLoading = false;
   submitted = false;
-  isDarkTheme = false;
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -94,49 +93,47 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    if (!this.loginForm.valid) {
+    if (this.loginForm.invalid) {
       Object.keys(this.loginForm.controls).forEach((key) => {
         this.loginForm.get(key)?.markAsTouched();
       });
       return;
     }
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
 
-      if (!email || !password) return;
-      if (this.isLoading) return;
+    const { email, password } = this.loginForm.value;
+    if (!email || !password) return;
+    if (this.isLoading) return;
 
-      this.setLoadingState(true);
+    this.setLoadingState(true);
 
-      this.authService
-        .login({ email: email, password: password })
-        .pipe(
-          tap((res) => {
-            if (res.data?.token) {
-              localStorage.setItem('authToken', res.data.token);
-              if (res.data.userId) {
-                this.store.dispatch(loadUser());
-                this.store
-                  .select(selectUser)
-                  .pipe(take(1))
-                  .subscribe((user) => {
-                    if (user) {
-                      this.router.navigate(['']);
-                    }
-                  });
-              }
+    this.authService
+      .login({ email, password })
+      .pipe(
+        tap((res) => {
+          if (res.data?.token) {
+            localStorage.setItem('authToken', res.data.token);
+            if (res.data.userId) {
+              this.store.dispatch(loadUser());
+              this.store
+                .select(selectUser)
+                .pipe(take(1))
+                .subscribe((user) => {
+                  if (user) {
+                    this.router.navigate(['']);
+                  }
+                });
             }
-          }),
-          catchError(() => {
-            this.showErrorMessage('Login Failed', 'Invalid email or password. Please try again.');
-            return of(null);
-          }),
-          finalize(() => {
-            this.setLoadingState(false);
-          }),
-        )
-        .subscribe();
-    }
+          }
+        }),
+        catchError(() => {
+          this.showErrorMessage('Login Failed', 'Invalid email or password. Please try again.');
+          return of(null);
+        }),
+        finalize(() => {
+          this.setLoadingState(false);
+        }),
+      )
+      .subscribe();
   }
 
   onClickRegister() {
@@ -145,24 +142,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' && !this.isLoading) {
-      this.onSubmit();
-    }
-  }
-
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
-  }
-
-  toggleTheme() {
-    this.isDarkTheme = !this.isDarkTheme;
-    localStorage.setItem('theme', this.isDarkTheme ? 'dark' : 'light');
-  }
-
-  ngOnInit() {
-    // 从本地存储读取主题设置，默认为白色模式
-    const savedTheme = localStorage.getItem('theme');
-    this.isDarkTheme = savedTheme === 'dark'; // 只有明确保存为 'dark' 时才使用深色模式
   }
 }

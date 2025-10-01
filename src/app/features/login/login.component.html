@@ -1,27 +1,10 @@
-<div [class.dark-theme]="isDarkTheme">
-  <button
-    class="theme-toggle-btn"
-    mat-icon-button
-    type="button"
-    (click)="toggleTheme()"
-    [attr.aria-label]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
-  >
-    <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
-  </button>
-
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" (keydown)="onKeydown($event)">
+<div class="login-container">
+  <h1 class="login-title">LOGIN</h1>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
-      <input
-        matInput
-        formControlName="email"
-        required
-        [class.error]="hasError('email')"
-        placeholder="Enter your email"
-      />
-      @if (hasError('email')) {
-        <mat-error>{{ getErrorMessage('email') }}</mat-error>
-      }
+      <input matInput formControlName="email" placeholder="Enter your email" />
+      <mat-error>{{ getErrorMessage('email') }}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -30,8 +13,6 @@
         matInput
         [type]="hidePassword ? 'password' : 'text'"
         formControlName="password"
-        required
-        [class.error]="hasError('password')"
         placeholder="Enter your password"
       />
       <button
@@ -44,9 +25,7 @@
       >
         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
-      @if (hasError('password')) {
-        <mat-error>{{ getErrorMessage('password') }}</mat-error>
-      }
+      <mat-error>{{ getErrorMessage('password') }}</mat-error>
     </mat-form-field>
 
     <div class="button-group">
@@ -58,18 +37,13 @@
         mat-raised-button
         color="primary"
         type="submit"
-        [disabled]="isLoading || !loginForm.valid"
+        [disabled]="isLoading"
         [class.loading]="isLoading"
       >
-        @if (!isLoading) {
-          <span>Login</span>
-        }
-        @if (isLoading) {
-          <span class="loading-content">
-            <mat-spinner diameter="20"></mat-spinner>
-            Logging in...
-          </span>
-        }
+        <span class="loading-content">
+          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+          {{ isLoading ? 'Logging in...' : 'Login' }}
+        </span>
       </button>
     </div>
 

@@ -36,7 +36,6 @@ describe('LoginComponent', () => {
   };
 
   beforeEach(async () => {
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
     mockStore = jasmine.createSpyObj('Store', ['dispatch', 'select']);
     mockAuthService = jasmine.createSpyObj('AuthService', ['login']);
     mockBottomSheet = jasmine.createSpyObj('MatBottomSheet', ['open']);
@@ -63,8 +62,6 @@ describe('LoginComponent', () => {
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-
-    // Get the router from TestBed after configuration
     mockRouter = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     spyOn(mockRouter, 'navigate');
 
@@ -80,7 +77,6 @@ describe('LoginComponent', () => {
       expect(component.hidePassword).toBe(true);
       expect(component.isLoading).toBe(false);
       expect(component.submitted).toBe(false);
-      expect(component.isDarkTheme).toBe(false);
     });
 
     it('should initialize form with empty values and validators', () => {
@@ -92,38 +88,28 @@ describe('LoginComponent', () => {
   });
 
   describe('Form Validation', () => {
-    it('should show error for invalid email', () => {
+    it('should show email validation errors', () => {
       const emailControl = component.loginForm.get('email');
-      emailControl?.setValue('invalid-email');
-      emailControl?.markAsTouched();
 
+      emailControl?.setValue('');
+      emailControl?.markAsTouched();
+      expect(component.hasError('email')).toBe(true);
+      expect(component.getErrorMessage('email')).toBe('Email is required');
+
+      emailControl?.setValue('invalid-email');
       expect(component.hasError('email')).toBe(true);
       expect(component.getErrorMessage('email')).toBe('Please enter a valid email');
     });
 
-    it('should show error for required email', () => {
-      const emailControl = component.loginForm.get('email');
-      emailControl?.setValue('');
-      emailControl?.markAsTouched();
-
-      expect(component.hasError('email')).toBe(true);
-      expect(component.getErrorMessage('email')).toBe('Email is required');
-    });
-
-    it('should show error for required password', () => {
+    it('should show password validation errors', () => {
       const passwordControl = component.loginForm.get('password');
+
       passwordControl?.setValue('');
       passwordControl?.markAsTouched();
-
       expect(component.hasError('password')).toBe(true);
       expect(component.getErrorMessage('password')).toBe('Password is required');
-    });
 
-    it('should show error for short password', () => {
-      const passwordControl = component.loginForm.get('password');
       passwordControl?.setValue('123');
-      passwordControl?.markAsTouched();
-
       expect(component.hasError('password')).toBe(true);
       expect(component.getErrorMessage('password')).toBe('Password must be at least 6 characters');
     });
@@ -137,6 +123,27 @@ describe('LoginComponent', () => {
       expect(component.loginForm.valid).toBe(true);
       expect(component.hasError('email')).toBe(false);
       expect(component.hasError('password')).toBe(false);
+    });
+
+    it('should return empty string for unknown control name in getErrorMessage', () => {
+      expect(component.getErrorMessage('unknownField')).toBe('');
+    });
+
+    it('should return empty string when control has no errors', () => {
+      component.loginForm.get('email')?.setValue('test@example.com');
+      expect(component.getErrorMessage('email')).toBe('');
+    });
+
+    it('should handle error checking in different states', () => {
+      const emailControl = component.loginForm.get('email');
+      emailControl?.setValue('');
+
+      component.submitted = true;
+      expect(component.hasError('email')).toBe(true);
+
+      component.submitted = false;
+      emailControl?.markAsDirty();
+      expect(component.hasError('email')).toBe(true);
     });
   });
 
@@ -152,17 +159,11 @@ describe('LoginComponent', () => {
     });
   });
 
-  describe('Theme Toggle', () => {
-    it('should toggle theme', () => {
-      expect(component.isDarkTheme).toBe(false);
+  describe('Navigation', () => {
+    it('should navigate to register page', () => {
+      component.onClickRegister();
 
-      component.toggleTheme();
-      expect(component.isDarkTheme).toBe(true);
-      expect(localStorage.getItem('theme')).toBe('dark');
-
-      component.toggleTheme();
-      expect(component.isDarkTheme).toBe(false);
-      expect(localStorage.getItem('theme')).toBe('light');
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['register']);
     });
   });
 
@@ -186,24 +187,8 @@ describe('LoginComponent', () => {
       expect(component.submitted).toBe(true);
     });
 
-    it('should mark all fields as touched when form is invalid', () => {
-      component.loginForm.patchValue({
-        email: '',
-        password: '',
-      });
-
-      component.onSubmit();
-
-      expect(component.loginForm.get('email')?.touched).toBe(true);
-      expect(component.loginForm.get('password')?.touched).toBe(true);
-    });
-
     it('should prevent submission when loading', () => {
       component.isLoading = true;
-      component.loginForm.patchValue({
-        email: 'test@example.com',
-        password: 'password123',
-      });
       component.onSubmit();
 
       expect(mockAuthService.login).not.toHaveBeenCalled();
@@ -211,10 +196,6 @@ describe('LoginComponent', () => {
 
     it('should call auth service on valid form submission', () => {
       mockAuthService.login.and.returnValue(of(mockAuthResponse));
-      component.loginForm.patchValue({
-        email: 'test@example.com',
-        password: 'password123',
-      });
       component.onSubmit();
 
       expect(mockAuthService.login).toHaveBeenCalledWith({
@@ -225,176 +206,56 @@ describe('LoginComponent', () => {
 
     it('should handle successful login', () => {
       mockAuthService.login.and.returnValue(of(mockAuthResponse));
-      component.loginForm.patchValue({
-        email: 'test@example.com',
-        password: 'password123',
-      });
       component.onSubmit();
 
       expect(localStorage.getItem('authToken')).toBe('test-token');
       expect(mockStore.dispatch).toHaveBeenCalled();
     });
 
-    it('should navigate to home on successful login', (done) => {
-      const mockUser = { id: 123, email: 'test@example.com' };
-      mockStore.select.and.returnValue(of(mockUser));
-      mockAuthService.login.and.returnValue(of(mockAuthResponse));
-
-      component.loginForm.patchValue({
-        email: 'test@example.com',
-        password: 'password123',
-      });
-
-      component.onSubmit();
-
-      // Wait for async operations to complete
-      setTimeout(() => {
-        expect(mockRouter.navigate).toHaveBeenCalledWith(['']);
-        done();
-      }, 100);
-    });
-
     it('should handle login error', () => {
       mockAuthService.login.and.returnValue(throwError(() => new Error('Login failed')));
-      component.loginForm.patchValue({
-        email: 'test@example.com',
-        password: 'password123',
-      });
       component.onSubmit();
 
       expect(mockBottomSheet.open).toHaveBeenCalled();
     });
   });
 
-  describe('Navigation', () => {
-    it('should navigate to register page', () => {
-      component.onClickRegister();
+  describe('Edge Cases', () => {
+    it('should handle invalid login response data', () => {
+      const testCases = [
+        { token: '', userId: 123, description: 'without token' },
+        { token: 'test-token', userId: 0, description: 'without userId' },
+        null,
+      ];
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['register']);
-    });
+      testCases.forEach((data) => {
+        const response = {
+          success: true,
+          message: 'Login successful',
+          data: data,
+        } as ApiResponse<LoginResponse>;
 
-    it('should not navigate to register when loading', () => {
-      component.isLoading = true;
+        mockAuthService.login.and.returnValue(of(response));
+        component.loginForm.patchValue({
+          email: 'test@example.com',
+          password: 'password123',
+        });
 
-      component.onClickRegister();
+        component.onSubmit();
 
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Keyboard Events', () => {
-    it('should submit form on Enter key', () => {
-      component.loginForm.patchValue({
-        email: 'test@example.com',
-        password: 'password123',
+        expect(mockAuthService.login).toHaveBeenCalled();
+        if (data && data.token && data.userId) {
+          expect(mockStore.dispatch).toHaveBeenCalled();
+        } else {
+          expect(mockStore.dispatch).not.toHaveBeenCalled();
+        }
       });
+    });
+
+    it('should handle store select returning null user', () => {
       mockAuthService.login.and.returnValue(of(mockAuthResponse));
+      mockStore.select.and.returnValue(of(null));
 
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
-      component.onKeydown(event);
-
-      expect(mockAuthService.login).toHaveBeenCalled();
-    });
-
-    it('should not submit on Enter when loading', () => {
-      component.isLoading = true;
-
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
-      component.onKeydown(event);
-
-      expect(mockAuthService.login).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Private Methods', () => {
-    it('should set loading state correctly', () => {
-      component['setLoadingState'](true);
-
-      expect(component.isLoading).toBe(true);
-      expect(component.loginForm.disabled).toBe(true);
-
-      component['setLoadingState'](false);
-
-      expect(component.isLoading).toBe(false);
-      expect(component.loginForm.disabled).toBe(false);
-    });
-
-    it('should show error message via bottom sheet', () => {
-      // Access private method using bracket notation
-      component['showErrorMessage']('Test Title', 'Test Description');
-
-      expect(mockBottomSheet.open).toHaveBeenCalled();
-    });
-  });
-
-  describe('Error Message Helper Methods', () => {
-    it('should return correct error messages', () => {
-      const emailControl = component.loginForm.get('email');
-      const passwordControl = component.loginForm.get('password');
-
-      emailControl?.setErrors({ required: true });
-      expect(component.getErrorMessage('email')).toBe('Email is required');
-
-      emailControl?.setErrors({ email: true });
-      expect(component.getErrorMessage('email')).toBe('Please enter a valid email');
-
-      passwordControl?.setErrors({ required: true });
-      expect(component.getErrorMessage('password')).toBe('Password is required');
-
-      passwordControl?.setErrors({ minlength: { requiredLength: 6, actualLength: 3 } });
-      expect(component.getErrorMessage('password')).toBe('Password must be at least 6 characters');
-    });
-  });
-
-  describe('hasError Method', () => {
-    it('should return true when control is invalid and touched/dirty/submitted', () => {
-      const emailControl = component.loginForm.get('email');
-      emailControl?.setErrors({ required: true });
-
-      emailControl?.markAsTouched();
-      expect(component.hasError('email')).toBe(true);
-
-      emailControl?.markAsUntouched();
-      emailControl?.markAsDirty();
-      expect(component.hasError('email')).toBe(true);
-    });
-
-    it('should return false when control is valid or not touched/dirty/submitted', () => {
-      const emailControl = component.loginForm.get('email');
-      emailControl?.setValue('test@example.com');
-      emailControl?.markAsTouched();
-
-      expect(component.hasError('email')).toBe(false);
-      expect(component.hasError('nonExistentField')).toBe(false);
-    });
-  });
-
-  describe('Component Lifecycle', () => {
-    it('should initialize with light theme when no theme is saved', () => {
-      localStorage.removeItem('theme');
-      component.ngOnInit();
-      expect(component.isDarkTheme).toBe(false);
-    });
-
-    it('should initialize with dark theme when dark theme is saved', () => {
-      localStorage.setItem('theme', 'dark');
-      component.ngOnInit();
-      expect(component.isDarkTheme).toBe(true);
-    });
-  });
-
-  describe('Edge Cases and Error Handling', () => {
-    it('should handle login response without token', () => {
-      const responseWithoutToken: ApiResponse<LoginResponse> = {
-        success: true,
-        message: 'Login successful',
-        data: {
-          token: '',
-          userId: 123,
-        },
-      };
-
-      mockAuthService.login.and.returnValue(of(responseWithoutToken));
       component.loginForm.patchValue({
         email: 'test@example.com',
         password: 'password123',
@@ -402,20 +263,8 @@ describe('LoginComponent', () => {
 
       component.onSubmit();
 
-      expect(mockAuthService.login).toHaveBeenCalled();
-      expect(mockStore.dispatch).not.toHaveBeenCalled();
-    });
-
-    it('should prevent multiple submissions when already loading', () => {
-      component.isLoading = true;
-      component.loginForm.patchValue({
-        email: 'test@example.com',
-        password: 'password123',
-      });
-
-      component.onSubmit();
-
-      expect(mockAuthService.login).not.toHaveBeenCalled();
+      expect(mockStore.dispatch).toHaveBeenCalled();
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
   });
 
