@@ -28,7 +28,7 @@ export type DialogResult =
   templateUrl: './employees-management.component.html',
   styleUrls: ['./employees-management.component.scss'],
 })
-export class em_managementPageComponent implements OnInit {
+export class EmployeeManagementPageComponent implements OnInit {
   private store = inject(Store);
   private bottomSheet = inject(MatBottomSheet);
 
