@@ -1,0 +1,371 @@
+.inventory-item-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 8px;
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+  }
+
+  &.package-item {
+    border-left: 4px solid #4f46e5;
+
+    .item-row {
+      background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+  }
+
+  &.expanded {
+    .expand-icon .icon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  &:active {
+    background-color: #f1f5f9;
+  }
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0; // Allow text truncation
+}
+
+.expand-icon {
+  margin-right: 12px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    transition: transform 0.2s ease;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.rotated {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.item-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .item-icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+
+    &.package-icon {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    &.variant-icon {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    &.simple-icon {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+    }
+  }
+}
+
+.item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+
+  .item-category {
+    background: #e2e8f0;
+    color: #64748b;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+}
+
+.item-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stock-info {
+  font-size: 14px;
+  font-weight: 500;
+  color: #10b981;
+  background: #ecfdf5;
+  border-radius: 6px;
+
+  &.low-stock {
+    color: #f59e0b;
+    background: #fffbeb;
+  }
+
+  &.out-of-stock {
+    color: #ef4444;
+    background: #fef2f2;
+  }
+}
+
+.price-info {
+  margin-left: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #059669;
+}
+
+.package-badge {
+  background: #4f46e5;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &.small {
+    width: 28px;
+    height: 28px;
+  }
+
+  &.edit-btn {
+    background: #f0f9ff;
+    color: #0369a1;
+
+    &:hover {
+      background: #0369a1;
+      color: white;
+      transform: scale(1.05);
+    }
+  }
+
+  &.delete-btn {
+    background: #fef2f2;
+    color: #dc2626;
+
+    &:hover {
+      background: #dc2626;
+      color: white;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.variants-container {
+  border-top: 1px solid #e2e8f0;
+  background: #fafafa;
+}
+
+.variants-list {
+  padding: 16px 20px 16px 60px;
+}
+
+.variant-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.variant-info {
+  flex: 1;
+}
+
+.variant-name {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.variant-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.sku-info {
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.variant-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.attribute-tag {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.variant-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.add-variant-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #64748b;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+  width: 100%;
+
+  &:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: #475569;
+  }
+}
+
+.children-list {
+  padding: 8px 20px 16px 60px;
+
+  .inventory-item-container {
+    margin-left: 24px;
+    border-left: 2px solid #e2e8f0;
+    border-radius: 0 12px 12px 0;
+
+    &:last-child {
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .item-row {
+    padding: 12px 16px;
+  }
+
+  .item-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+  }
+
+  .item-name {
+    font-size: 14px;
+  }
+
+  .item-meta {
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .variants-list,
+  .children-list {
+    padding-left: 40px;
+  }
+
+  .action-btn {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.item-list {
+  margin-top: 56px;
+}
