@@ -15,7 +15,13 @@ export class ItemsComponent {
   readonly panelOpenState = signal(false);
   private readonly router = inject(Router);
   private readonly itemService = inject(ItemService);
-  @Input() item!: Item;
+  @Input() item: Item = {
+    name: '',
+    description: '',
+    price: 0,
+    quantity: 0,
+    children: [] as Item[],
+  };
   @Input() isExpanded = false;
 
   get hasChildren(): boolean {
