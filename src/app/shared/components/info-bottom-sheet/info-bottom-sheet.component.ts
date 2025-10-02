@@ -19,8 +19,18 @@ export class InfoBottomSheetComponent {
     title: string;
     description: string;
     isConfirm: boolean;
-    confirmButtonText: string;
+    confirmButtonText?: string;
+    cancelButtonText?: string;
   };
+  constructor() {
+    if (!this.data.confirmButtonText) {
+      this.data.confirmButtonText = 'Ok';
+    }
+
+    if (this.data.isConfirm && !this.data.cancelButtonText) {
+      this.data.cancelButtonText = 'Cancel';
+    }
+  }
 
   dismiss(confirm: boolean) {
     this.bottomSheetRef.dismiss(confirm);

@@ -48,6 +48,13 @@ export const routes: Routes = [
       import('./features/register/register.component').then((m) => m.RegisterComponent),
   },
   {
+    path: 'employees-management',
+    loadComponent: () =>
+      import('./features/employees-management/employees-management.component').then(
+        (m) => m.EmployeeManagementPageComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
