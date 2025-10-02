@@ -9,11 +9,11 @@
   >
     @if (data.isConfirm) {
       <button class="confirm-button" mat-stroked-button color="primary" (click)="dismiss(false)">
-        Cancel
+        {{ data.cancelButtonText }}
       </button>
     }
     <button class="confirm-button" mat-flat-button color="primary" (click)="dismiss(true)">
-      Ok
+      {{ data.confirmButtonText }}
     </button>
   </div>
 </div>

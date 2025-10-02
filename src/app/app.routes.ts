@@ -55,6 +55,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'employees-management',
+    loadComponent: () =>
+      import('./features/employees-management/employees-management.component').then(
+        (m) => m.EmployeeManagementPageComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

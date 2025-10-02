@@ -15,3 +15,5 @@ export const VERIFY_EMAIL = `${AUTH_PREFIX}/verify-email`;
 export const USER_PREFIX = `${API_PREFIX}/users`;
 
 export const REGISTER_USER = `${USER_PREFIX}/register`;
+export const EMPLOYEES = `${USER_PREFIX}/employees`;
+export const MANAGERS = `${USER_PREFIX}/managers`;
