@@ -5,33 +5,12 @@ import { Store } from '@ngrx/store';
 import { tap } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import {
-  SettingsOption,
+  Identifier,
   SettingsOptionComponent,
 } from '../../shared/components/settings-option/settings-option.component';
 import { selectUser } from '../../store/user/user.selector';
-
-const settingItems: SettingsOption[] = [
-  {
-    title: '',
-    titleUppercase: true,
-    desc: '',
-    icon: 'person',
-    iconColor: 'blue',
-    showChevron: true,
-    onClick: () => {
-      return;
-    },
-  },
-  {
-    title: 'Logout',
-    desc: 'We will miss you!',
-    icon: 'logout',
-    iconColor: 'red',
-    onClick: () => {
-      return;
-    },
-  },
-];
+import { settingItems } from './settingItems';
+import { User } from '../../core/models/user/user';
 
 @Component({
   selector: 'app-settings',
@@ -56,22 +35,10 @@ export class SettingsComponent implements OnInit {
             return;
           }
 
-          this.settingItems[0].title = `${user.firstName} ${user.lastName}`;
-          this.settingItems[0].desc = user.role;
-          this.settingItems[0].onClick = () => {
-            this.router.navigate(['/profile']);
-          };
+          this.generateSettings(user);
         }),
       )
       .subscribe();
-
-    this.settingItems[1].onClick = () => {
-      this.logout();
-    };
-  }
-
-  goToEmployeesManagement() {
-    this.router.navigate(['employees-management']);
   }
 
   logout() {
@@ -79,5 +46,43 @@ export class SettingsComponent implements OnInit {
       localStorage.removeItem('authToken');
       this.router.navigate(['/login']);
     });
+  }
+
+  generateSettings(user: User) {
+    // Profile
+    this.settingItems.find((si) => si.identifier === Identifier.Profile)!.title =
+      `${user.firstName} ${user.lastName}`;
+    this.settingItems.find((si) => si.identifier === Identifier.Profile)!.desc = user.role;
+    this.settingItems.find((si) => si.identifier === Identifier.Profile)!.onClick = () => {
+      this.router.navigate(['/profile']);
+    };
+
+    // Employee Management
+    if (user.role === 'Admin' || user.role === 'Manager') {
+      this.settingItems.find((si) => si.identifier === Identifier.EmployeeManagement)!.onClick =
+        () => {
+          this.router.navigate(['/employees-management']);
+        };
+    } else {
+      this.settingItems = this.settingItems.filter(
+        (si) => si.identifier !== Identifier.EmployeeManagement,
+      );
+    }
+
+    // Item Management
+    if (user.role === 'Admin' || user.role === 'Manager') {
+      this.settingItems.find((si) => si.identifier === Identifier.ItemManagement)!.onClick = () => {
+        this.router.navigate(['/inventory-management']);
+      };
+    } else {
+      this.settingItems = this.settingItems.filter(
+        (si) => si.identifier !== Identifier.ItemManagement,
+      );
+    }
+
+    // Logout
+    this.settingItems.find((si) => si.identifier === Identifier.Logout)!.onClick = () => {
+      this.logout();
+    };
   }
 }
