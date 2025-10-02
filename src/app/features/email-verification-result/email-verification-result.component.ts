@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { EmailVerificationRequest } from '../../core/models/auth/email-verification-request';
 import { ApiResponse } from '../../core/models/api-response';
 import { EmailVerificationResponse } from '../../core/models/auth/email-verification-response';
+import { ResendVerificationRequest } from '../../core/models/auth/resend-verification-request';
 
 type VerificationStatus = 'success' | 'expired' | 'failed' | 'verifying';
 
@@ -94,11 +95,12 @@ export class EmailVerificationResultComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.authService.resendVerificationEmail({ email: this.email }).subscribe({
+    const request: ResendVerificationRequest = { email: this.email };
+
+    this.authService.resendVerificationEmail(request).subscribe({
       next: (response: ApiResponse<boolean>) => {
         this.isLoading = false;
         if (response.data) {
-          // 仍保持 expired 状态，但更新消息表明邮件已发送
           this.message = 'A new verification email has been sent. Please check your inbox.';
         } else {
           this.status = 'failed';
