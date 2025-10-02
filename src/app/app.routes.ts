@@ -69,6 +69,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'verify-email',
+    loadComponent: () =>
+      import('./features/email-verification-result/email-verification-result.component').then(
+        (m) => m.EmailVerificationResultComponent,
+      ),
+  },
+  {
+    path: 'employees-management',
+    loadComponent: () =>
+      import('./features/employees-management/employees-management.component').then(
+        (m) => m.EmployeeManagementPageComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
