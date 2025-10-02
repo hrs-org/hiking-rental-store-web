@@ -98,17 +98,15 @@ export class AddEditEmployeesComponent implements OnInit {
     }
   }
   onCreate(): void {
-    // console.log(this.CreateForm.value);
     if (this.UpdateForm.invalid) {
       this.UpdateForm.markAsDirty();
       this.UpdateForm.markAsTouched();
       return;
     }
     const payload = this.UpdateForm.getRawValue() as Employee;
-    // console.log(payload);
     this.userService.CreateEmployee(payload).subscribe({
       next: (response) => {
-        this.dialogRef.close(response);
+        this.dialogRef.close(response.data);
       },
     });
   }

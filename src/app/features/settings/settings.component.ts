@@ -35,13 +35,6 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  get userInitials(): string {
-    return this.userName
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
-  }
   goToEmployeesManagement() {
     this.router.navigate(['employees-management']);
   }
