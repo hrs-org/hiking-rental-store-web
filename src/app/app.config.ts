@@ -10,6 +10,8 @@ import { provideStore } from '@ngrx/store';
 import { userReducer } from './store/user/user.reducer';
 import { UserEffects } from './store/user/user.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { itemsReducer } from './store/items/items.reducer';
+import { ItemEffects } from './store/items/items.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,8 +22,8 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideStore({ user: userReducer }),
-    provideEffects([UserEffects]),
+    provideStore({ user: userReducer, items: itemsReducer }),
+    provideEffects([UserEffects, ItemEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

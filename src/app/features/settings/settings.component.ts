@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { tap } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import {
   SettingsOption,
   SettingsOptionComponent,
 } from '../../shared/components/settings-option/settings-option.component';
-import { Store } from '@ngrx/store';
 import { selectUser } from '../../store/user/user.selector';
-import { tap } from 'rxjs';
 
 const settingItems: SettingsOption[] = [
   {
@@ -38,6 +38,7 @@ const settingItems: SettingsOption[] = [
   imports: [MatButtonModule, SettingsOptionComponent],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
+  standalone: true,
 })
 export class SettingsComponent implements OnInit {
   private router = inject(Router);
@@ -67,6 +68,10 @@ export class SettingsComponent implements OnInit {
     this.settingItems[1].onClick = () => {
       this.logout();
     };
+  }
+
+  goToEmployeesManagement() {
+    this.router.navigate(['employees-management']);
   }
 
   logout() {

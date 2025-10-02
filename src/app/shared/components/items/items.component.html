@@ -1,0 +1,122 @@
+<div class="item-row">
+  <div
+    class="item-info"
+    (click)="toggleExpand()"
+    (keydown.enter)="toggleExpand()"
+    (keydown.space)="toggleExpand()"
+    tabindex="0"
+  >
+    @if (hasChildren) {
+      <!-- Expand/Collapse Icon -->
+      <div class="expand-icon">
+        <i class="icon" [class.rotated]="isExpanded">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="6,9 12,15 18,9"></polyline>
+          </svg>
+        </i>
+      </div>
+    }
+    <!-- Item Details -->
+    <div class="item-details">
+      <div class="item-name">
+        {{ item.name }}
+      </div>
+      <div class="item-meta">
+        <span
+          class="stock-info"
+          [class.low-stock]="item.quantity <= 5 && item.quantity > 0"
+          [class.out-of-stock]="item.quantity === 0"
+        >
+          Stock: {{ item.quantity }}
+        </span>
+        <span class="price-info">${{ item.price }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="item-actions">
+      <button class="action-btn edit-btn" title="Edit Item" (click)="onClickEdit()">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="m18 2 4 4-14 14H4v-4z" />
+          <path d="m14.5 5.5 4 4" />
+        </svg>
+      </button>
+
+      <button class="action-btn delete-btn" title="Delete Item" (click)="onClickDelete(item.id!)">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <polyline points="3,6 5,6 21,6" />
+          <path
+            d="m19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1 2-2h4a2,2 0 0,1 2,2v2"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Variants/Children (Expandable) -->
+    <div class="variants-container">
+      @if (isExpanded && hasChildren) {
+        <!-- Variants for variant items -->
+        <div class="variants-list">
+          @for (item of item.children; track item.id) {
+            <div class="variant-row">
+              <div class="variant-info">
+                <div class="variant-name">{{ item.name }}</div>
+                <div class="variant-meta">
+                  <span
+                    class="stock-info"
+                    [class.low-stock]="item.quantity <= 3 && item.quantity > 0"
+                    [class.out-of-stock]="item.quantity === 0"
+                  >
+                    Stock: {{ item.quantity }}
+                  </span>
+                </div>
+              </div>
+              <div class="variant-actions">
+                <button
+                  class="action-btn delete-btn"
+                  title="Delete Item"
+                  (click)="onClickDelete(item.id!)"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="3,6 5,6 21,6" />
+                    <path
+                      d="m19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1 2-2h4a2,2 0 0,1 2,2v2"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

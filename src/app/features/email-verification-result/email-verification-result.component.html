@@ -1,0 +1,46 @@
+<div class="verification-container">
+  <mat-card class="verification-card">
+    <mat-card-content>
+      <div class="icon-container">
+        <mat-icon class="status-icon" [ngClass]="getStatusConfig().colorClass">
+          {{ getStatusConfig().icon }}
+        </mat-icon>
+      </div>
+
+      <h1 class="title" [ngClass]="getStatusConfig().colorClass">
+        {{ getStatusConfig().title }}
+      </h1>
+
+      <p class="message">
+        {{ message }}
+      </p>
+
+      <div class="email-display" *ngIf="email">
+        <strong>Email:</strong>
+        {{ email }}
+      </div>
+
+      <div class="button-container">
+        <button
+          mat-raised-button
+          [color]="getStatusConfig().primaryButton.color"
+          (click)="handlePrimaryButtonClick()"
+          [disabled]="isLoading"
+          class="action-button"
+        >
+          <mat-icon *ngIf="isLoading">refresh</mat-icon>
+          {{ isLoading ? 'Processing...' : getStatusConfig().primaryButton.text }}
+        </button>
+
+        <button
+          mat-stroked-button
+          *ngIf="getStatusConfig().secondaryButton"
+          (click)="handleSecondaryButtonClick()"
+          class="secondary-button"
+        >
+          {{ getStatusConfig().secondaryButton!.text }}
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

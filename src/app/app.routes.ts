@@ -53,6 +53,41 @@ export const routes: Routes = [
       import('./features/register/register.component').then((m) => m.RegisterComponent),
   },
   {
+    path: 'inventory-management',
+    loadComponent: () =>
+      import('./features/settings/inventory-management/inventory-management.component').then(
+        (m) => m.InventoryManagementComponent,
+      ),
+  },
+  {
+    path: 'add-edit-item',
+    loadComponent: () =>
+      import('./features/settings/inventory-management/add-edit-item/add-edit-item.component').then(
+        (m) => m.AddEditItemComponent,
+      ),
+  },
+  {
+    path: 'add-edit-item/:id',
+    loadComponent: () =>
+      import('./features/settings/inventory-management/add-edit-item/add-edit-item.component').then(
+        (m) => m.AddEditItemComponent,
+      ),
+  },
+  {
+    path: 'verify-email',
+    loadComponent: () =>
+      import('./features/email-verification-result/email-verification-result.component').then(
+        (m) => m.EmailVerificationResultComponent,
+      ),
+  },
+  {
+    path: 'employees-management',
+    loadComponent: () =>
+      import('./features/employees-management/employees-management.component').then(
+        (m) => m.EmployeeManagementPageComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

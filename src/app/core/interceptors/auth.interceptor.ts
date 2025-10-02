@@ -90,7 +90,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return handle401Error(err, apiReq, next, authService, bottomSheet);
       }
 
-      showBottomSheet(bottomSheet, 'Error', 'An unexpected error occurred.');
+      showBottomSheet(
+        bottomSheet,
+        'Error',
+        err.error?.errors?.[0] || 'An unexpected error occurred.',
+      );
       return throwError(() => err);
     }),
   );
