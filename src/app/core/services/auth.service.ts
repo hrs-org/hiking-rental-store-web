@@ -1,20 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { LoginRequest, LoginResponse, LogOutResponse } from '../models/auth/auth';
-import { ResendVerificationRequest } from '../models/auth/resend-verification-request';
-import { EmailVerificationRequest } from '../models/auth/email-verification-request';
-import { SKIP_AUTH } from '../tokens/auth.token';
-import { ApiResponse } from '../models/api-response';
-import { User } from '../models/user/user';
 import {
   ACTIVE_USER,
+  CHANGE_PASSWORD,
   LOGIN,
   LOGOUT,
   REFRESH_TOKEN,
   RESEND_VERIFICATION,
   VERIFY_EMAIL,
 } from '../constants/api.constants';
+import { ApiResponse } from '../models/api-response';
+import {
+  ChangePasswordRequest,
+  LoginRequest,
+  LoginResponse,
+  LogOutResponse,
+} from '../models/auth/auth';
+import { EmailVerificationRequest } from '../models/auth/email-verification-request';
+import { ResendVerificationRequest } from '../models/auth/resend-verification-request';
+import { User } from '../models/user/user';
+import { SKIP_AUTH } from '../tokens/auth.token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -42,6 +48,10 @@ export class AuthService {
 
   getActiveUser() {
     return this.http.get<ApiResponse<User>>(ACTIVE_USER);
+  }
+
+  changePassword(request: ChangePasswordRequest) {
+    return this.http.post<ApiResponse<LogOutResponse>>(CHANGE_PASSWORD, request);
   }
 
   resendVerificationEmail(request: ResendVerificationRequest) {

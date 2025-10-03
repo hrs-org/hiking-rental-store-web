@@ -12,3 +12,9 @@ export interface LogOutResponse {
   success: boolean;
   message: string;
 }
+
+export interface ChangePasswordRequest {
+  confirmNewPassword: string;
+  currentPassword: string;
+  newPassword: string;
+}

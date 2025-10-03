@@ -11,7 +11,7 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SettingsComponent],
-      providers: [provideHttpClient(), provideStore()],
+      providers: [provideHttpClient(), provideStore({})],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsComponent);
