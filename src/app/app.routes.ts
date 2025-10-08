@@ -88,6 +88,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./features/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent,
+      ),
+  },
+  {
+    path: 'forget-password',
+    loadComponent: () =>
+      import('./features/forget-password/forget-password.component').then(
+        (m) => m.ForgetPasswordComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
