@@ -54,11 +54,11 @@ export class ForgetPasswordComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         const message =
-          res.data?.message || 'If the email is registered, a password reset link will be sent.';
-        const title = res.data?.isSuccess ? 'Success' : 'Failed';
+          res?.message || 'If the email is registered, a password reset link will be sent.';
+
         this.bottomSheet.open(InfoBottomSheetComponent, {
           data: {
-            title: title,
+            title: 'Success',
             description: message,
             isConfirm: false,
             confirmButtonText: 'Ok',

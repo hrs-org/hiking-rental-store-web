@@ -22,9 +22,7 @@ import {
 import { EmailVerificationRequest } from '../models/auth/email-verification-request';
 import { ResendVerificationRequest } from '../models/auth/resend-verification-request';
 import { ForgotPasswordRequest } from '../models/auth/forgot-password-request';
-import { ForgotPasswordResponse } from '../models/auth/forgot-password-response';
 import { ResetPasswordRequest } from '../models/auth/reset-password-request';
-import { ResetPasswordResponse } from '../models/auth/reset-password-response';
 import { User } from '../models/user/user';
 import { SKIP_AUTH } from '../tokens/auth.token';
 
@@ -88,13 +86,13 @@ export class AuthService {
   }
 
   resetPassword(request: ResetPasswordRequest) {
-    return this.http.post<ApiResponse<ResetPasswordResponse>>(RESET_PASSWORD, request, {
+    return this.http.post<ApiResponse<object>>(RESET_PASSWORD, request, {
       context: new HttpContext().set(SKIP_AUTH, true),
     });
   }
 
   forgotPassword(request: ForgotPasswordRequest) {
-    return this.http.post<ApiResponse<ForgotPasswordResponse>>(FORGOT_PASSWORD, request, {
+    return this.http.post<ApiResponse<object>>(FORGOT_PASSWORD, request, {
       context: new HttpContext().set(SKIP_AUTH, true),
     });
   }
