@@ -86,13 +86,13 @@ export class AuthService {
   }
 
   resetPassword(request: ResetPasswordRequest) {
-    return this.http.post<ApiResponse<object>>(RESET_PASSWORD, request, {
+    return this.http.post<ApiResponse<string>>(RESET_PASSWORD, request, {
       context: new HttpContext().set(SKIP_AUTH, true),
     });
   }
 
   forgotPassword(request: ForgotPasswordRequest) {
-    return this.http.post<ApiResponse<object>>(FORGOT_PASSWORD, request, {
+    return this.http.post<ApiResponse<string>>(FORGOT_PASSWORD, request, {
       context: new HttpContext().set(SKIP_AUTH, true),
     });
   }
