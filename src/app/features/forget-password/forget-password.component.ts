@@ -66,20 +66,8 @@ export class ForgetPasswordComponent implements OnInit {
         });
         this.forgetPasswordForm.reset();
       },
-      error: (error) => {
+      error: () => {
         this.isLoading = false;
-        const message =
-          error?.error?.message ||
-          error?.error?.errors?.[0] ||
-          'Failed to send reset email. Please try again.';
-        this.bottomSheet.open(InfoBottomSheetComponent, {
-          data: {
-            title: 'Error',
-            description: message,
-            isConfirm: false,
-            confirmButtonText: 'Ok',
-          },
-        });
       },
     });
   }

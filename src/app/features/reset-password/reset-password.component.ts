@@ -1,6 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  ValidationErrors,
+  AbstractControl,
+  ValidatorFn,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -61,7 +69,10 @@ export class ResetPasswordComponent implements OnInit {
 
     this.resetPasswordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
-      confirmNewPassword: ['', [Validators.required]],
+      confirmNewPassword: ['', [Validators.required, this.matchPassword()]],
+    });
+    this.resetPasswordForm.get('newPassword')?.valueChanges.subscribe(() => {
+      this.resetPasswordForm.get('confirmNewPassword')?.updateValueAndValidity();
     });
   }
 
@@ -97,20 +108,8 @@ export class ResetPasswordComponent implements OnInit {
           this.router.navigate(['/login']);
         }, 2000);
       },
-      error: (error) => {
+      error: () => {
         this.isLoading = false;
-        const message =
-          error?.error?.message ||
-          error?.error?.errors?.[0] ||
-          'Failed to reset password. Please try again.';
-        this.bottomSheet.open(InfoBottomSheetComponent, {
-          data: {
-            title: 'Error',
-            description: message,
-            isConfirm: false,
-            confirmButtonText: 'Ok',
-          },
-        });
       },
     });
   }
@@ -121,5 +120,16 @@ export class ResetPasswordComponent implements OnInit {
     } else {
       this.hideConfirmPassword = !this.hideConfirmPassword;
     }
+  }
+
+  private matchPassword(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.parent) {
+        return null;
+      }
+      const password = control.parent.get('newPassword')?.value;
+      const confirmPassword = control.value;
+      return password === confirmPassword ? null : { passwordsMismatch: true };
+    };
   }
 }

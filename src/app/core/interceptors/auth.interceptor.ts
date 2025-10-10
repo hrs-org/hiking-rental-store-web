@@ -71,7 +71,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (apiReq.context.get(SKIP_AUTH)) {
     return next(apiReq).pipe(
       catchError((err) => {
-        showBottomSheet(bottomSheet, 'Error', 'An unexpected error occurred.');
+        showBottomSheet(
+          bottomSheet,
+          'Error',
+          err.error?.errors?.[0] || 'An unexpected error occurred.',
+        );
         return throwError(() => err);
       }),
     );
