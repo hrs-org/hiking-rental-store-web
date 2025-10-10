@@ -59,4 +59,16 @@ export const settingItems: SettingsOption[] = [
       return;
     },
   },
+  {
+    order: 5,
+    identifier: Identifier.TestPayment,
+    section: Section.Settings,
+    title: 'testPayment',
+    desc: 'TESTTTT',
+    icon: 'person',
+    iconColor: 'blue',
+    onClick: () => {
+      return;
+    },
+  },
 ];

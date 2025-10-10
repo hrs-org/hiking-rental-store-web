@@ -102,6 +102,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'payment',
+    loadComponent: () =>
+      import('./features/payment/payment.component').then((m) => m.PaymentComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

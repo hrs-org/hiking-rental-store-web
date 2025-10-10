@@ -22,3 +22,7 @@ export const MANAGERS = `${USER_PREFIX}/managers`;
 // Item endpoints
 export const ITEM_PREFIX = `${API_PREFIX}/items`;
 export const ITEM_ADD = `${ITEM_PREFIX}/add`;
+
+//Payment endpoints
+export const PAYMENT_PREFIX = `${API_PREFIX}/payments`;
+export const CHECKOUTWITHPRICE = `${PAYMENT_PREFIX}/checkoutPrice`;

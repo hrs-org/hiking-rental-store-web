@@ -19,6 +19,7 @@ export enum Identifier {
   ItemManagement = 'item-management',
   EmployeeManagement = 'employee-management',
   Logout = 'logout',
+  TestPayment = 'test-payment',
 }
 
 export enum Section {

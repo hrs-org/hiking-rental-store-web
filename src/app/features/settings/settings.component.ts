@@ -84,5 +84,9 @@ export class SettingsComponent implements OnInit {
     this.settingItems.find((si) => si.identifier === Identifier.Logout)!.onClick = () => {
       this.logout();
     };
+
+    this.settingItems.find((si) => si.identifier === Identifier.TestPayment)!.onClick = () => {
+      this.router.navigate(['/payment']);
+    };
   }
 }
