@@ -1,0 +1,7 @@
+.payment-status-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 56px); // เผื่อ header
+  background-color: #f8f9fa;
+}

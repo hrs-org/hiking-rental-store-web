@@ -1,11 +1,14 @@
+.container {
+  // display: flex;
+  // flex-direction: column;
+  // align-items: stretch;
+  // padding-top: 56px; /* header space */
+  min-height: 100vh;
+}
+
 #checkout {
   min-height: 500px;
-}
-.container {
-  display: flex;
-  // position: fixed;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  margin-top: 56px;
+  // padding-top: 30px;
+  // transform: scaleY(0.5);
+  // transform-origin: top;
 }

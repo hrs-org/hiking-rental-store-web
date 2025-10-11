@@ -12,6 +12,7 @@ import { UserEffects } from './store/user/user.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { itemsReducer } from './store/items/items.reducer';
 import { ItemEffects } from './store/items/items.effects';
+import { provideNgxStripe } from 'ngx-stripe';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,5 +33,8 @@ export const appConfig: ApplicationConfig = {
       traceLimit: 75,
       connectInZone: true,
     }),
+    provideNgxStripe(
+      'pk_test_51SGPODCnKKTOv8A0cxsifksvBbtKMH0d1PcKMgd5fyIGvVmY8M4BytKqmmWhdga5VMqRKplGNVDTSjhimnA90OoI000TGDvBm3',
+    ),
   ],
 };

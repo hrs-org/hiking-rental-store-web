@@ -107,6 +107,13 @@ export const routes: Routes = [
       import('./features/payment/payment.component').then((m) => m.PaymentComponent),
   },
   {
+    path: 'payment-returnpage',
+    loadComponent: () =>
+      import('./features/payment/payment-returnpage/payment-returnpage.component').then(
+        (m) => m.PaymentReturnpageComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

@@ -27,3 +27,4 @@ export const ITEM_ADD = `${ITEM_PREFIX}/add`;
 export const PAYMENT_PREFIX = `${API_PREFIX}/payments`;
 export const CHECKOUTWITHPRICE = `${PAYMENT_PREFIX}/checkoutPrice`;
 export const CHECKOUTCART = `${PAYMENT_PREFIX}/checkoutCart`;
+export const VERIFYPAMENT = `${PAYMENT_PREFIX}/VerifyCheckout`;
