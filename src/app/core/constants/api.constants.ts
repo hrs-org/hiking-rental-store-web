@@ -26,3 +26,4 @@ export const ITEM_ADD = `${ITEM_PREFIX}/add`;
 //Payment endpoints
 export const PAYMENT_PREFIX = `${API_PREFIX}/payments`;
 export const CHECKOUTWITHPRICE = `${PAYMENT_PREFIX}/checkoutPrice`;
+export const CHECKOUTCART = `${PAYMENT_PREFIX}/checkoutCart`;

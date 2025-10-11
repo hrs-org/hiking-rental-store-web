@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ApiResponse } from '../models/api-response';
-import { CHECKOUTWITHPRICE } from '../constants/api.constants';
+import { CHECKOUTCART, CHECKOUTWITHPRICE } from '../constants/api.constants';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -13,5 +13,9 @@ export class PaymentService {
       amount: price,
     };
     return this.http.post<ApiResponse<{ clientSecret: string }>>(CHECKOUTWITHPRICE, body);
+  }
+
+  checkoutCart() {
+    return this.http.get<ApiResponse<{ clientSecret: string }>>(CHECKOUTCART);
   }
 }

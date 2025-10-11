@@ -29,7 +29,7 @@ export class PaymentComponent implements AfterViewInit {
       return;
     }
 
-    const response = await firstValueFrom(this.paymentservice.checkoutPrice('krit', 555));
+    const response = await firstValueFrom(this.paymentservice.checkoutCart());
     if (!response.data) {
       throw new Error('Missing clientSecret from server');
     }
