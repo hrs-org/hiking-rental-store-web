@@ -91,7 +91,7 @@ export class AddEditItemComponent implements OnInit {
     if (
       !this.item.name ||
       !this.item.description ||
-      this.item.children.every((child) => !child.name)
+      this.item.children.some((child) => !child.name)
     ) {
       showBottomSheet(
         this.bottomSheet,
