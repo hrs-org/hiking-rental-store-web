@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, inject, OnDestroy } from '@angular/core';
 import {
   loadStripe,
-  Stripe,
   StripeElements,
   StripeEmbeddedCheckout,
   StripePaymentElement,
@@ -12,8 +11,6 @@ import { firstValueFrom } from 'rxjs';
 import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Location } from '@angular/common';
-import { StripeService } from 'ngx-stripe';
-
 @Component({
   selector: 'app-payment',
   standalone: true,
@@ -28,16 +25,14 @@ export class PaymentComponent implements AfterViewInit, OnDestroy {
   private paymentservice = inject(PaymentService);
   private embeddedCheckout: StripeEmbeddedCheckout | null = null;
   private bottomSheet = inject(MatBottomSheet);
-  private stripe = inject(StripeService);
   location = inject(Location);
   title = 'Test Payment';
 
   elements!: StripeElements;
   paymentElement!: StripePaymentElement;
   clientSecret!: string;
-  private stripeInstance!: Stripe | null;
 
-  //vsersion @stripe/stripe-js'
+  //version @stripe/stripe-js'
   async ngAfterViewInit() {
     await this.initializeCheckout();
   }
@@ -90,62 +85,4 @@ export class PaymentComponent implements AfterViewInit, OnDestroy {
       this.embeddedCheckout = null;
     }
   }
-
-  // NGX stripe
-  // async ngAfterViewInit() {
-  //   try {
-  //     this.stripeInstance = await this.stripePromise;
-
-  //     if (!this.stripeInstance) {
-  //       throw new Error('Stripe failed to load.');
-  //     }
-
-  //     const response = await firstValueFrom(this.paymentservice.checkoutCart());
-
-  //     if (!response.data) throw new Error('Missing clientSecret from server');
-
-  //     // let clientSecret: string;
-  //     console.log(response);
-  //     const clientSecret = response.data;
-
-  //     this.clientSecret = clientSecret;
-  //     console.log('Final ClientSecret being used:', this.clientSecret);
-
-  //     // 2. Initialize elements using the native Stripe instance
-  //     this.elements = this.stripeInstance.elements({ clientSecret: this.clientSecret });
-
-  //     this.paymentElement = this.elements.create('payment') as StripePaymentElement;
-  //     this.paymentElement.mount('#checkout');
-  //   } catch (err) {
-  //     this.bottomSheet
-  //       .open(InfoBottomSheetComponent, {
-  //         data: { title: 'ERROR', description: 'Payment initialization failed' },
-  //       })
-  //       .afterDismissed()
-  //       .subscribe(() => this.location.back());
-  //     console.error(err);
-  //   }
-  // }
-
-  // async pay() {
-  //   const stripe = inject(StripeService);
-  //   stripe
-  //     .confirmPayment({
-  //       elements: this.elements,
-  //       confirmParams: { return_url: window.location.href },
-  //     })
-  //     .subscribe((result) => {
-  //       if (result.error) {
-  //         console.error(result.error.message);
-  //       } else {
-  //         console.log('Payment confirmed', result);
-  //       }
-  //     });
-  // }
-
-  // ngOnDestroy() {
-  //   if (this.paymentElement) {
-  //     this.paymentElement.destroy();
-  //   }
-  // }
 }
