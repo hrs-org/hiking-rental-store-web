@@ -113,7 +113,7 @@ export class AddEditItemComponent implements OnInit {
       for (const rate of this.item.rates) {
         delete rate.id;
       }
-      console.log(this.item);
+      
       this.itemService.addItem(this.item).subscribe(() => {
         this.router.navigate(['inventory-management']);
       });
