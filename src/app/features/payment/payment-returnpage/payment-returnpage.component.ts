@@ -5,11 +5,12 @@ import { selectUser } from '../../../store/user/user.selector';
 import { Store } from '@ngrx/store';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { InfoBottomSheetComponent } from '../../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-payment-returnpage',
-  imports: [PwaHeaderComponent],
+  imports: [PwaHeaderComponent, CommonModule],
   templateUrl: './payment-returnpage.component.html',
   styleUrl: './payment-returnpage.component.scss',
 })
@@ -17,13 +18,14 @@ export class PaymentReturnpageComponent implements OnInit {
   private paymentservice = inject(PaymentService);
   private store = inject(Store);
   private bottomSheet = inject(MatBottomSheet);
-  location = inject(Location);
+  private router = inject(Router);
 
   title = 'VerifyPayment';
   clientSecret: string | null = null;
   user$ = this.store.select(selectUser);
   useremail = '';
   message = 'Payment status unknown';
+  countdown = 10; // ⏱ countdown starts at 10 seconds
 
   ngOnInit(): void {
     console.log('start');
@@ -41,22 +43,38 @@ export class PaymentReturnpageComponent implements OnInit {
         .open(InfoBottomSheetComponent, {
           data: {
             title: 'ERROR',
+            description: "Can't Receive {client_secret} ",
           },
         })
         .afterDismissed()
         .subscribe((confirmed: boolean) => {
           if (confirmed) {
-            this.location.go('settings');
+            this.router.navigate(['settings']);
           }
         });
     }
+    this.startCountdown();
   }
 
   private verifyPayment(secret: string) {
     this.paymentservice.verifyCheckout(secret, this.useremail).subscribe({
       next: (response) => {
-        this.message = response.message;
+        if (response?.data?.status) {
+          this.message = `Payment status: ${response.data.status}`;
+        } else {
+          this.message = response.message || 'Unable to retrieve payment status.';
+        }
       },
     });
+  }
+
+  private startCountdown() {
+    const interval = setInterval(() => {
+      this.countdown--;
+      if (this.countdown <= 0) {
+        clearInterval(interval);
+        this.router.navigate(['store']);
+      }
+    }, 1000);
   }
 }

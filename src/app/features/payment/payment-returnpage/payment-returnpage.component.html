@@ -1,5 +1,15 @@
 <app-pwa-header [title]="title" [backButtonVisible]="false"></app-pwa-header>
 
-<div class="payment-status-container">
-  <p class="status-text">{{ message }}</p>
+<div class="payment-returnpage">
+  <h2 class="status Text">{{ message }}</h2>
+
+  <div class="countdown-container" *ngIf="countdown > 0">
+    <p>Redirecting to Store in</p>
+    <h1 class="countdown">{{ countdown }}</h1>
+    <p>seconds...</p>
+  </div>
+
+  <div *ngIf="countdown <= 0">
+    <p>Redirecting now...</p>
+  </div>
 </div>

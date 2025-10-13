@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { ApiResponse } from '../models/api-response';
 import { CHECKOUTCART, CHECKOUTWITHPRICE, VERIFYPAMENT } from '../constants/api.constants';
 import { BehaviorSubject } from 'rxjs';
-import { Stripe } from '@stripe/stripe-js';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -30,6 +29,14 @@ export class PaymentService {
 
   verifyCheckout(clientSecret: string, email: string) {
     const body = { clientSecret, email };
-    return this.http.post<ApiResponse<{ session: Stripe }>>(VERIFYPAMENT, body);
+    return this.http.post<{
+      success: boolean;
+      message: string;
+      data: {
+        status: string;
+        payment_status: string;
+        id: string;
+      };
+    }>(VERIFYPAMENT, body);
   }
 }
