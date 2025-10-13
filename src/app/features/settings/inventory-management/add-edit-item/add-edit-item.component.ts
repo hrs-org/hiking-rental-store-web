@@ -83,7 +83,7 @@ export class AddEditItemComponent implements OnInit {
           children: [],
         } as Item;
       }
-      console.log(this.item);
+      
     });
   }
 
