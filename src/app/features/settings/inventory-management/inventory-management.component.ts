@@ -26,7 +26,6 @@ export class InventoryManagementComponent implements OnInit {
     this.store.dispatch(loadItems());
     this.itemList$.subscribe((itemList) => {
       this.itemList = itemList;
-      console.log(this.itemList);
     });
   }
 

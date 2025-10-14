@@ -4,5 +4,13 @@ export interface Item {
   description: string;
   quantity: number;
   price: number;
+  rates: ItemRate[];
   children: Item[];
+}
+
+export interface ItemRate {
+  id?: number;
+  minDays: number;
+  dailyRate: number;
+  isActive: boolean;
 }
