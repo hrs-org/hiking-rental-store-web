@@ -83,7 +83,6 @@ export class AddEditItemComponent implements OnInit {
           children: [],
         } as Item;
       }
-      
     });
   }
 
@@ -113,7 +112,7 @@ export class AddEditItemComponent implements OnInit {
       for (const rate of this.item.rates) {
         delete rate.id;
       }
-      
+
       this.itemService.addItem(this.item).subscribe(() => {
         this.router.navigate(['inventory-management']);
       });
