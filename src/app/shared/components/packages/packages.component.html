@@ -1,0 +1,36 @@
+<div>
+  <div
+    class="package-info"
+    (click)="toggleExpand()"
+    (keydown.enter)="toggleExpand()"
+    (keydown.space)="toggleExpand()"
+    tabindex="0"
+  >
+    @if (hasItems) {
+      <!-- Expand/Collapse Icon -->
+      <div class="expand-icon">
+        <i class="icon" [class.rotated]="isExpanded">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="6,9 12,15 18,9"></polyline>
+          </svg>
+        </i>
+      </div>
+    }
+    <!-- Package Details -->
+    <div class="package-details">
+      <div class="package-name">
+        {{ packages.name }}
+      </div>
+      <div class="package-meta">
+        <span class="item-count">Items: {{ packages.items.length }}</span>
+      </div>
+    </div>
+  </div>
+</div>

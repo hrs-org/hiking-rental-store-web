@@ -80,6 +80,14 @@ export class SettingsComponent implements OnInit {
       );
     }
 
+    // Package Management
+    if (user.role === 'Admin' || user.role === 'Manager') {
+      this.settingItems.find((si) => si.identifier === Identifier.PackageManagement)!.onClick =
+        () => {
+          this.router.navigate(['/package-management']);
+        };
+    }
+
     // Logout
     this.settingItems.find((si) => si.identifier === Identifier.Logout)!.onClick = () => {
       this.logout();

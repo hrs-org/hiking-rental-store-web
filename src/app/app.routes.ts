@@ -102,6 +102,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'package-management',
+    loadComponent: () =>
+      import('./features/settings/package-management/package-management.component').then(
+        (m) => m.PackageManagementComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
