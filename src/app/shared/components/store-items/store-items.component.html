@@ -1,0 +1,149 @@
+@if (item.children && item.children.length > 0) {
+  <div class="accordion">
+    <div
+      class="accordion-header"
+      (click)="toggleExpand()"
+      (keydown.enter)="toggleExpand()"
+      [ngClass]="{ expanded: expanded }"
+      tabindex="0"
+    >
+      <div class="item-info">
+        <div class="item-name">{{ item.name }}</div>
+        <div class="item-price">
+          {{ item.dailyRate | currency }}
+          <span class="price-suffix">/day</span>
+        </div>
+        <div class="item-stock">Available: {{ item.available }}</div>
+      </div>
+      <div class="expand-icon">
+        <mat-icon>
+          {{ expanded ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </div>
+    </div>
+
+    @if (expanded) {
+      <div class="accordion-body">
+        @for (child of item.children; track $index) {
+          <div class="child-row">
+            <div class="item-info">
+              <div class="child-name">{{ child.name }}</div>
+              <div class="child-stock">Available: {{ child.available }}</div>
+            </div>
+
+            <div class="qty-controls">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="changeQty(child.catalogId, -1)"
+                [disabled]="getQty(child.catalogId) === 0"
+              >
+                <mat-icon>remove</mat-icon>
+              </button>
+
+              <span class="qty-value">{{ getQty(child.catalogId) }}</span>
+
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="changeQty(child.catalogId, 1)"
+                [disabled]="getQty(child.catalogId) >= child.available"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+} @else if (item.packageItems && item.packageItems.length > 0) {
+  <div class="accordion">
+    <div class="accordion-header" [ngClass]="{ expanded: expanded }">
+      <div
+        class="item-info"
+        style="flex: 1"
+        (click)="toggleExpand()"
+        (keydown.enter)="toggleExpand()"
+        tabindex="0"
+      >
+        <div class="item-name">
+          {{ item.name }}
+          <span><mat-icon style="width: 12px; height: 12px; font-size: 12px">info</mat-icon></span>
+        </div>
+        <div class="item-price">
+          {{ item.dailyRate | currency }}
+          <span class="price-suffix">/day</span>
+        </div>
+        <div class="item-stock">Available: {{ item.available }}</div>
+      </div>
+
+      <div class="qty-controls">
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="changeQty(item.catalogId, -1)"
+          [disabled]="selectedQty === 0"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+
+        <span class="qty-value">{{ selectedQty }}</span>
+
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="changeQty(item.catalogId, 1)"
+          [disabled]="selectedQty >= item.available"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    @if (expanded) {
+      <div class="accordion-body">
+        @for (child of item.packageItems; track $index) {
+          <div class="child-row">
+            <div class="item-info">
+              <div class="child-name">{{ child.name }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <div class="item-row item-border">
+    <div class="item-info">
+      <div class="item-name">{{ item.name }}</div>
+      <div class="item-price">
+        {{ item.dailyRate | currency }}
+        <span class="price-suffix">/day</span>
+      </div>
+      <div class="item-stock">Available: {{ item.available }}</div>
+    </div>
+
+    <div class="qty-controls">
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="changeQty(item.catalogId, -1)"
+        [disabled]="selectedQty === 0"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+
+      <span class="qty-value">{{ selectedQty }}</span>
+
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="changeQty(item.catalogId, 1)"
+        [disabled]="selectedQty >= item.available"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+}

@@ -1,0 +1,58 @@
+<div class="main-page">
+  <app-pwa-header [title]="title" [backButtonVisible]="true"></app-pwa-header>
+
+  <div class="content">
+    <div class="container">
+      <div class="card">
+        <div class="card-title">
+          <div>Order Information</div>
+          <div class="order-status" [ngClass]="getStatusClass()">
+            {{ order.status }}
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="order-detail">
+          <div class="order-detail-label">Customer Name</div>
+          <div class="order-detail-value">{{ order.guestName }}</div>
+        </div>
+        <div class="order-detail">
+          <div class="order-detail-label">Phone</div>
+          <div class="order-detail-value">{{ order.guestPhone }}</div>
+        </div>
+        <div class="order-detail">
+          <div class="order-detail-label">Channel</div>
+          <div class="order-detail-value">{{ order.channel }}</div>
+        </div>
+        <div class="order-detail">
+          <div class="order-detail-label">Start Date</div>
+          <div class="order-detail-value">{{ formatDate(order.startDate) }}</div>
+        </div>
+        <div class="order-detail">
+          <div class="order-detail-label">End Date</div>
+          <div class="order-detail-value">{{ formatDate(order.endDate) }}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Rented Items</div>
+        <mat-divider></mat-divider>
+        <div>
+          @for (item of order.items; track $index) {
+            <app-booking-detail-items [item]="item"></app-booking-detail-items>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-confirmation">
+    <div class="button-group">
+      <button class="button" (click)="onCancel()" mat-stroked-button>
+        {{ isPending() ? 'Reject' : 'Close' }}
+      </button>
+      <button class="button" (click)="onSubmit()" mat-flat-button>
+        {{ isPending() ? 'Confirm Booking' : 'Rent' }}
+      </button>
+    </div>
+  </div>
+</div>

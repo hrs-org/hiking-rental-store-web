@@ -6,15 +6,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterModule } from '@angular/router';
-import { take, tap, catchError, finalize } from 'rxjs';
-import { of } from 'rxjs';
+import { take, tap, finalize, filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { Store } from '@ngrx/store';
-import { loadUser } from '../../store/user/user.actions';
+import { loadUser } from '../../state/user/user.actions';
 import { MatIconModule } from '@angular/material/icon';
-import { selectUser } from '../../store/user/user.selector';
+import { selectUser } from '../../state/user/user.selector';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
+import { LoadingService } from '../../core/services/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -34,13 +33,12 @@ import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sh
 })
 export class LoginComponent {
   private authService = inject(AuthService);
+  private loadingService = inject(LoadingService);
   private router = inject(Router);
   private store = inject(Store);
   private bottomSheet = inject(MatBottomSheet);
 
   hidePassword = true;
-  isLoading = false;
-  submitted = false;
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -49,7 +47,7 @@ export class LoginComponent {
 
   hasError(controlName: string): boolean {
     const control = this.loginForm.get(controlName);
-    return !!(control && control.invalid && (control.dirty || control.touched || this.submitted));
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   getErrorMessage(controlName: string): string {
@@ -69,30 +67,7 @@ export class LoginComponent {
     return '';
   }
 
-  private setLoadingState(loading: boolean) {
-    this.isLoading = loading;
-
-    if (loading) {
-      this.loginForm.disable();
-    } else {
-      this.loginForm.enable();
-    }
-  }
-
-  private showErrorMessage(title: string, description: string) {
-    this.bottomSheet.open(InfoBottomSheetComponent, {
-      data: {
-        title,
-        description,
-        isConfirm: false,
-        confirmButtonText: 'OK',
-      },
-    });
-  }
-
   onSubmit() {
-    this.submitted = true;
-
     if (this.loginForm.invalid) {
       Object.keys(this.loginForm.controls).forEach((key) => {
         this.loginForm.get(key)?.markAsTouched();
@@ -102,10 +77,8 @@ export class LoginComponent {
 
     const { email, password } = this.loginForm.value;
     if (!email || !password) return;
-    if (this.isLoading) return;
 
-    this.setLoadingState(true);
-
+    this.loadingService.show();
     this.authService
       .login({ email, password })
       .pipe(
@@ -116,30 +89,29 @@ export class LoginComponent {
               this.store.dispatch(loadUser());
               this.store
                 .select(selectUser)
-                .pipe(take(1))
-                .subscribe((user) => {
-                  if (user) {
-                    this.router.navigate(['']);
-                  }
+                .pipe(
+                  filter((user) => !!user),
+                  take(1),
+                )
+                .subscribe(() => {
+                  this.router.navigate(['']);
                 });
             }
           }
         }),
-        catchError(() => {
-          this.showErrorMessage('Login Failed', 'Invalid email or password. Please try again.');
-          return of(null);
-        }),
         finalize(() => {
-          this.setLoadingState(false);
+          this.loadingService.hide();
         }),
       )
       .subscribe();
   }
 
   onClickRegister() {
-    if (!this.isLoading) {
-      this.router.navigate(['register']);
-    }
+    this.router.navigate(['register']);
+  }
+
+  onClickForgetPassword() {
+    this.router.navigate(['forget-password']);
   }
 
   togglePasswordVisibility() {

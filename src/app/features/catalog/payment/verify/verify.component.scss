@@ -1,0 +1,40 @@
+.main-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  padding-top: 56px;
+  padding-bottom: 122px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.countdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    font-size: 1rem;
+    color: #666;
+  }
+
+  .countdown {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #0078ff;
+    animation: pulse 1s infinite ease-in-out;
+  }
+}

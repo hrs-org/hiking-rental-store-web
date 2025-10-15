@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { selectItemById } from '../../../../store/items/items.selector';
+import { selectItemById } from '../../../../state/items/items.selector';
 import { PwaHeaderComponent } from '../../../../shared/components/pwa-header/pwa-header.component';
 import { Item } from '../../../../core/models/item/item';
 import { ItemService } from '../../../../core/services/item.service';

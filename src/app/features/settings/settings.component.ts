@@ -8,7 +8,7 @@ import {
   Identifier,
   SettingsOptionComponent,
 } from '../../shared/components/settings-option/settings-option.component';
-import { selectUser } from '../../store/user/user.selector';
+import { selectUser } from '../../state/user/user.selector';
 import { settingItems } from './settingItems';
 import { User } from '../../core/models/user/user';
 
@@ -74,9 +74,15 @@ export class SettingsComponent implements OnInit {
       this.settingItems.find((si) => si.identifier === Identifier.ItemManagement)!.onClick = () => {
         this.router.navigate(['/inventory-management']);
       };
+      this.settingItems.find((si) => si.identifier === Identifier.ItemMaintenance)!.onClick =
+        () => {
+          this.router.navigate(['/item-maintenance']);
+        };
     } else {
       this.settingItems = this.settingItems.filter(
-        (si) => si.identifier !== Identifier.ItemManagement,
+        (si) =>
+          si.identifier !== Identifier.ItemManagement &&
+          si.identifier !== Identifier.ItemMaintenance,
       );
     }
 

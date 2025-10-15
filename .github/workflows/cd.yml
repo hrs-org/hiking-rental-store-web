@@ -31,10 +31,12 @@ jobs:
       - name: Rewrite environment.uat.ts
         run: |
           echo "Using API URL: ${{ secrets.API_URL }}"
+          echo "Using Stripe Public Key: ${{ secrets.STRIPE_PUBLIC_KEY }}"
           cat > src/environments/environment.uat.ts << 'EOF'
           export const environment = {
             production: true,
-            apiUrl: '${{ secrets.API_URL }}'
+            apiUrl: '${{ secrets.API_URL }}',
+            stripePublicKey: '${{ secrets.STRIPE_PUBLIC_KEY }}'
           };
           EOF
 

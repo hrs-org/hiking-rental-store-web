@@ -1,3 +1,18 @@
+.main-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  padding-top: 56px;
+  padding-bottom: 80px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .inventory-item-container {
   background: white;
   border-radius: 12px;
@@ -364,11 +379,6 @@
     width: 32px;
     height: 32px;
   }
-}
-
-.item-list {
-  margin-top: 56px;
-  z-index: -1;
 }
 
 .floating-add-button {

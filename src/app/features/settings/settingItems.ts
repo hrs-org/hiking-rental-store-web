@@ -49,6 +49,20 @@ export const settingItems: SettingsOption[] = [
   },
   {
     order: 4,
+    identifier: Identifier.ItemMaintenance,
+    section: Section.Management,
+    title: 'Item Maintenance',
+    titleUppercase: false,
+    desc: 'Maintenance items in the store',
+    icon: 'person',
+    iconColor: 'blue',
+    showChevron: true,
+    onClick: () => {
+      return;
+    },
+  },
+  {
+    order: 5,
     identifier: Identifier.Logout,
     section: Section.Settings,
     title: 'Logout',

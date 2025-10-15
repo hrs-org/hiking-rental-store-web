@@ -21,3 +21,25 @@ export const MANAGERS = `${USER_PREFIX}/managers`;
 
 // Item endpoints
 export const ITEM_PREFIX = `${API_PREFIX}/items`;
+
+// Catalog endpoints
+export const CATALOG_PREFIX = `${API_PREFIX}/catalogs`;
+
+// Order endpoints
+export const ORDER_PREFIX = `${API_PREFIX}/orders`;
+export const ORDER_BOOKINGS = `${ORDER_PREFIX}/bookings`;
+export const ORDER_RENTS = `${ORDER_PREFIX}/rents`;
+export const ORDER_APPROVE = `${ORDER_PREFIX}/{0}/approve`;
+export const ORDER_CANCEL = `${ORDER_PREFIX}/{0}/cancel`;
+export const ORDER_CONFIRM = `${ORDER_PREFIX}/{0}/confirm`;
+export const ORDER_RETURN = `${ORDER_PREFIX}/{0}/return`;
+export const ORDER_CLOSE = `${ORDER_PREFIX}/{0}/close`;
+
+// Payment endpoints
+export const PAYMENT_PREFIX = `${API_PREFIX}/payments`;
+export const PAYMENT_CREATE_SESSION = `${PAYMENT_PREFIX}/create-session`;
+export const PAYMENT_VERIFY = `${PAYMENT_PREFIX}/verify`;
+
+// Item maintenance endpoints
+export const ITEM_MAINTENANCE_PREFIX = `${API_PREFIX}/item-maintenances`;
+export const ITEM_MAINTENANCE_FIX = `${ITEM_MAINTENANCE_PREFIX}/{0}/fix`;
