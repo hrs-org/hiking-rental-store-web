@@ -1,0 +1,67 @@
+<div class="filter-container">
+  <div class="filters">
+    <p>Start: {{ formatDate(startDate) }}</p>
+    <p>End: {{ formatDate(endDate) }}</p>
+    <button mat-icon-button (click)="toggleShowDateFilter()">
+      <mat-icon>filter_list</mat-icon>
+    </button>
+  </div>
+  @if (showDateFilter) {
+    <div class="date-picker-filter">
+      <div class="date-pickers">
+        <mat-form-field
+          (click)="startpicker.open()"
+          appearance="outline"
+          style="width: 150px; font-size: 17px"
+        >
+          <mat-label>Start Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startpicker"
+            [(ngModel)]="startDate"
+            (dateChange)="onDateChange()"
+          />
+          <mat-datepicker #startpicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="date-pickers">
+        <mat-form-field
+          (click)="endpicker.open()"
+          appearance="outline"
+          style="width: 150px; font-size: 17px"
+        >
+          <mat-label>End Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endpicker"
+            [(ngModel)]="endDate"
+            (dateChange)="onDateChange()"
+          />
+          <mat-datepicker #endpicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  }
+</div>
+<div class="container">
+  @if (catalog$ | async) {
+    @for (item of catalog$ | async; track item.catalogId) {
+      <app-store-items
+        [item]="item"
+        [selectedQty]="selectedQuantities[item.catalogId] || 0"
+        [childQuantities]="selectedQuantities"
+        (quantityChange)="updateQuantity($event)"
+      ></app-store-items>
+    }
+  }
+</div>
+
+<button
+  mat-raised-button
+  color="primary"
+  class="create-button"
+  (click)="createOrder()"
+  [hidden]="hideButton()"
+>
+  Create Order
+</button>

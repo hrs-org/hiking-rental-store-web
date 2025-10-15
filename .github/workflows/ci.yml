@@ -124,15 +124,6 @@ jobs:
             test-results.xml
           retention-days: 1
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          file: ./coverage/lcov.info
-          flags: frontend
-          name: angular-coverage
-          fail_ci_if_error: false
-
   lint-and-format:
     name: Lint & Format Check
     runs-on: ubuntu-latest

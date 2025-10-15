@@ -1,0 +1,87 @@
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 85vw;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-title {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+.order-guest-name {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.order-status {
+  padding: 2px;
+  font-size: 14px;
+  border-radius: 14px;
+
+  &-pending {
+    background-color: #fbbf24;
+    color: white;
+    padding: 2px 6px;
+  }
+
+  &-pendingpayment {
+    background-color: #f59e0b;
+    color: white;
+    padding: 2px 6px;
+  }
+
+  &-booked {
+    background-color: #3b82f6;
+    color: white;
+    padding: 2px 6px;
+  }
+
+  &-rented {
+    background-color: #ef4444;
+    color: white;
+    padding: 2px 6px;
+  }
+
+  &-returned {
+    background-color: #6366f1;
+    color: white;
+    padding: 2px 6px;
+  }
+
+  &-completed {
+    background-color: #10b981;
+    color: white;
+    padding: 2px 6px;
+  }
+
+  &-cancelled {
+    background-color: #9ca3af;
+    color: white;
+    padding: 2px 6px;
+  }
+}
+
+.order-date {
+  font-size: 14px;
+  color: #9f9f9f;
+  margin-top: 4px;
+}
+
+.order-amount {
+  color: rgb(0, 166, 3);
+  font-weight: 600;
+  font-size: 16px;
+}

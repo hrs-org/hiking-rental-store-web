@@ -1,0 +1,52 @@
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  gap: 20px;
+  width: 85vw;
+
+  p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.date-picker-filter {
+  display: flex;
+  justify-content: center;
+  padding: 0 12px;
+  gap: 8px;
+  width: 85vw;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  overflow-x: hidden;
+  gap: 12px;
+  margin-bottom: 50px;
+}
+
+.create-button {
+  position: fixed;
+  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: 90px;
+  height: 50px;
+  width: 90vw;
+  display: flex;
+  border-radius: 50px;
+}

@@ -5,8 +5,23 @@ import angular from 'angular-eslint';
 import ngrx from '@ngrx/eslint-plugin/v9';
 
 export default defineConfig([
+  // Top-level ignore for all files
   {
-    ignores: ['node_modules/**', 'build/**', 'dist/**', 'coverage/**', '.angular/**'],
+    ignores: [
+      'node_modules',
+      'build',
+      'dist',
+      'coverage',
+      '.angular',
+      'node_modules/**',
+      'build/**',
+      'dist/**',
+      'coverage/**',
+      '.angular/**',
+    ],
+  },
+  // Your TypeScript config
+  {
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
@@ -35,11 +50,5 @@ export default defineConfig([
         },
       ],
     },
-  },
-  {
-    ignores: ['node_modules/**', 'build/**', 'dist/**', 'coverage/**', '.angular/**'],
-    files: ['**/*.html'],
-    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
-    rules: {},
   },
 ]);

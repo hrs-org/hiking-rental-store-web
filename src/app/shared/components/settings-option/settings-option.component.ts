@@ -16,8 +16,9 @@ export interface SettingsOption {
 
 export enum Identifier {
   Profile = 'profile',
-  ItemManagement = 'item-management',
   EmployeeManagement = 'employee-management',
+  ItemManagement = 'item-management',
+  ItemMaintenance = 'item-maintenance',
   Logout = 'logout',
 }
 
@@ -50,7 +51,6 @@ export class SettingsOptionComponent {
   };
 
   onItemClick() {
-    console.log('Clicked', this.settingsOption);
     this.settingsOption.onClick();
   }
 }

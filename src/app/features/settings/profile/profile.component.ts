@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PwaHeaderComponent } from '../../../shared/components/pwa-header/pwa-header.component';
 import { MatCardModule } from '@angular/material/card';
 import { Store } from '@ngrx/store';
-import { selectUser } from '../../../store/user/user.selector';
+import { selectUser } from '../../../state/user/user.selector';
 import { AsyncPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
