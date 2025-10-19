@@ -14,11 +14,9 @@
         required
         placeholder="Enter your first name"
       />
-      @if (hasError('firstName')) {
-        <div class="error-message">
-          {{ getErrorMessage('firstName') }}
-        </div>
-      }
+      <div *ngIf="hasError('firstName')" class="error-message">
+        {{ getErrorMessage('firstName') }}
+      </div>
     </div>
 
     <div class="form-group">
@@ -33,11 +31,9 @@
         required
         placeholder="Enter your last name"
       />
-      @if (hasError('lastName')) {
-        <div class="error-message">
-          {{ getErrorMessage('lastName') }}
-        </div>
-      }
+      <div *ngIf="hasError('lastName')" class="error-message">
+        {{ getErrorMessage('lastName') }}
+      </div>
     </div>
 
     <div class="form-group">
@@ -53,11 +49,9 @@
         required
         placeholder="Enter your email"
       />
-      @if (hasError('email')) {
-        <div class="error-message">
-          {{ getErrorMessage('email') }}
-        </div>
-      }
+      <div *ngIf="hasError('email')" class="error-message">
+        {{ getErrorMessage('email') }}
+      </div>
     </div>
 
     <div class="form-group">
@@ -85,11 +79,9 @@
           </mat-icon>
         </button>
       </div>
-      @if (hasError('password')) {
-        <div class="error-message">
-          {{ getErrorMessage('password') }}
-        </div>
-      }
+      <div *ngIf="hasError('password')" class="error-message">
+        {{ getErrorMessage('password') }}
+      </div>
     </div>
 
     <div class="form-group">
@@ -117,16 +109,79 @@
           </mat-icon>
         </button>
       </div>
-      @if (hasError('confirmPassword')) {
-        <div class="error-message">
-          {{ getErrorMessage('confirmPassword') }}
-        </div>
-      }
-      @if (getPasswordMatchError()) {
-        <div class="error-message">
-          {{ getPasswordMatchError() }}
-        </div>
-      }
+      <div *ngIf="hasError('confirmPassword')" class="error-message">
+        {{ getErrorMessage('confirmPassword') }}
+      </div>
+      <div *ngIf="getPasswordMatchError()" class="error-message">
+        {{ getPasswordMatchError() }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <mat-label class="form-label">
+        Register As
+        <span class="asterisk">*</span>
+      </mat-label>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.viewValue }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-group" *ngIf="registerForm.get('role')?.value === 'Store'">
+      <mat-label class="form-label">
+        Store Name
+        <span class="asterisk">*</span>
+      </mat-label>
+      <input
+        class="form-input"
+        [class.error]="hasError('storeName')"
+        formControlName="storeName"
+        placeholder="Enter your store name"
+      />
+      <div *ngIf="hasError('storeName')" class="error-message">
+        {{ getErrorMessage('storeName') }}
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="registerForm.get('role')?.value === 'Store'">
+      <mat-label class="form-label">
+        Store Address
+        <span class="asterisk">*</span>
+      </mat-label>
+      <input
+        class="form-input"
+        [class.error]="hasError('storeAddress')"
+        formControlName="storeAddress"
+        placeholder="Enter store address"
+      />
+      <div *ngIf="hasError('storeAddress')" class="error-message">
+        {{ getErrorMessage('storeAddress') }}
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="registerForm.get('role')?.value === 'Store'">
+      <mat-label class="form-label">Store Description</mat-label>
+      <textarea
+        class="form-input"
+        formControlName="storeDescription"
+        placeholder="Optional: describe your store"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="form-group" *ngIf="registerForm.get('role')?.value === 'Store'">
+      <mat-label class="form-label">Store Phone Number</mat-label>
+      <input
+        class="form-input"
+        [class.error]="hasError('storePhoneNumber')"
+        formControlName="storePhoneNumber"
+        placeholder="Enter store phone number"
+      />
+      <div *ngIf="hasError('storePhoneNumber')" class="error-message">
+        {{ getErrorMessage('storePhoneNumber') }}
+      </div>
     </div>
 
     <br />

@@ -85,6 +85,13 @@ export const routes: Routes = [
           import('./features/settings/profile/profile.component').then((m) => m.ProfileComponent),
       },
       {
+        path: 'settings/store-profile',
+        loadComponent: () =>
+          import('./features/settings/store-profile/store-profile.component').then(
+            (m) => m.StoreProfileComponent,
+          ),
+      },
+      {
         path: 'employees-management',
         loadComponent: () =>
           import('./features/settings/employees-management/employees-management.component').then(

@@ -11,6 +11,7 @@ import {
 import { selectUser } from '../../state/user/user.selector';
 import { settingItems } from './settingItems';
 import { User } from '../../core/models/user/user';
+import { selectStore } from '../../state/store/store.selector';
 
 @Component({
   selector: 'app-settings',
@@ -25,6 +26,7 @@ export class SettingsComponent implements OnInit {
   private store = inject(Store);
 
   user$ = this.store.select(selectUser);
+  store$ = this.store.select(selectStore);
   settingItems = settingItems;
 
   ngOnInit() {
@@ -36,6 +38,16 @@ export class SettingsComponent implements OnInit {
           }
 
           this.generateSettings(user);
+        }),
+      )
+      .subscribe();
+
+    this.store$
+      .pipe(
+        tap((store) => {
+          if (!store) {
+            return;
+          }
         }),
       )
       .subscribe();
@@ -90,5 +102,16 @@ export class SettingsComponent implements OnInit {
     this.settingItems.find((si) => si.identifier === Identifier.Logout)!.onClick = () => {
       this.logout();
     };
+
+    // Store Profile
+    if (user.role === 'Admin' || user.role === 'Manager') {
+      this.settingItems.find((si) => si.identifier === Identifier.StoreProfile)!.onClick = () => {
+        this.router.navigate(['/settings/store-profile']);
+      };
+    } else {
+      this.settingItems = this.settingItems.filter(
+        (si) => si.identifier !== Identifier.StoreProfile,
+      );
+    }
   }
 }
