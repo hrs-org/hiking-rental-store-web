@@ -52,6 +52,7 @@ export class CatalogComponent implements OnInit {
   ngOnInit(): void {
     this.endDate.setDate(this.endDate.getDate() + 5);
     this.storeId = Number(this.route.snapshot.paramMap.get('storeId'));
+    localStorage.setItem('selectedStoreId', JSON.stringify(this.storeId));
 
     this.store.dispatch(
       loadCatalog({ startDate: this.startDate, endDate: this.endDate, storeId: this.storeId || 0 }),

@@ -98,6 +98,15 @@ export class CheckoutComponent implements OnInit {
       localStorage.setItem('checkoutItems', JSON.stringify(this.checkout));
     }
 
+    if (!this.storeId) {
+      const storeIdStr = localStorage.getItem('selectedStoreId');
+      if (storeIdStr) {
+        this.storeId = JSON.parse(storeIdStr) as number;
+      }
+    } else {
+      localStorage.setItem('selectedStoreId', JSON.stringify(this.storeId));
+    }
+
     if (!this.checkout) {
       return;
     }
@@ -183,12 +192,14 @@ export class CheckoutComponent implements OnInit {
                 });
               }
             },
+            error: () => this.loadingService.hide(),
             complete: () => this.loadingService.hide(),
           });
         } else {
           this.router.navigate(['/store']);
         }
       },
+      error: () => this.loadingService.hide(),
       complete: () => this.loadingService.hide(),
     });
   }
