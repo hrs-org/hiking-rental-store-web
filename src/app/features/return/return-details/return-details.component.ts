@@ -27,10 +27,10 @@ export class ReturnDetailsComponent implements OnInit {
   private readonly loadingService = inject(LoadingService);
   private readonly location = inject(Location);
 
-  itemId = Number(this.route.snapshot.paramMap.get('id'));
+  itemId = this.route.snapshot.paramMap.get('id');
   order: Order = {} as Order;
   showOrderDetails = false;
-  selectedQuantities: Record<number, ReturnRentalOrderItem> = {};
+  selectedQuantities: Record<string, ReturnRentalOrderItem> = {};
 
   ngOnInit(): void {
     this.fetchOrder();
@@ -39,7 +39,7 @@ export class ReturnDetailsComponent implements OnInit {
   private fetchOrder(): void {
     this.loadingService.show();
     this.orderService
-      .getOrderById(this.itemId)
+      .getOrderById(this.itemId!)
       .pipe(
         tap((res) => {
           const orderData = res.data;
@@ -80,7 +80,7 @@ export class ReturnDetailsComponent implements OnInit {
     const items: ReturnRentalOrderItem[] = Object.entries(this.selectedQuantities).map(
       ([key, value]) => ({
         ...value,
-        rentalOrderItemId: Number(key),
+        rentalOrderItemId: key,
       }),
     );
     return { items };
@@ -110,7 +110,7 @@ export class ReturnDetailsComponent implements OnInit {
         (value.repairQty ?? 0) +
         (value.damagedQty ?? 0) +
         (value.lostQty ?? 0);
-      const orderItem = this.order.items?.find((item) => item.id === Number(key));
+      const orderItem = this.order.items?.find((item) => item.id === key);
       return orderItem ? total >= orderItem.quantity : false;
     });
   }

@@ -43,3 +43,9 @@ export const PAYMENT_VERIFY = `${PAYMENT_PREFIX}/verify`;
 // Item maintenance endpoints
 export const ITEM_MAINTENANCE_PREFIX = `${API_PREFIX}/item-maintenances`;
 export const ITEM_MAINTENANCE_FIX = `${ITEM_MAINTENANCE_PREFIX}/{0}/fix`;
+
+//Store endpoints
+export const STORE_PREFIX = `${API_PREFIX}/stores`;
+export const STORE_GETBYID = `${STORE_PREFIX}/{0}`;
+export const STORE_REGISTER = `${STORE_PREFIX}/register`;
+export const STORE_USER = `${STORE_PREFIX}/users/{0}`;

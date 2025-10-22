@@ -1,0 +1,32 @@
+<app-pwa-header title="Store Profile" [backButtonVisible]="true"></app-pwa-header>
+
+<div class="content">
+  <mat-card appearance="outlined">
+    <mat-card-content class="card-content">
+      <ng-container *ngIf="store$ | async as store; else noStore">
+        <div class="profile-header">
+          <div class="profile-name">{{ store.name }}</div>
+        </div>
+
+        <div class="email">
+          <div class="email-label">Description</div>
+          <div class="email-detail">{{ store.description || '-' }}</div>
+        </div>
+
+        <div class="email">
+          <div class="email-label">Address</div>
+          <div class="email-detail">{{ store.address || '-' }}</div>
+        </div>
+
+        <div class="email">
+          <div class="email-label">Phone</div>
+          <div class="email-detail">{{ store.phoneNumber || '-' }}</div>
+        </div>
+      </ng-container>
+
+      <ng-template #noStore>
+        <div class="no-store">No store information available.</div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

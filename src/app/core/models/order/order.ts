@@ -15,7 +15,7 @@ export interface OrderRequest extends BaseOrder {
 }
 
 export interface Order extends BaseOrder {
-  id: number;
+  id: string;
   totalAmount: number;
   status: OrderStatus;
   items: OrderItem[];
@@ -44,37 +44,37 @@ export enum OrderPaymentType {
 }
 
 export interface BaseOrderItem {
-  itemId: number;
+  itemId: string;
   quantity: number;
 }
 
 export interface BaseOrderPackage {
-  packageId: number;
+  packageId: string;
   quantity: number;
 }
 
 export interface OrderItem extends BaseOrderItem {
-  id: number;
+  id: string;
   itemNameSnapshot: string;
   dailyRateSnapshot: number;
 }
 
 export interface OrderPackage extends BaseOrderPackage {
-  id: number;
+  id: string;
   packageNameSnapshot: string;
   dailyRateSnapshot: number;
   items: OrderPackageItem[];
 }
 
 export interface OrderPackageItem {
-  id: number;
-  itemId: number;
+  id: string;
+  itemId: string;
   itemNameSnapshot: string;
   quantityPerPackageSnapshot: number;
 }
 
 export interface ReturnRentalOrderItem {
-  rentalOrderItemId: number;
+  rentalOrderItemId: string;
   goodQty: number;
   repairQty: number;
   damagedQty: number;
