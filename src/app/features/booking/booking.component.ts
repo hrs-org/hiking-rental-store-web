@@ -24,7 +24,7 @@ export class BookingComponent implements OnInit {
     this.store.dispatch(loadBookingPageOrders());
   }
 
-  handleOrderClick(orderId: number) {
+  handleOrderClick(orderId: string) {
     this.router.navigate(['booking', orderId]);
   }
 }

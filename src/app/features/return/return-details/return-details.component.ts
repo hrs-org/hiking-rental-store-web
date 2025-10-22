@@ -66,7 +66,7 @@ export class ReturnDetailsComponent implements OnInit {
     return moment(date).format('MM/DD/YYYY');
   }
 
-  updateReturnQuantity(event: { orderItemId: number; returnQty: ReturnRentalOrderItem }) {
+  updateReturnQuantity(event: { orderItemId: string; returnQty: ReturnRentalOrderItem }) {
     this.selectedQuantities = {
       ...this.selectedQuantities,
       [event.orderItemId]: {
