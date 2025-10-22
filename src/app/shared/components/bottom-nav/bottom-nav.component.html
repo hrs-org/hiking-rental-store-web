@@ -1,13 +1,25 @@
 <nav class="bottom-nav">
-  <button
-    [routerLink]="['/catalog']"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    (click)="onClick()"
-  >
-    <mat-icon class="icon">store</mat-icon>
-    <p style="margin: 0; padding: 0">Catalog</p>
-  </button>
+  @if (user?.role === 'Customer') {
+    <button
+      [routerLink]="['/stores']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="onClick()"
+    >
+      <mat-icon class="icon">store</mat-icon>
+      <p style="margin: 0; padding: 0">Store</p>
+    </button>
+  } @else {
+    <button
+      [routerLink]="['/catalog']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="onClick()"
+    >
+      <mat-icon class="icon">store</mat-icon>
+      <p style="margin: 0; padding: 0">Catalog</p>
+    </button>
+  }
   @if (user?.role !== 'Customer') {
     <button
       [routerLink]="['/booking']"

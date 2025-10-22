@@ -1,5 +1,5 @@
 export interface Item {
-  id?: number;
+  id?: string;
   name: string;
   description: string;
   quantity: number;
@@ -9,7 +9,7 @@ export interface Item {
 }
 
 export interface ItemRate {
-  id?: number;
+  id?: string;
   minDays: number;
   dailyRate: number;
   isActive: boolean;

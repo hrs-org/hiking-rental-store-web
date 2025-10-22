@@ -86,6 +86,17 @@ export class SettingsComponent implements OnInit {
       );
     }
 
+    // Store Profile
+    if (user.role === 'Admin' || user.role === 'Manager') {
+      this.settingItems.find((si) => si.identifier === Identifier.StoreProfile)!.onClick = () => {
+        this.router.navigate(['/settings/store-profile']);
+      };
+    } else {
+      this.settingItems = this.settingItems.filter(
+        (si) => si.identifier !== Identifier.StoreProfile,
+      );
+    }
+
     // Logout
     this.settingItems.find((si) => si.identifier === Identifier.Logout)!.onClick = () => {
       this.logout();

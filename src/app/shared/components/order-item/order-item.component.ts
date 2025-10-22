@@ -11,7 +11,7 @@ import { CurrencyPipe, NgClass } from '@angular/common';
 })
 export class OrderItemComponent {
   @Input() order?: Order;
-  @Output() orderClick = new EventEmitter<number>();
+  @Output() orderClick = new EventEmitter<string>();
 
   formatDate(date?: Date) {
     if (!date) return '';

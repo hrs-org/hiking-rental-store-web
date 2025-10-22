@@ -21,6 +21,20 @@ export const settingItems: SettingsOption[] = [
   },
   {
     order: 2,
+    identifier: Identifier.StoreProfile,
+    section: Section.Management,
+    title: 'Store',
+    titleUppercase: false,
+    desc: 'Store profile',
+    icon: 'store',
+    iconColor: 'blue',
+    showChevron: true,
+    onClick: () => {
+      return;
+    },
+  },
+  {
+    order: 3,
     identifier: Identifier.EmployeeManagement,
     section: Section.Management,
     title: 'Employees',
@@ -34,7 +48,7 @@ export const settingItems: SettingsOption[] = [
     },
   },
   {
-    order: 3,
+    order: 4,
     identifier: Identifier.ItemManagement,
     section: Section.Management,
     title: 'Item Management',
@@ -48,7 +62,7 @@ export const settingItems: SettingsOption[] = [
     },
   },
   {
-    order: 4,
+    order: 5,
     identifier: Identifier.ItemMaintenance,
     section: Section.Management,
     title: 'Item Maintenance',
@@ -62,7 +76,7 @@ export const settingItems: SettingsOption[] = [
     },
   },
   {
-    order: 5,
+    order: 6,
     identifier: Identifier.Logout,
     section: Section.Settings,
     title: 'Logout',

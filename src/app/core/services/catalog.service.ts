@@ -15,10 +15,11 @@ import { map, Observable } from 'rxjs';
 export class CatalogService {
   http = inject(HttpClient);
 
-  getCatalog(startDate: Date, endDate: Date): Observable<CatalogEntry[]> {
+  getCatalog(startDate: Date, endDate: Date, storeId: number): Observable<CatalogEntry[]> {
     const params = {
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
+      storeId: storeId,
     };
 
     return this.http.get<ApiResponse<StoreViewModel>>(CATALOG_PREFIX, { params }).pipe(

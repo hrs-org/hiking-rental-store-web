@@ -1,6 +1,6 @@
 export interface PaymentRequest {
   amount: number;
-  orderId: number;
+  orderId: string;
 }
 
 export interface PaymentVerifyRequestDto {

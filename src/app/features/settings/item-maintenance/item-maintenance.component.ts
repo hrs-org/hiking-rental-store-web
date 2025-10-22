@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { PwaHeaderComponent } from '../../../shared/components/pwa-header/pwa-header.component';
+import { ItemMaintenanceService } from '../../../core/services/item-maintenance.service';
 
 @Component({
   selector: 'app-item-maintenance',
@@ -7,4 +8,10 @@ import { PwaHeaderComponent } from '../../../shared/components/pwa-header/pwa-he
   templateUrl: './item-maintenance.component.html',
   styleUrl: './item-maintenance.component.scss',
 })
-export class ItemMaintenanceComponent {}
+export class ItemMaintenanceComponent implements OnInit {
+  itemMaintenanceService = inject(ItemMaintenanceService);
+
+  ngOnInit(): void {
+    this.itemMaintenanceService.getItemMaintenances().subscribe();
+  }
+}

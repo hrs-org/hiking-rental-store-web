@@ -5,7 +5,7 @@ import { loadCatalog } from '../../state/store/store.actions';
 import { StoreItemsComponent } from '../../shared/components/store-items/store-items.component';
 import { CatalogEntry } from '../../core/models/store/store';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, Location } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import moment from 'moment';
 import { MatDividerModule } from '@angular/material/divider';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-store',
@@ -36,6 +36,8 @@ import { Router } from '@angular/router';
 export class CatalogComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private location = inject(Location);
 
   catalog$ = this.store.select(selectCatalog);
   catalog?: CatalogEntry[];
@@ -45,11 +47,15 @@ export class CatalogComponent implements OnInit {
   selectedQuantities: Record<string, number> = {};
 
   showDateFilter = false;
+  storeId?: number;
 
   ngOnInit(): void {
     this.endDate.setDate(this.endDate.getDate() + 5);
+    this.storeId = Number(this.route.snapshot.paramMap.get('storeId'));
 
-    this.store.dispatch(loadCatalog({ startDate: this.startDate, endDate: this.endDate }));
+    this.store.dispatch(
+      loadCatalog({ startDate: this.startDate, endDate: this.endDate, storeId: this.storeId || 0 }),
+    );
     this.catalog$.subscribe((catalog) => {
       this.catalog = catalog;
     });
@@ -106,10 +112,16 @@ export class CatalogComponent implements OnInit {
   }
 
   onDateChange() {
-    this.store.dispatch(loadCatalog({ startDate: this.startDate, endDate: this.endDate }));
+    this.store.dispatch(
+      loadCatalog({ startDate: this.startDate, endDate: this.endDate, storeId: this.storeId || 0 }),
+    );
   }
 
   formatDate(date: Date): string {
     return moment(date).format('MM/DD/YYYY');
+  }
+
+  onBackButton() {
+    this.location.back();
   }
 }

@@ -26,6 +26,7 @@ export class BottomNavComponent implements AfterViewInit, OnDestroy {
     map(() => {
       const current = this.router.url;
       if (current.includes('catalog')) return 'Catalog';
+      if (current.includes('store')) return 'Store';
       if (current.includes('booking')) return 'Booking';
       if (current.includes('return')) return 'Return';
       if (current.includes('settings')) return 'Settings';

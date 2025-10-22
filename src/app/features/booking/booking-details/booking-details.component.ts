@@ -23,13 +23,13 @@ export class BookingDetailsComponent implements OnInit {
   private readonly loadingService = inject(LoadingService);
   private readonly location = inject(Location);
 
-  orderId = Number(this.route.snapshot.paramMap.get('id'));
+  orderId = this.route.snapshot.paramMap.get('id');
   order: Order = {} as Order;
   title = '';
 
   ngOnInit(): void {
     this.loadingService.show();
-    this.orderService.getOrderById(this.orderId).subscribe({
+    this.orderService.getOrderById(this.orderId!).subscribe({
       next: (res) => {
         if (res.data) this.order = res.data;
         this.title = this.isPending() ? 'Pending Booking' : 'Booking Details';

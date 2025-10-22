@@ -114,7 +114,7 @@ export class CheckoutComponent implements OnInit {
           items: checkout.items
             .filter((item) => item.selectedQty && item.selectedQty > 0)
             .map((item) => ({
-              itemId: item.itemId as number,
+              itemId: item.itemId!,
               quantity: item.selectedQty || 0,
             })),
         };

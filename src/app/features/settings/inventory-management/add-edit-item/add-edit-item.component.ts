@@ -48,13 +48,13 @@ export class AddEditItemComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly bottomSheet = inject(MatBottomSheet);
 
-  itemId = Number(this.route.snapshot.paramMap.get('id'));
+  itemId = this.route.snapshot.paramMap.get('id');
   mode = this.itemId ? 'edit' : 'add';
   is_active = false;
   displayedColumns: string[] = ['minDays', 'dailyRate', 'delete'];
 
   // get the item and display it
-  item$ = this.store.select(selectItemById(this.itemId));
+  item$ = this.store.select(selectItemById(this.itemId!));
   item: Item = {
     name: '',
     quantity: 0,
@@ -129,11 +129,11 @@ export class AddEditItemComponent implements OnInit {
   addRate() {
     this.item = {
       ...this.item,
-      rates: [...this.item.rates, { id: 0, minDays: 0, dailyRate: 0, isActive: true }],
+      rates: [...this.item.rates, { minDays: 0, dailyRate: 0, isActive: true }],
     };
   }
 
-  deleteRate(rateId: number) {
+  deleteRate(rateId: string) {
     this.item = {
       ...this.item,
       rates: this.item.rates.filter((rate) => rate.id !== rateId),

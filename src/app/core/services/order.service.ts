@@ -17,7 +17,7 @@ import { ApiResponse } from '../models/api-response';
 export class OrderService {
   http = inject(HttpClient);
 
-  getOrderById(orderId: number) {
+  getOrderById(orderId: string) {
     return this.http.get<ApiResponse<Order>>(`${ORDER_PREFIX}/${orderId}`);
   }
 
@@ -33,23 +33,23 @@ export class OrderService {
     return this.http.post<ApiResponse<Order>>(ORDER_PREFIX, order);
   }
 
-  approveOrder(orderId: number) {
+  approveOrder(orderId: string) {
     return this.http.put<ApiResponse<Order>>(ORDER_APPROVE.replace('{0}', `${orderId}`), {});
   }
 
-  cancelOrder(orderId: number) {
+  cancelOrder(orderId: string) {
     return this.http.put<ApiResponse<Order>>(ORDER_CANCEL.replace('{0}', `${orderId}`), {});
   }
 
-  confirmOrder(orderId: number) {
+  confirmOrder(orderId: string) {
     return this.http.put<ApiResponse<Order>>(ORDER_CONFIRM.replace('{0}', `${orderId}`), {});
   }
 
-  returnOrderItem(orderId: number, items: ReturnRentalOrderItemRequest) {
+  returnOrderItem(orderId: string, items: ReturnRentalOrderItemRequest) {
     return this.http.put<ApiResponse<Order>>(ORDER_RETURN.replace('{0}', `${orderId}`), items);
   }
 
-  closeOrder(orderId: number) {
+  closeOrder(orderId: string) {
     return this.http.put<ApiResponse<Order>>(ORDER_CLOSE.replace('{0}', `${orderId}`), {});
   }
 }
