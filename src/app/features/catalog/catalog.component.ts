@@ -89,7 +89,7 @@ export class CatalogComponent implements OnInit {
 
     localStorage.setItem('checkoutItems', JSON.stringify(checkout));
     this.router.navigate(['/checkout'], {
-      state: { checkout: checkout },
+      state: { checkout: checkout, storeId: this.storeId },
     });
   }
 

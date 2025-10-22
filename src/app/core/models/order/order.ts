@@ -3,6 +3,7 @@ interface BaseOrder {
   guestName?: string;
   guestPhone?: string;
   guestEmail?: string;
+  storeId: number;
   startDate: Date;
   endDate: Date;
   channel: OrderChannel;

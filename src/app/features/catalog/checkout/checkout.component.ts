@@ -59,6 +59,7 @@ export class CheckoutComponent implements OnInit {
   private loadingService = inject(LoadingService);
 
   checkout?: Checkout;
+  storeId?: number;
   user$ = this.store.select(selectUser);
   user = {} as User;
   orderRequest = {} as OrderRequest;
@@ -86,6 +87,7 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
     this.checkout = navigation?.extras.state?.['checkout'];
+    this.storeId = navigation?.extras.state?.['storeId'];
 
     if (!this.checkout) {
       const checkoutStr = localStorage.getItem('checkoutItems');
@@ -107,6 +109,7 @@ export class CheckoutComponent implements OnInit {
         this.user = user;
 
         this.orderRequest = {
+          storeId: this.storeId!,
           channel: OrderChannel.POS,
           paymentType: OrderPaymentType.Cash,
           startDate: checkout.startDate,
