@@ -1,8 +1,10 @@
 <div class="filter-container">
   <div class="filters">
-    <button mat-icon-button (click)="onBackButton()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
+    @if ((user$ | async)?.role === 'Customer') {
+      <button mat-icon-button (click)="onBackButton()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+    }
     <p>Start: {{ formatDate(startDate) }}</p>
     <p>End: {{ formatDate(endDate) }}</p>
     <button mat-icon-button (click)="toggleShowDateFilter()">

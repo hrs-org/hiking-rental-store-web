@@ -11,7 +11,7 @@
     </button>
   } @else {
     <button
-      [routerLink]="['/catalog']"
+      [routerLink]="['/catalog', (store$ | async)?.id || 0]"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
       (click)="onClick()"

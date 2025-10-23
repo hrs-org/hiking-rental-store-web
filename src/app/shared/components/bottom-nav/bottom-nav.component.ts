@@ -5,9 +5,11 @@ import { filter, startWith, map, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../../../state/user/user.selector';
 import { User } from '../../../core/models/user/user';
+import { selectStore } from '../../../state/store/store.selector';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-bottom-nav',
-  imports: [RouterLinkActive, RouterLink, MatIcon],
+  imports: [RouterLinkActive, RouterLink, MatIcon, AsyncPipe],
   templateUrl: './bottom-nav.component.html',
   styleUrl: './bottom-nav.component.scss',
 })
@@ -19,6 +21,7 @@ export class BottomNavComponent implements AfterViewInit, OnDestroy {
   @Output() titleChange = new EventEmitter<string>();
 
   user$ = this.store.select(selectUser);
+  store$ = this.store.select(selectStore);
   user?: User;
   title$ = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd),

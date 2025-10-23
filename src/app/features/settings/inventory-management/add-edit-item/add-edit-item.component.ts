@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { selectItemById } from '../../../../state/items/items.selector';
 import { PwaHeaderComponent } from '../../../../shared/components/pwa-header/pwa-header.component';
 import { Item } from '../../../../core/models/item/item';
@@ -14,6 +14,8 @@ import { InfoBottomSheetComponent } from '../../../../shared/components/info-bot
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
 
 function showBottomSheet(bottomSheet: MatBottomSheet, title: string, description: string) {
   bottomSheet
@@ -37,6 +39,8 @@ function showBottomSheet(bottomSheet: MatBottomSheet, title: string, description
     MatSlideToggleModule,
     MatExpansionModule,
     MatTableModule,
+    MatIcon,
+    MatButton,
   ],
   templateUrl: './add-edit-item.component.html',
   styleUrl: './add-edit-item.component.scss',
@@ -45,8 +49,8 @@ export class AddEditItemComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
   private readonly itemService = inject(ItemService);
-  private readonly router = inject(Router);
   private readonly bottomSheet = inject(MatBottomSheet);
+  private readonly location = inject(Location);
 
   itemId = this.route.snapshot.paramMap.get('id');
   mode = this.itemId ? 'edit' : 'add';
@@ -105,31 +109,66 @@ export class AddEditItemComponent implements OnInit {
       } else {
         this.item.rates = this.item.rates.map((rate) => ({ ...rate, isActive: false }));
       }
+
+      // Clean up temporary IDs before submitting
+      this.item.rates = this.item.rates.map((rate) => {
+        if (rate.id && rate.id.toString().startsWith('temp-')) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { id, ...rateWithoutId } = rate;
+          return rateWithoutId;
+        }
+        return rate;
+      });
+
+      this.item.children = this.item.children.map((child) => {
+        if (child.id && child.id.toString().startsWith('temp-')) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { id, ...childWithoutId } = child;
+          return childWithoutId;
+        }
+        return child;
+      });
+
       this.itemService.updateItem(this.item).subscribe(() => {
-        this.router.navigate(['inventory-management']);
+        this.location.back();
       });
     } else {
+      // Remove all IDs (including temp IDs) for new items
       for (const rate of this.item.rates) {
         delete rate.id;
       }
+      for (const child of this.item.children) {
+        delete child.id;
+      }
 
       this.itemService.addItem(this.item).subscribe(() => {
-        this.router.navigate(['inventory-management']);
+        this.location.back();
       });
     }
   }
 
   addChildItem() {
+    // Generate a temporary ID for new children
+    const tempId = `temp-${Date.now()}`;
     this.item = {
       ...this.item,
-      children: [...this.item.children, { name: '', quantity: 0, price: 0 } as Item],
+      children: [...this.item.children, { id: tempId, name: '', quantity: 0, price: 0 } as Item],
+    };
+  }
+
+  deleteChildItem(childId: string) {
+    this.item = {
+      ...this.item,
+      children: this.item.children.filter((child) => child.id !== childId),
     };
   }
 
   addRate() {
+    // Generate a temporary ID for new rates (negative timestamp to avoid conflicts)
+    const tempId = `temp-${Date.now()}`;
     this.item = {
       ...this.item,
-      rates: [...this.item.rates, { minDays: 0, dailyRate: 0, isActive: true }],
+      rates: [...this.item.rates, { id: tempId, minDays: 0, dailyRate: 0, isActive: true }],
     };
   }
 

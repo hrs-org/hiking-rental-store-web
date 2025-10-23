@@ -162,6 +162,7 @@ export class CheckoutComponent implements OnInit {
 
     if (this.user.role === UserRole.Customer) {
       this.orderRequest.customerId = this.user.id;
+      this.orderRequest.guestName = `${this.user.firstName} ${this.user.lastName}`;
     } else {
       this.orderRequest.guestName = this.guestForm.controls['name'].value!;
       this.orderRequest.guestPhone = this.guestForm.controls['phoneNumber'].value!.toString();

@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 import moment from 'moment';
 import { MatDividerModule } from '@angular/material/divider';
 import { ActivatedRoute, Router } from '@angular/router';
+import { selectUser } from '../../state/user/user.selector';
 
 @Component({
   selector: 'app-store',
@@ -40,6 +41,7 @@ export class CatalogComponent implements OnInit {
   private location = inject(Location);
 
   catalog$ = this.store.select(selectCatalog);
+  user$ = this.store.select(selectUser);
   catalog?: CatalogEntry[];
 
   startDate = new Date();
