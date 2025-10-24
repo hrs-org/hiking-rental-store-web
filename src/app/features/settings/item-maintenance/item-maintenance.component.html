@@ -1,5 +1,11 @@
 <div class="main-page">
   <app-pwa-header title="Item Maintenance" [backButtonVisible]="true"></app-pwa-header>
 
-  <div class="content"></div>
+  <div class="content">
+    <div class="container">
+      @for (item of itemMaintenance; track $index) {
+        <app-item-maintenance-item [itemMMaintenance]="item"></app-item-maintenance-item>
+      }
+    </div>
+  </div>
 </div>

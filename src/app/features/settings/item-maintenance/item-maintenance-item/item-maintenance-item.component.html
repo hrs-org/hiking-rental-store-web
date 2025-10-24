@@ -1,0 +1,19 @@
+<div
+  class="container"
+  tabindex="0"
+  (click)="onItemClick()"
+  (keydown.enter)="onItemClick()"
+  (keydown.space)="onItemClick()"
+>
+  <div class="content">
+    <div class="settings-item">
+      <div class="item">
+        <div class="item-title">{{ itemMMaintenance?.itemId }}</div>
+        <div class="item-desc">{{ itemMMaintenance?.quantity }}</div>
+      </div>
+    </div>
+    <div class="chevron-icon">
+      <mat-icon>chevron_right</mat-icon>
+    </div>
+  </div>
+</div>
