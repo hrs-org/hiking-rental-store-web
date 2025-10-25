@@ -63,6 +63,18 @@ export const settingItems: SettingsOption[] = [
   },
   {
     order: 5,
+    identifier: Identifier.TransactionHistory,
+    section: Section.Management,
+    title: 'History',
+    desc: 'View your transaction history',
+    icon: 'person',
+    iconColor: 'blue',
+    onClick: () => {
+      return;
+    },
+  },
+  {
+    order: 6,
     identifier: Identifier.Logout,
     section: Section.Settings,
     title: 'Logout',

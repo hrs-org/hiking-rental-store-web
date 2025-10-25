@@ -24,3 +24,17 @@ export const loadBookingPageOrdersFailure = createAction(
   '[Order] Load Booking Page Orders Failure',
   props<{ error: unknown }>(),
 );
+
+export const loadTransactionHistoryOrders = createAction(
+  '[Order] Load Transaction History Orders',
+  props<{ customerId: number }>(),
+);
+
+export const loadTransactionHistoryOrdersSuccess = createAction(
+  '[Order] Load Transaction History Orders Success',
+  props<{ orders: Order[] }>(),
+);
+export const loadTransactionHistoryOrdersFailure = createAction(
+  '[Order] Load Transaction History Orders Failure',
+  props<{ error: unknown }>(),
+);

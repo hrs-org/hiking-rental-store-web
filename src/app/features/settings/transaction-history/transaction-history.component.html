@@ -1,0 +1,9 @@
+<app-pwa-header title="Transaction History" [backButtonVisible]="true"></app-pwa-header>
+<div class="container">
+  @for (item of (orderList$ | async)?.slice()?.reverse(); track $index) {
+    <app-order-item [order]="item" (orderClick)="handleOrderClick($event)"></app-order-item>
+  }
+  @if ((orderList$ | async)?.length === 0) {
+    <div>No transactions History.</div>
+  }
+</div>

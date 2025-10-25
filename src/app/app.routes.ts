@@ -129,6 +129,24 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: [UserRole.Admin, UserRole.Manager] },
       },
+      {
+        path: 'transaction-history',
+        loadComponent: () =>
+          import('./features/settings/transaction-history/transaction-history.component').then(
+            (m) => m.TransactionHistoryComponent,
+          ),
+        canActivate: [RoleGuard],
+        data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Customer, UserRole.Employee] },
+      },
+      {
+        path: 'transaction-details/:id',
+        loadComponent: () =>
+          import(
+            './features/settings/transaction-history/transaction-details/transaction-details.component'
+          ).then((m) => m.TransactionDetailsComponent),
+        canActivate: [RoleGuard],
+        data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Customer, UserRole.Employee] },
+      },
     ],
   },
   {
