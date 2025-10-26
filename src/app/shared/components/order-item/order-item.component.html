@@ -10,5 +10,15 @@
       {{ formatDate(order?.startDate) }} - {{ formatDate(order?.endDate) }}
     </div>
   </div>
-  <div class="order-amount">{{ order?.totalAmount | currency }}</div>
+  <div style="display: flex; align-items: center; gap: 8px">
+    <div class="order-amount">{{ order?.totalAmount | currency }}</div>
+    <ng-container *ngIf="order?.status === 'PendingPayment' && countdown">
+      <span style="color: #fbbf24; font-weight: 500; min-width: 60px; text-align: center">
+        {{ countdown }}
+      </span>
+    </ng-container>
+    <button *ngIf="showDelete" mat-stroked-button color="warn" (click)="onDeleteClick($event)">
+      Delete
+    </button>
+  </div>
 </div>
