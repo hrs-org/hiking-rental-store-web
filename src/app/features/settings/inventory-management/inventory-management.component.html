@@ -1,6 +1,7 @@
-<div>
+<div class="main-page">
   <app-pwa-header title="Inventory Management" [backButtonVisible]="true"></app-pwa-header>
-  <div class="item-list">
+
+  <div class="content">
     @for (item of itemList$ | async; track $index) {
       <app-items [item]="item"></app-items>
     }

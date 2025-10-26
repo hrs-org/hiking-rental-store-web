@@ -29,35 +29,14 @@
     </mat-form-field>
 
     <div class="button-group">
-      <button mat-raised-button type="button" (click)="onClickRegister()" [disabled]="isLoading">
-        Register
-      </button>
-
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="isLoading"
-        [class.loading]="isLoading"
-      >
-        <span class="loading-content">
-          @if (isLoading) {
-            <mat-spinner diameter="20"></mat-spinner>
-          }
-          {{ isLoading ? 'Logging in...' : 'Login' }}
-        </span>
-      </button>
+      <button mat-raised-button type="button" (click)="onClickRegister()">Register</button>
+      <button mat-raised-button color="primary" type="submit">Login</button>
     </div>
 
     <div class="forgot-password">
-      <a
-        routerLink="/forget-password"
-        [class.disabled]="isLoading"
-        [tabindex]="isLoading ? -1 : 0"
-        (click)="isLoading && $event.preventDefault()"
-      >
-        Forgot Password?
-      </a>
+      <button mat-raised-button type="button" (click)="onClickForgetPassword()">
+        Forget Password?
+      </button>
     </div>
   </form>
 </div>

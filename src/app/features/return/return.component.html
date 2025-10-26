@@ -1,1 +1,9 @@
-<p>return works!</p>
+<div class="container">
+  @for (item of orderList$ | async; track $index) {
+    <app-order-item [order]="item" (orderClick)="handleOrderClick($event)"></app-order-item>
+  }
+
+  @if ((orderList$ | async)?.length === 0) {
+    <div>No returns available.</div>
+  }
+</div>

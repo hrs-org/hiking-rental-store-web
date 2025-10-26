@@ -1,0 +1,14 @@
+<div class="item-row item-border" (click)="onClick()" (keydown.enter)="onClick()" tabindex="0">
+  <div class="order-info">
+    <div class="order-title">
+      <div class="order-guest-name">{{ order?.guestName }}</div>
+      <div class="order-status" ngClass="order-status-{{ order?.status?.toLocaleLowerCase() }}">
+        {{ order?.status }}
+      </div>
+    </div>
+    <div class="order-date">
+      {{ formatDate(order?.startDate) }} - {{ formatDate(order?.endDate) }}
+    </div>
+  </div>
+  <div class="order-amount">{{ order?.totalAmount | currency }}</div>
+</div>

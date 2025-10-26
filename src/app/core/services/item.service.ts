@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ApiResponse } from '../models/api-response';
 import { Item } from '../models/item/item';
-import { ITEM_ADD, ITEM_PREFIX } from '../constants/api.constants';
+import { ITEM_PREFIX } from '../constants/api.constants';
 
 @Injectable({ providedIn: 'root' })
 export class ItemService {
@@ -19,7 +19,7 @@ export class ItemService {
 
   // add item
   addItem(item: Item) {
-    return this.http.post<ApiResponse<Item>>(`${ITEM_ADD}`, item);
+    return this.http.post<ApiResponse<Item>>(`${ITEM_PREFIX}`, item);
   }
 
   // update item

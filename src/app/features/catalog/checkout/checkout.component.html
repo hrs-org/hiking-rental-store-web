@@ -1,0 +1,121 @@
+<div class="main-page">
+  <app-pwa-header title="Checkout" [backButtonVisible]="true"></app-pwa-header>
+
+  <div class="content">
+    <div class="container">
+      <div class="card-info">
+        <ng-container *ngIf="user$ | async as user">
+          <div class="user-details">
+            <div class="card-title">Customer Detail</div>
+            @if (user.role === 'Customer') {
+              <p class="user-details-name">{{ user.firstName }} {{ user.lastName }}</p>
+              <p class="user-details-email">Email: {{ user.email }}</p>
+            } @else {
+              <form [formGroup]="guestForm">
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>Customer Name</mat-label>
+                  <input matInput formControlName="name" placeholder="First Name" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%">
+                  <mat-label>Phone Number</mat-label>
+                  <input
+                    matInput
+                    formControlName="phoneNumber"
+                    placeholder="Phone Number"
+                    type="number"
+                  />
+                </mat-form-field>
+              </form>
+            }
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="card-info">
+        <div class="card-title">Order Detail</div>
+
+        <form [formGroup]="orderForm">
+          @if (user.role !== 'Customer') {
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Channel</mat-label>
+              <mat-select formControlName="channel" placeholder="Channel">
+                <mat-option *ngFor="let option of channelOptions" [value]="option.value">
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
+
+          <div class="date">
+            <mat-form-field
+              (click)="startpicker.open()"
+              appearance="outline"
+              style="width: 150px; font-size: 17px"
+            >
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="startpicker" formControlName="startDate" />
+              <mat-datepicker #startpicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field
+              (click)="endpicker.open()"
+              appearance="outline"
+              style="width: 150px; font-size: 17px"
+            >
+              <mat-label>End Date</mat-label>
+              <input matInput [matDatepicker]="endpicker" formControlName="endDate" />
+              <mat-datepicker #endpicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+
+      @if (user.role !== 'Customer') {
+        <div class="card-info">
+          <div class="card-title">Payment Type</div>
+          <form [formGroup]="paymentTypeForm">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Payment Type</mat-label>
+              <mat-select formControlName="paymentType" placeholder="Payment Type">
+                <mat-option *ngFor="let option of paymentOptions" [value]="option.value">
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+        </div>
+      }
+
+      @for (item of checkout?.items; track $index) {
+        <div class="card-item card-info">
+          <div class="item-left-section">
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-qty">Quantity: {{ item.selectedQty }}</div>
+          </div>
+          <div class="item-right-section">
+            <div class="item-price-calculation">
+              {{ item.dailyRate | currency }} x {{ item.selectedQty }} x {{ totalDays() }} =
+            </div>
+            <div class="item-price">
+              {{ (item.dailyRate || 0) * (item.selectedQty || 0) * totalDays() | currency }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="bottom-confirmation">
+    <div class="bottom-content">
+      <div class="total-price-section">
+        <div class="total-price">Total Price</div>
+        <div class="price">{{ totalPrice() | currency }}</div>
+      </div>
+      <div class="button-group">
+        <button class="button" (click)="onCancel()" mat-stroked-button>Cancel</button>
+        <button class="button" (click)="onPayment()" mat-flat-button [disabled]="!isValid()">
+          Payment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

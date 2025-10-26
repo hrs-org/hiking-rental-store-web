@@ -1,0 +1,126 @@
+.main-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  padding-top: 56px;
+  padding-bottom: 122px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  gap: 12px;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 12px;
+  width: 85vw;
+  padding: 16px;
+  background-color: white;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: large;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.date {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-name {
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.item-qty {
+  font-size: 14px;
+  color: #9f9f9f;
+}
+
+.item-right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.item-price-calculation {
+  font-size: 12px;
+  color: #9f9f9f;
+}
+
+.item-price {
+  font-weight: 500;
+  font-size: 20px;
+  margin-top: 4px;
+  color: #10b981;
+}
+
+.total-price-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.price {
+  font-size: large;
+  font-weight: 600;
+  color: #10b981;
+}
+
+.bottom-confirmation {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  height: 122px;
+  background: #fdfdfd;
+  border-top: 1px solid #e0e0e0;
+  border-radius: 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.button {
+  width: 48%;
+}

@@ -1,31 +1,33 @@
 <nav class="bottom-nav">
   <button
-    [routerLink]="['/store']"
+    [routerLink]="['/catalog']"
     routerLinkActive="active"
     [routerLinkActiveOptions]="{ exact: true }"
     (click)="onClick()"
   >
     <mat-icon class="icon">store</mat-icon>
-    <p style="margin: 0; padding: 0">Store</p>
+    <p style="margin: 0; padding: 0">Catalog</p>
   </button>
-  <button
-    [routerLink]="['/booking']"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    (click)="onClick()"
-  >
-    <mat-icon class="icon">library_books</mat-icon>
-    <p style="margin: 0; padding: 0">Booking</p>
-  </button>
-  <button
-    [routerLink]="['/return']"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    (click)="onClick()"
-  >
-    <mat-icon class="icon">assignment_returned</mat-icon>
-    <p style="margin: 0; padding: 0">Return</p>
-  </button>
+  @if (user?.role !== 'Customer') {
+    <button
+      [routerLink]="['/booking']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="onClick()"
+    >
+      <mat-icon class="icon">library_books</mat-icon>
+      <p style="margin: 0; padding: 0">Booking</p>
+    </button>
+    <button
+      [routerLink]="['/return']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="onClick()"
+    >
+      <mat-icon class="icon">assignment_returned</mat-icon>
+      <p style="margin: 0; padding: 0">Return</p>
+    </button>
+  }
   <button
     [routerLink]="['/settings']"
     routerLinkActive="active"

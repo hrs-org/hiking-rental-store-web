@@ -7,11 +7,15 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
-import { userReducer } from './store/user/user.reducer';
-import { UserEffects } from './store/user/user.effects';
+import { userReducer } from './state/user/user.reducer';
+import { UserEffects } from './state/user/user.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { itemsReducer } from './store/items/items.reducer';
-import { ItemEffects } from './store/items/items.effects';
+import { itemsReducer } from './state/items/items.reducer';
+import { ItemEffects } from './state/items/items.effects';
+import { storeReducer } from './state/store/store.reducer';
+import { StoreEffects } from './state/store/store.effects';
+import { ordersReducer } from './state/order/orders.reducer';
+import { OrderEffects } from './state/order/orders.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,8 +26,13 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideStore({ user: userReducer, items: itemsReducer }),
-    provideEffects([UserEffects, ItemEffects]),
+    provideStore({
+      user: userReducer,
+      items: itemsReducer,
+      store: storeReducer,
+      orders: ordersReducer,
+    }),
+    provideEffects([UserEffects, ItemEffects, StoreEffects, OrderEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

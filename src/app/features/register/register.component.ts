@@ -8,6 +8,7 @@ import { UserService } from '../../core/services/user.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
 import { MatIcon } from '@angular/material/icon';
+import { LoadingService } from '../../core/services/loading.service';
 
 @Component({
   selector: 'app-register',
@@ -17,10 +18,10 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class RegisterComponent {
   private userService = inject(UserService);
+  private loadingService = inject(LoadingService);
   private bottomSheet = inject(MatBottomSheet);
   private router = inject(Router);
 
-  isLoading = false;
   submitted = false;
   hidePassword = true;
   hideConfirmPassword = true;
@@ -32,16 +33,6 @@ export class RegisterComponent {
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', Validators.required),
   });
-
-  private setLoadingState(loading: boolean): void {
-    this.isLoading = loading;
-
-    if (loading) {
-      this.registerForm.disable();
-    } else {
-      this.registerForm.enable();
-    }
-  }
 
   private openInfoSheet(title: string, description: string, callback?: () => void): void {
     this.bottomSheet
@@ -124,9 +115,7 @@ export class RegisterComponent {
 
     const { password, firstName, lastName, email } = this.registerForm.value;
 
-    if (this.isLoading) return;
-    this.setLoadingState(true);
-
+    this.loadingService.show();
     this.userService
       .register({
         firstName: firstName!,
@@ -136,20 +125,13 @@ export class RegisterComponent {
       })
       .subscribe({
         next: () => {
-          this.setLoadingState(false);
           this.openInfoSheet(
             'Registration Successful',
             'You can now log in with your credentials.',
             () => this.navigateToLogin(),
           );
         },
-        error: () => {
-          this.setLoadingState(false);
-          this.openInfoSheet(
-            'Registration Failed',
-            'Something went wrong during registration. Please try again.',
-          );
-        },
+        complete: () => this.loadingService.hide(),
       });
   }
 
@@ -165,9 +147,7 @@ export class RegisterComponent {
   }
 
   navigateToLogin(): void {
-    if (!this.isLoading) {
-      this.router.navigate(['login']);
-    }
+    this.router.navigate(['login']);
   }
 
   togglePasswordVisibility() {

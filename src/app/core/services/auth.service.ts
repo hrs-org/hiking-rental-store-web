@@ -41,9 +41,13 @@ export class AuthService {
   }
 
   refreshToken() {
-    return this.http.post<ApiResponse<LoginResponse>>(REFRESH_TOKEN, {
-      context: new HttpContext().set(SKIP_AUTH, true),
-    });
+    return this.http.post<ApiResponse<LoginResponse>>(
+      REFRESH_TOKEN,
+      {
+        context: new HttpContext().set(SKIP_AUTH, true),
+      },
+      { withCredentials: true },
+    );
   }
 
   logout() {

@@ -20,6 +20,7 @@ export class ItemsComponent {
     description: '',
     price: 0,
     quantity: 0,
+    rates: [],
     children: [] as Item[],
   };
   @Input() isExpanded = false;
@@ -39,7 +40,6 @@ export class ItemsComponent {
   onClickDelete(itemId: number) {
     if (confirm(`Are you sure you want to delete item: ${this.item.name}?`)) {
       this.itemService.deleteItem(itemId).subscribe(() => {
-        console.log(`Item with id ${itemId} deleted`);
         window.location.reload();
       });
     }

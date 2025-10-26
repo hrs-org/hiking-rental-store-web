@@ -1,0 +1,19 @@
+<div class="main-page">
+  <app-pwa-header title="Payment Confirmation" [backButtonVisible]="false"></app-pwa-header>
+
+  <div class="content">
+    <h2 class="title">{{ message }}</h2>
+
+    @if (countdown > 0) {
+      <div class="countdown-container">
+        <p>
+          Thank you for your purchase. Redirecting to store in
+          <span class="countdown">{{ countdown }}</span>
+          seconds...
+        </p>
+      </div>
+    } @else {
+      <p>Redirecting now...</p>
+    }
+  </div>
+</div>
