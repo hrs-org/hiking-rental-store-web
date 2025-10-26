@@ -59,6 +59,7 @@ export class CheckoutComponent implements OnInit {
   private loadingService = inject(LoadingService);
 
   checkout?: Checkout;
+  storeId?: number;
   user$ = this.store.select(selectUser);
   user = {} as User;
   orderRequest = {} as OrderRequest;
@@ -86,6 +87,7 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
     this.checkout = navigation?.extras.state?.['checkout'];
+    this.storeId = navigation?.extras.state?.['storeId'];
 
     if (!this.checkout) {
       const checkoutStr = localStorage.getItem('checkoutItems');
@@ -94,6 +96,15 @@ export class CheckoutComponent implements OnInit {
       }
     } else {
       localStorage.setItem('checkoutItems', JSON.stringify(this.checkout));
+    }
+
+    if (!this.storeId) {
+      const storeIdStr = localStorage.getItem('selectedStoreId');
+      if (storeIdStr) {
+        this.storeId = JSON.parse(storeIdStr) as number;
+      }
+    } else {
+      localStorage.setItem('selectedStoreId', JSON.stringify(this.storeId));
     }
 
     if (!this.checkout) {
@@ -107,6 +118,7 @@ export class CheckoutComponent implements OnInit {
         this.user = user;
 
         this.orderRequest = {
+          storeId: this.storeId!,
           channel: OrderChannel.POS,
           paymentType: OrderPaymentType.Cash,
           startDate: checkout.startDate,
@@ -114,7 +126,7 @@ export class CheckoutComponent implements OnInit {
           items: checkout.items
             .filter((item) => item.selectedQty && item.selectedQty > 0)
             .map((item) => ({
-              itemId: item.itemId as number,
+              itemId: item.itemId!,
               quantity: item.selectedQty || 0,
             })),
         };
@@ -150,6 +162,7 @@ export class CheckoutComponent implements OnInit {
 
     if (this.user.role === UserRole.Customer) {
       this.orderRequest.customerId = this.user.id;
+      this.orderRequest.guestName = `${this.user.firstName} ${this.user.lastName}`;
     } else {
       this.orderRequest.guestName = this.guestForm.controls['name'].value!;
       this.orderRequest.guestPhone = this.guestForm.controls['phoneNumber'].value!.toString();
@@ -180,12 +193,14 @@ export class CheckoutComponent implements OnInit {
                 });
               }
             },
+            error: () => this.loadingService.hide(),
             complete: () => this.loadingService.hide(),
           });
         } else {
           this.router.navigate(['/store']);
         }
       },
+      error: () => this.loadingService.hide(),
       complete: () => this.loadingService.hide(),
     });
   }

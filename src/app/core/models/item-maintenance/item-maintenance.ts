@@ -1,5 +1,5 @@
 export interface ItemMaintenance {
-  id: number;
+  id: string;
   itemId: number;
   rentalOrderId: number;
   type: ItemMaintenanceType;
@@ -16,7 +16,7 @@ export enum ItemMaintenanceType {
 }
 
 export interface ItemMaintenanceFixRequest {
-  id: number;
+  id: string;
   quantityFixed: number;
   remarks?: string;
 }
