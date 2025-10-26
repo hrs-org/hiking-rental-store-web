@@ -1,6 +1,11 @@
 <div class="container">
   @for (item of orderList$ | async; track $index) {
-    <app-order-item [order]="item" (orderClick)="handleOrderClick($event)"></app-order-item>
+    <app-order-item
+      [order]="item"
+      [showDelete]="true"
+      (orderClick)="handleOrderClick($event)"
+      (deleteClick)="deleteOrder($event)"
+    ></app-order-item>
   }
   @if ((orderList$ | async)?.length === 0) {
     <div>No bookings available.</div>
