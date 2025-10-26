@@ -37,7 +37,7 @@ export class ItemsComponent {
     this.router.navigate(['add-edit-item', this.item.id]);
   }
 
-  onClickDelete(itemId: number) {
+  onClickDelete(itemId: string) {
     if (confirm(`Are you sure you want to delete item: ${this.item.name}?`)) {
       this.itemService.deleteItem(itemId).subscribe(() => {
         window.location.reload();

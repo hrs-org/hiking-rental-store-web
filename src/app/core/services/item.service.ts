@@ -9,7 +9,7 @@ export class ItemService {
   http = inject(HttpClient);
 
   // get item by id
-  getItemById(itemId: number) {
+  getItemById(itemId: string) {
     return this.http.get<ApiResponse<Item>>(`${ITEM_PREFIX}/${itemId}`);
   }
   // get all items
@@ -28,7 +28,7 @@ export class ItemService {
   }
 
   // delete item
-  deleteItem(itemId: number) {
+  deleteItem(itemId: string) {
     return this.http.delete<ApiResponse<null>>(`${ITEM_PREFIX}/${itemId}`);
   }
 }

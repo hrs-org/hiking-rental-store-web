@@ -15,11 +15,20 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'catalog',
-            pathMatch: 'full',
+            loadComponent: () =>
+              import('./features/role-redirect/role-redirect.component').then(
+                (m) => m.RoleRedirectComponent,
+              ),
           },
           {
-            path: 'catalog',
+            path: 'stores',
+            loadComponent: () =>
+              import('./features/store-list/store-list.component').then(
+                (m) => m.StoreListComponent,
+              ),
+          },
+          {
+            path: 'catalog/:storeId',
             loadComponent: () =>
               import('./features/catalog/catalog.component').then((m) => m.CatalogComponent),
           },
@@ -83,6 +92,13 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () =>
           import('./features/settings/profile/profile.component').then((m) => m.ProfileComponent),
+      },
+      {
+        path: 'settings/store-profile',
+        loadComponent: () =>
+          import('./features/settings/store-profile/store-profile.component').then(
+            (m) => m.StoreProfileComponent,
+          ),
       },
       {
         path: 'employees-management',

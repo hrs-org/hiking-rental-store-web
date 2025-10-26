@@ -5,6 +5,7 @@ import {
   ItemMaintenance,
   ItemMaintenanceFixRequest,
 } from '../models/item-maintenance/item-maintenance';
+import { ApiResponse } from '../models/api-response';
 
 @Injectable({ providedIn: 'root' })
 export class ItemMaintenanceService {
@@ -16,5 +17,11 @@ export class ItemMaintenanceService {
 
   fixItemMaintenance(request: ItemMaintenanceFixRequest) {
     return this.http.post(ITEM_MAINTENANCE_FIX.replace('{0}', `${request.id}`), request);
+  }
+
+  getItemMaintenanceByStoreId(id: string) {
+    return this.http.get<ApiResponse<ItemMaintenance[]>>(
+      `${ITEM_MAINTENANCE_PREFIX}/items?storeId=${id}`,
+    );
   }
 }
