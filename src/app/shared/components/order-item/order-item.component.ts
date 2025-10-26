@@ -21,8 +21,8 @@ import { CurrencyPipe, NgClass, NgIf } from '@angular/common';
 export class OrderItemComponent implements OnInit, OnDestroy {
   @Input() showDelete = false;
   @Input() order?: Order;
-  @Output() orderClick = new EventEmitter<number>();
-  @Output() deleteClick = new EventEmitter<number | { id: number; auto?: boolean }>();
+  @Output() orderClick = new EventEmitter<string>();
+  @Output() deleteClick = new EventEmitter<string | { id: string; auto?: boolean }>();
   countdown = '';
   private timer?: ReturnType<typeof setInterval>;
   private cdr = inject(ChangeDetectorRef);
@@ -88,11 +88,15 @@ export class OrderItemComponent implements OnInit, OnDestroy {
   }
 
   onClick() {
-    this.orderClick.emit(this.order?.id);
+    if (this.order?.id) {
+      this.orderClick.emit(this.order.id);
+    }
   }
 
   onDeleteClick(event: MouseEvent) {
     event.stopPropagation();
-    this.deleteClick.emit(this.order?.id);
+    if (this.order?.id) {
+      this.deleteClick.emit(this.order.id);
+    }
   }
 }

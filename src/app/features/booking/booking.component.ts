@@ -30,8 +30,8 @@ export class BookingComponent implements OnInit {
     this.router.navigate(['booking', orderId]);
   }
 
-  deleteOrder(event: number | { id: number; auto?: boolean }) {
-    let orderId: number;
+  deleteOrder(event: string | { id: string; auto?: boolean }) {
+    let orderId: string;
     let auto = false;
     if (typeof event === 'object' && event !== null) {
       orderId = event.id;

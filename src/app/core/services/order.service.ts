@@ -15,7 +15,7 @@ import { ApiResponse } from '../models/api-response';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
-  deleteOrder(orderId: number) {
+  deleteOrder(orderId: string) {
     return this.http.delete<ApiResponse<null>>(`${ORDER_PREFIX}/${orderId}`);
   }
   http = inject(HttpClient);
