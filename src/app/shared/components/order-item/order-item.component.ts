@@ -33,13 +33,6 @@ export class OrderItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('OrderItemComponent order:', this.order);
-    console.log(
-      'OrderItemComponent createdAt:',
-      this.order && 'createdAt' in this.order
-        ? (this.order as { createdAt?: string | Date }).createdAt
-        : undefined,
-    );
     if (this.order?.status === 'PendingPayment' && this.getCreatedAt()) {
       this.updateCountdown();
       this.timer = setInterval(() => this.updateCountdown(), 1000);
