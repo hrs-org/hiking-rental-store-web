@@ -42,11 +42,13 @@ export class CatalogComponent implements OnInit {
 
   startDate = new Date();
   endDate = new Date();
+  today = new Date();
   selectedQuantities: Record<string, number> = {};
 
   showDateFilter = false;
 
   ngOnInit(): void {
+    this.today.setHours(0, 0, 0, 0);
     this.endDate.setDate(this.endDate.getDate() + 5);
 
     this.store.dispatch(loadCatalog({ startDate: this.startDate, endDate: this.endDate }));
