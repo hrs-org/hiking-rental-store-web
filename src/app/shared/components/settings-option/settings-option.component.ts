@@ -16,6 +16,7 @@ export interface SettingsOption {
 
 export enum Identifier {
   Profile = 'profile',
+  StoreProfile = 'store-profile',
   EmployeeManagement = 'employee-management',
   ItemManagement = 'item-management',
   ItemMaintenance = 'item-maintenance',

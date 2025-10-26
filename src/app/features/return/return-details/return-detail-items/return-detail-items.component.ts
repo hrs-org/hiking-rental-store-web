@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ReturnDetailItemsComponent {
   @Input() item: OrderItem = {} as OrderItem;
-  @Input() returnQuantities: Record<number, ReturnRentalOrderItem> = {};
+  @Input() returnQuantities: Record<string, ReturnRentalOrderItem> = {};
   @Input() selectedQty = {
-    rentalOrderItemId: 0,
+    rentalOrderItemId: '',
     goodQty: 0,
     repairQty: 0,
     damagedQty: 0,
@@ -22,7 +22,7 @@ export class ReturnDetailItemsComponent {
   } as ReturnRentalOrderItem;
 
   @Output() quantityChange = new EventEmitter<{
-    orderItemId: number;
+    orderItemId: string;
     returnQty: ReturnRentalOrderItem;
   }>();
 
@@ -32,7 +32,7 @@ export class ReturnDetailItemsComponent {
     this.expanded = !this.expanded;
   }
 
-  changeQty(orderItemId: number, delta: number) {
+  changeQty(orderItemId: string, delta: number) {
     const current = this.getQty(orderItemId);
     const next = Math.max(0, current + delta);
     this.quantityChange.emit({
@@ -41,13 +41,13 @@ export class ReturnDetailItemsComponent {
     });
   }
 
-  getQty(orderItemId: number): number {
+  getQty(orderItemId: string): number {
     return orderItemId === this.item.id
       ? this.selectedQty.goodQty
       : (this.returnQuantities?.[orderItemId].goodQty ?? 0);
   }
 
-  changeRepairQty(orderItemId: number, delta: number) {
+  changeRepairQty(orderItemId: string, delta: number) {
     const current = this.getRepairQty(orderItemId);
     const next = Math.max(0, current + delta);
     this.quantityChange.emit({
@@ -56,13 +56,13 @@ export class ReturnDetailItemsComponent {
     });
   }
 
-  getRepairQty(orderItemId: number): number {
+  getRepairQty(orderItemId: string): number {
     return orderItemId === this.item.id
       ? this.selectedQty.repairQty
       : (this.returnQuantities?.[orderItemId].repairQty ?? 0);
   }
 
-  changeDamagedQty(orderItemId: number, delta: number) {
+  changeDamagedQty(orderItemId: string, delta: number) {
     const current = this.getDamagedQty(orderItemId);
     const next = Math.max(0, current + delta);
     this.quantityChange.emit({
@@ -71,13 +71,13 @@ export class ReturnDetailItemsComponent {
     });
   }
 
-  getDamagedQty(orderItemId: number): number {
+  getDamagedQty(orderItemId: string): number {
     return orderItemId === this.item.id
       ? this.selectedQty.damagedQty
       : (this.returnQuantities?.[orderItemId].damagedQty ?? 0);
   }
 
-  changeLostQty(orderItemId: number, delta: number) {
+  changeLostQty(orderItemId: string, delta: number) {
     const current = this.getLostQty(orderItemId);
     const next = Math.max(0, current + delta);
     this.quantityChange.emit({
@@ -86,7 +86,7 @@ export class ReturnDetailItemsComponent {
     });
   }
 
-  getLostQty(orderItemId: number): number {
+  getLostQty(orderItemId: string): number {
     return orderItemId === this.item.id
       ? this.selectedQty.lostQty
       : (this.returnQuantities?.[orderItemId].lostQty ?? 0);

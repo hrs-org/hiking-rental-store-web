@@ -1,3 +1,5 @@
+import { RegisterRequest } from '../user/registerUserReq';
+
 export interface StoreViewModel {
   periodStart: Date;
   periodEnd: Date;
@@ -6,7 +8,7 @@ export interface StoreViewModel {
 }
 
 export interface StoreItem {
-  itemId: 0;
+  itemId: string;
   itemName: string;
   dailyRate: 0;
   availableQuantity: 0;
@@ -14,7 +16,7 @@ export interface StoreItem {
 }
 
 export interface StorePackage {
-  packageId: number;
+  packageId: string;
   packageName: string;
   dailyRate: number;
   availablePackages: number;
@@ -22,8 +24,8 @@ export interface StorePackage {
 }
 
 export interface CatalogEntry {
-  itemId?: number;
-  packageId?: number;
+  itemId?: string;
+  packageId?: string;
   catalogId: string;
   type: 'item' | 'package';
   name: string;
@@ -37,9 +39,24 @@ export interface CatalogEntry {
 }
 
 export interface PackageContentEntry {
-  itemId: number;
+  itemId: string;
   name: string;
   available: number;
   dailyRate: number;
   items?: CatalogEntry[];
+}
+
+export interface StoreDto {
+  id: string;
+  name: string;
+  description?: string;
+  address?: string;
+  phoneNumber?: string;
+}
+
+export interface RegisterStoreDto extends RegisterRequest {
+  name: string;
+  description?: string;
+  address?: string;
+  phoneNumber?: string;
 }

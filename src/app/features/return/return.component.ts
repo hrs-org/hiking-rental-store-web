@@ -22,7 +22,7 @@ export class ReturnComponent implements OnInit {
     this.store.dispatch(loadReturnPageOrders());
   }
 
-  handleOrderClick(orderId: number) {
+  handleOrderClick(orderId: string) {
     this.router.navigate(['return', orderId]);
   }
 }

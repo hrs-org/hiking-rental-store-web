@@ -15,7 +15,7 @@ jobs:
   deploy-uat:
     name: Build & Deploy to Azure Static Web App (UAT)
     runs-on: ubuntu-latest
-    environment: uat
+    environment: ms-uat
 
     steps:
       - uses: actions/checkout@v4
