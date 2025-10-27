@@ -169,7 +169,7 @@ export class AddEditItemComponent implements OnInit {
     };
   }
 
-  deleteRate(rateId: number) {
+  deleteRate(rateId: number | string) {
     this.item = {
       ...this.item,
       rates: this.item.rates.filter((rate) => rate.id !== rateId),
