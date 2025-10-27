@@ -4,6 +4,6 @@
     <app-order-item [order]="item" (orderClick)="handleOrderClick($event)"></app-order-item>
   }
   @if ((orderList$ | async)?.length === 0) {
-    <div>No transactions History.</div>
+    <div>No transactions history.</div>
   }
 </div>

@@ -176,7 +176,6 @@ export class CheckoutComponent implements OnInit {
         if (!res.data) {
           return;
         }
-        // localStorage.removeItem('checkoutItems');
         localStorage.setItem(
           'OrderDetail',
           JSON.stringify({
@@ -205,7 +204,7 @@ export class CheckoutComponent implements OnInit {
           });
         } else {
           localStorage.removeItem('OrderDetail');
-          localStorage.removeItem('CheckoutItems');
+          localStorage.removeItem('checkoutItems');
           this.router.navigate(['/store']);
         }
       },

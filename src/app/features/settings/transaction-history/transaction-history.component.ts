@@ -19,7 +19,7 @@ export class TransactionHistoryComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
   user$ = this.store.select(selectUser);
-  userId = 9999999;
+  userId: number | null = null;
   orderList$ = this.store.select(selectOrderById);
 
   ngOnInit(): void {
