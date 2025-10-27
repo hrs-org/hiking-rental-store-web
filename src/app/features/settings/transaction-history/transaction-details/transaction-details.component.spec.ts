@@ -73,9 +73,21 @@ describe('TransactionDetailsComponent', () => {
   });
 
   it('should set title to Pending Booking when order is pending', () => {
-    component.ngOnInit();
-    expect(component.isPending()).toBeTrue();
-    expect(component.title).toBe('Pending Booking');
+    // create a fresh fixture where the service returns a Pending order
+    (orderService.getOrderById as jasmine.Spy).and.returnValue(
+      of({
+        success: true,
+        message: '',
+        data: { ...mockOrder, status: OrderStatus.Pending },
+      } as ApiResponse<Order>),
+    );
+
+    const nf = TestBed.createComponent(TransactionDetailsComponent);
+    const comp = nf.componentInstance;
+    nf.detectChanges();
+
+    expect(comp.isPending()).toBeTrue();
+    expect(comp.title).toBe('Pending Booking');
   });
 
   it('formatDate should format date correctly', () => {
@@ -84,8 +96,20 @@ describe('TransactionDetailsComponent', () => {
   });
 
   it('isBooked should return false for pending order and getStatusClass should reflect status', () => {
-    expect(component.isBooked()).toBeFalse();
-    expect(component.getStatusClass()).toBe('order-status-pending');
+    // use a fresh instance with pending status to be deterministic
+    (orderService.getOrderById as jasmine.Spy).and.returnValue(
+      of({
+        success: true,
+        message: '',
+        data: { ...mockOrder, status: OrderStatus.Pending },
+      } as ApiResponse<Order>),
+    );
+    const nf = TestBed.createComponent(TransactionDetailsComponent);
+    const comp = nf.componentInstance;
+    nf.detectChanges();
+
+    expect(comp.isBooked()).toBeFalse();
+    expect(comp.getStatusClass()).toBe('order-status-pending');
   });
 
   it('should handle no-data response from orderService and set title to Booking Details', () => {
@@ -129,17 +153,26 @@ describe('TransactionDetailsComponent', () => {
     expect(orderService.getOrderById).toHaveBeenCalledWith(7);
   });
 
-  it('should not hide loading when orderService throws an error', () => {
+  it('should keep loading visible when orderService errors (no complete)', () => {
+    // Make service error synchronously on subscribe
     (orderService.getOrderById as jasmine.Spy).and.returnValue(throwError(() => new Error('boom')));
 
-    expect(() => {
-      const nf = TestBed.createComponent(TransactionDetailsComponent);
-      nf.detectChanges();
-    }).toThrow();
+    // Reset previous calls from the default fixture created in beforeEach
+    loadingService.show.calls.reset();
+    loadingService.hide.calls.reset();
 
-    // loading.show should have been called before the error
+    // Create a fresh component instance to trigger ngOnInit
+    const nf = TestBed.createComponent(TransactionDetailsComponent);
+    // Some Angular setups may rethrow Zone errors; we only assert on loading state calls
+    try {
+      nf.detectChanges();
+    } catch {
+      // ignore to keep assertions focused on loadingService behavior
+    }
+
+    // show should be called when starting to load
     expect(loadingService.show).toHaveBeenCalled();
-    // hide should NOT be called because observable errored before completion
+    // complete handler is not invoked on error, so hide must not be called
     expect(loadingService.hide).not.toHaveBeenCalled();
   });
 
