@@ -16,6 +16,9 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookingComponent implements OnInit {
+  onCountdownEnd() {
+    this.store.dispatch(loadBookingPageOrders());
+  }
   private store = inject(Store);
   private router = inject(Router);
   private orderService = inject(OrderService);
@@ -30,18 +33,8 @@ export class BookingComponent implements OnInit {
     this.router.navigate(['booking', orderId]);
   }
 
-  deleteOrder(event: number | { id: number; auto?: boolean }) {
-    let orderId: number;
-    let auto = false;
-    if (typeof event === 'object' && event !== null) {
-      orderId = event.id;
-      auto = !!event.auto;
-    } else {
-      orderId = event;
-    }
-    if (!auto) {
-      if (!confirm('Are you sure you want to delete this order?')) return;
-    }
+  deleteOrder(orderId: number, auto = false) {
+    if (!auto && !confirm('Are you sure you want to delete this order?')) return;
     this.orderService.deleteOrder(orderId).subscribe({
       next: () => {
         this.store.dispatch(loadBookingPageOrders());

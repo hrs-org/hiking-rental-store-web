@@ -12,13 +12,11 @@
   </div>
   <div style="display: flex; align-items: center; gap: 8px">
     <div class="order-amount">{{ order?.totalAmount | currency }}</div>
-    <ng-container *ngIf="order?.status === 'PendingPayment' && countdown">
-      <span style="color: #fbbf24; font-weight: 500; min-width: 60px; text-align: center">
-        {{ countdown }}
-      </span>
-    </ng-container>
-    <button *ngIf="showDelete" mat-stroked-button color="warn" (click)="onDeleteClick($event)">
-      Delete
-    </button>
+    @if (order?.status === 'PendingPayment' && countdown !== null) {
+      <span class="pending-countdown">{{ countdownDisplay }}</span>
+    }
+    @if (showDelete) {
+      <button mat-stroked-button color="warn" (click)="onDeleteClick($event)">Delete</button>
+    }
   </div>
 </div>
