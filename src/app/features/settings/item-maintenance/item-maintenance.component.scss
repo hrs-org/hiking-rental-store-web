@@ -11,4 +11,17 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+}
+.container {
+  padding: 12px 16px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.container app-item-maintenance-item,
+.container .maintenance-card {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
 }

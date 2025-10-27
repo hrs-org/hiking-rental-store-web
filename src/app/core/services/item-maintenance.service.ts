@@ -5,16 +5,20 @@ import {
   ItemMaintenance,
   ItemMaintenanceFixRequest,
 } from '../models/item-maintenance/item-maintenance';
+import { ApiResponse } from '../models/api-response';
 
 @Injectable({ providedIn: 'root' })
 export class ItemMaintenanceService {
   http = inject(HttpClient);
 
   getItemMaintenances() {
-    return this.http.get<ItemMaintenance[]>(ITEM_MAINTENANCE_PREFIX);
+    return this.http.get<ApiResponse<ItemMaintenance[]>>(ITEM_MAINTENANCE_PREFIX);
   }
 
   fixItemMaintenance(request: ItemMaintenanceFixRequest) {
-    return this.http.post(ITEM_MAINTENANCE_FIX.replace('{0}', `${request.id}`), request);
+    return this.http.post<ApiResponse<ItemMaintenance>>(
+      ITEM_MAINTENANCE_FIX.replace('{0}', `${request.id}`),
+      request,
+    );
   }
 }
