@@ -57,7 +57,6 @@ export class AddEditItemComponent implements OnInit {
   is_active = false;
   displayedColumns: string[] = ['minDays', 'dailyRate', 'delete'];
 
-  // get the item and display it
   item$ = this.store.select(selectItemById(this.itemId!));
   item: Item = {
     name: '',
@@ -148,15 +147,14 @@ export class AddEditItemComponent implements OnInit {
   }
 
   addChildItem() {
-    // Generate a temporary ID for new children
-    const tempId = Math.random() + new Date().getTime();
+    const tempId = 'temp-' + (Math.random() + new Date().getTime());
     this.item = {
       ...this.item,
       children: [...this.item.children, { id: tempId, name: '', quantity: 0, price: 0 } as Item],
     };
   }
 
-  deleteChildItem(childId: number) {
+  deleteChildItem(childId: number | string) {
     this.item = {
       ...this.item,
       children: this.item.children.filter((child) => child.id !== childId),
@@ -164,8 +162,7 @@ export class AddEditItemComponent implements OnInit {
   }
 
   addRate() {
-    // Generate a temporary ID for new rates (negative timestamp to avoid conflicts)
-    const tempId = Math.random() + new Date().getTime();
+    const tempId = 'temp-' + (Math.random() + new Date().getTime());
     this.item = {
       ...this.item,
       rates: [...this.item.rates, { id: tempId, minDays: 0, dailyRate: 0, isActive: true }],
