@@ -49,6 +49,20 @@ export const settingItems: SettingsOption[] = [
   },
   {
     order: 4,
+    identifier: Identifier.PackageManagement,
+    section: Section.Management,
+    title: 'Package Management',
+    titleUppercase: false,
+    desc: 'Manage packages in the store',
+    icon: 'person',
+    iconColor: 'blue',
+    showChevron: true,
+    onClick: () => {
+      return;
+    },
+  },
+  {
+    order: 5,
     identifier: Identifier.ItemMaintenance,
     section: Section.Management,
     title: 'Item Maintenance',
@@ -62,7 +76,7 @@ export const settingItems: SettingsOption[] = [
     },
   },
   {
-    order: 5,
+    order: 6,
     identifier: Identifier.Logout,
     section: Section.Settings,
     title: 'Logout',

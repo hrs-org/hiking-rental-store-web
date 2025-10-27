@@ -3,6 +3,6 @@ export interface Package {
   name: string;
   description: string;
   basePrice: number;
-  items: { itemId: number; quantity: number }[];
+  items: { itemId: number; itemName: string; quantity: number }[];
   rates: { id?: number; minDays: number; dailyRate: number; isActive: boolean }[];
 }

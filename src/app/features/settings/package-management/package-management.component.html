@@ -1,6 +1,6 @@
-<div>
+<div class="main-page">
   <app-pwa-header title="Package Management" [backButtonVisible]="true"></app-pwa-header>
-  <div class="item-list">
+  <div class="content">
     @for (packages of packageList$ | async; track $index) {
       <app-packages [packages]="packages"></app-packages>
     }

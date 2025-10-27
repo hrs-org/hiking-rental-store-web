@@ -121,6 +121,31 @@ export const routes: Routes = [
         data: { roles: [UserRole.Admin, UserRole.Manager] },
       },
       {
+        path: 'package-management',
+        loadComponent: () =>
+          import('./features/settings/package-management/package-management.component').then(
+            (m) => m.PackageManagementComponent,
+          ),
+      },
+      {
+        path: 'add-edit-package',
+        loadComponent: () =>
+          import(
+            './features/settings/package-management/add-edit-package/add-edit-package.component'
+          ).then((m) => m.AddEditPackageComponent),
+        canActivate: [RoleGuard],
+        data: { roles: [UserRole.Admin, UserRole.Manager] },
+      },
+      {
+        path: 'add-edit-package/:id',
+        loadComponent: () =>
+          import(
+            './features/settings/package-management/add-edit-package/add-edit-package.component'
+          ).then((m) => m.AddEditPackageComponent),
+        canActivate: [RoleGuard],
+        data: { roles: [UserRole.Admin, UserRole.Manager] },
+      },
+      {
         path: 'item-maintenance',
         loadComponent: () =>
           import('./features/settings/item-maintenance/item-maintenance.component').then(
@@ -152,13 +177,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/forget-password/forget-password.component').then(
         (m) => m.ForgetPasswordComponent,
-      ),
-  },
-  {
-    path: 'package-management',
-    loadComponent: () =>
-      import('./features/settings/package-management/package-management.component').then(
-        (m) => m.PackageManagementComponent,
       ),
   },
   {

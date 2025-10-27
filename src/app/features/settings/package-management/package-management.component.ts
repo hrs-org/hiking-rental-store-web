@@ -23,9 +23,12 @@ export class PackageManagementComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(loadPackages());
+    this.packageList$.subscribe((packageList) => {
+      this.packageList = packageList;
+    });
   }
 
   onClickAddPackage() {
-    this.router.navigate(['package-management']);
+    this.router.navigate(['add-edit-package']);
   }
 }

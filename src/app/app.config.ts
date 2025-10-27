@@ -12,6 +12,8 @@ import { UserEffects } from './state/user/user.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { itemsReducer } from './state/items/items.reducer';
 import { ItemEffects } from './state/items/items.effects';
+import { packagesReducer } from './store/packages/packages.reducer';
+import { PackageEffects } from './store/packages/packages.effects';
 import { storeReducer } from './state/store/store.reducer';
 import { StoreEffects } from './state/store/store.effects';
 import { ordersReducer } from './state/order/orders.reducer';
@@ -29,10 +31,11 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       user: userReducer,
       items: itemsReducer,
+      packages: packagesReducer,
       store: storeReducer,
       orders: ordersReducer,
     }),
-    provideEffects([UserEffects, ItemEffects, StoreEffects, OrderEffects]),
+    provideEffects([UserEffects, ItemEffects, PackageEffects, StoreEffects, OrderEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),
