@@ -4,7 +4,7 @@
       <div class="header">
         <span class="item-id">Item ID: {{ itemMaintenance?.itemId }}</span>
         <span class="type-badge" [ngClass]="getTypeClass(itemMaintenance?.type!)">
-          {{ getTypeLabel(itemMaintenance?.type!) }}
+          {{ itemMaintenance?.type }}
         </span>
       </div>
 
@@ -32,7 +32,7 @@
       }
     </div>
 
-    @if (itemMaintenance?.type === 'Repair') {
+    @if (itemMaintenance?.type === ItemMaintenanceType.Repair) {
       <button
         mat-raised-button
         color="primary"

@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class ItemMaintenanceItemComponent {
   @Input() itemMaintenance?: ItemMaintenance;
   fixClicked = output<ItemMaintenance>();
+  readonly ItemMaintenanceType = ItemMaintenanceType;
 
   onFixClick(event: Event) {
     event.stopPropagation();
@@ -31,16 +32,6 @@ export class ItemMaintenanceItemComponent {
 
     const fixed = this.itemMaintenance.quantityFixed || 0;
     return fixed >= this.itemMaintenance.quantity;
-  }
-
-  getTypeLabel(type: ItemMaintenanceType): string {
-    const types: Record<string, string> = {
-      [ItemMaintenanceType.Repair]: 'Repair',
-      [ItemMaintenanceType.Fixed]: 'Fixed',
-      [ItemMaintenanceType.Broken]: 'Broken',
-      [ItemMaintenanceType.Lost]: 'Lost',
-    };
-    return types[type] || 'Unknown';
   }
 
   getTypeClass(type: ItemMaintenanceType): string {

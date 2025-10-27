@@ -35,8 +35,6 @@ export class ItemMaintenanceComponent implements OnInit {
   }
 
   onFixItem(item: ItemMaintenance): void {
-    const remainingQuantity = item.quantity - (item.quantityFixed || 0);
-
     const request: ItemMaintenanceFixRequest = {
       id: item.id,
       quantityFixed: item.quantity,
@@ -52,7 +50,7 @@ export class ItemMaintenanceComponent implements OnInit {
             .open(InfoBottomSheetComponent, {
               data: {
                 title: 'Success',
-                description: `Successfully fixed ${remainingQuantity} item(s).`,
+                description: `Successfully fixed ${item.quantity} item(s).`,
                 isConfirm: false,
                 confirmButtonText: 'OK',
               },
