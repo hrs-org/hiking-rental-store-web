@@ -14,6 +14,6 @@ export const packagesReducer = createReducer(
   initialState,
   on(
     loadPackagesSuccess,
-    (state, { packages }): PackageState => ({ ...state, packages: packages }),
+    (state, { packages }): PackageState => ({ ...state, packages }),
   ),
 );
