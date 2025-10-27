@@ -16,6 +16,7 @@
         <div class="item-stock">Available: {{ item.available }}</div>
       </div>
       <div class="expand-icon">
+        <span class="expand-label">Total: {{ getTotalSelectedQty(item) }} items</span>
         <mat-icon>
           {{ expanded ? 'expand_less' : 'expand_more' }}
         </mat-icon>

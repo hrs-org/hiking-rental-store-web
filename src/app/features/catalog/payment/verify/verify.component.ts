@@ -42,6 +42,8 @@ export class VerifyComponent implements OnInit {
           }
         });
     }
+    localStorage.removeItem('checkoutItems');
+    localStorage.removeItem('OrderDetail');
     this.startCountdown();
   }
 
