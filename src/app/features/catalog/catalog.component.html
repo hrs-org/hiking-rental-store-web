@@ -20,6 +20,8 @@
             [matDatepicker]="startpicker"
             [(ngModel)]="startDate"
             (dateChange)="onDateChange()"
+            [max]="endDate"
+            [min]="today"
           />
           <mat-datepicker #startpicker></mat-datepicker>
         </mat-form-field>
@@ -36,6 +38,7 @@
             [matDatepicker]="endpicker"
             [(ngModel)]="endDate"
             (dateChange)="onDateChange()"
+            [min]="startDate || today"
           />
           <mat-datepicker #endpicker></mat-datepicker>
         </mat-form-field>

@@ -43,12 +43,15 @@ export class CatalogComponent implements OnInit {
 
   startDate = new Date();
   endDate = new Date();
+  today = new Date();
   selectedQuantities: Record<string, number> = {};
 
   showDateFilter = false;
 
   ngOnInit(): void {
     const checkoutStr = localStorage.getItem('checkoutItems');
+    this.today.setHours(0, 0, 0, 0);
+    this.startDate.setHours(0, 0, 0, 0);
     if (checkoutStr) {
       this.checkout = JSON.parse(checkoutStr) as Checkout;
       this.startDate = new Date(this.checkout.startDate);
@@ -56,7 +59,6 @@ export class CatalogComponent implements OnInit {
     } else {
       this.endDate.setDate(this.endDate.getDate() + 5);
     }
-
     this.store.dispatch(loadCatalog({ startDate: this.startDate, endDate: this.endDate }));
     this.catalog$.subscribe((catalog) => {
       this.catalog = catalog;
