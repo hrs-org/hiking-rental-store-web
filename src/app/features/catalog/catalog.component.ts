@@ -49,6 +49,7 @@ export class CatalogComponent implements OnInit {
 
   ngOnInit(): void {
     this.today.setHours(0, 0, 0, 0);
+    this.startDate.setHours(0, 0, 0, 0);
     this.endDate.setDate(this.endDate.getDate() + 5);
 
     this.store.dispatch(loadCatalog({ startDate: this.startDate, endDate: this.endDate }));
