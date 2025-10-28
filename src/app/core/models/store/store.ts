@@ -11,6 +11,7 @@ export interface StoreItem {
   dailyRate: number;
   availableQuantity: number;
   basePrice?: number;
+  rentingQuantity?: number;
   children: StoreItem[] | null;
 }
 
@@ -31,7 +32,6 @@ export interface CatalogEntry {
   dailyRate: number;
   available: number;
   basePrice?: number;
-
   children?: CatalogEntry[];
   packageItems?: PackageContentEntry[];
 
@@ -43,5 +43,6 @@ export interface PackageContentEntry {
   name: string;
   available: number;
   dailyRate: number;
+  rentingQuantity?: number;
   items?: CatalogEntry[];
 }
