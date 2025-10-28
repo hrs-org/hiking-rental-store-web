@@ -12,8 +12,5 @@ export const initialState: PackageState = {
 
 export const packagesReducer = createReducer(
   initialState,
-  on(
-    loadPackagesSuccess,
-    (state, { packages }): PackageState => ({ ...state, packages }),
-  ),
+  on(loadPackagesSuccess, (state, { packages }): PackageState => ({ ...state, packages })),
 );

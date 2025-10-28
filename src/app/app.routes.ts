@@ -126,6 +126,8 @@ export const routes: Routes = [
           import('./features/settings/package-management/package-management.component').then(
             (m) => m.PackageManagementComponent,
           ),
+        canActivate: [RoleGuard],
+        data: { roles: [UserRole.Admin, UserRole.Manager] },
       },
       {
         path: 'add-edit-package',
