@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PwaHeaderComponent } from '../../../shared/components/pwa-header/pwa-header.component';
 import { ItemMaintenanceService } from '../../../core/services/item-maintenance.service';
+import { LoadingService } from '../../../core/services/loading.service';
 import {
   ItemMaintenance,
   ItemMaintenanceFixRequest,
@@ -18,9 +19,9 @@ import { InfoBottomSheetComponent } from '../../../shared/components/info-bottom
 export class ItemMaintenanceComponent implements OnInit {
   private itemMaintenanceService = inject(ItemMaintenanceService);
   private bottomSheet = inject(MatBottomSheet);
+  public loadingService = inject(LoadingService);
 
   itemMaintenance: ItemMaintenance[] = [];
-  isFixing = false;
 
   ngOnInit(): void {
     this.loadItemMaintenances();
@@ -40,10 +41,10 @@ export class ItemMaintenanceComponent implements OnInit {
       quantityFixed: item.quantity,
     };
 
-    this.isFixing = true;
+    this.loadingService.show();
     this.itemMaintenanceService.fixItemMaintenance(request).subscribe({
       next: (res) => {
-        this.isFixing = false;
+        this.loadingService.hide();
 
         if (res.success) {
           this.bottomSheet
@@ -62,7 +63,7 @@ export class ItemMaintenanceComponent implements OnInit {
         }
       },
       error: () => {
-        this.isFixing = false;
+        this.loadingService.hide();
       },
     });
   }
