@@ -75,6 +75,7 @@ export class CatalogComponent implements OnInit {
       return {
         ...catalogItem,
         selectedQty: value,
+        basePrice: catalogItem.basePrice ?? 0,
       };
     });
 
