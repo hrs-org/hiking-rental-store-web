@@ -83,12 +83,27 @@ export const settingItems: SettingsOption[] = [
     desc: 'View your transaction history',
     icon: 'person',
     iconColor: 'blue',
+    showChevron: true,
     onClick: () => {
       return;
     },
   },
   {
     order: 7,
+    identifier: Identifier.Report,
+    section: Section.Reporting,
+    title: 'Report',
+    titleUppercase: false,
+    desc: 'View reports for the store',
+    icon: 'person',
+    iconColor: 'blue',
+    showChevron: true,
+    onClick: () => {
+      return;
+    },
+  },
+  {
+    order: 8,
     identifier: Identifier.Logout,
     section: Section.Settings,
     title: 'Logout',

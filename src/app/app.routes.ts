@@ -174,6 +174,13 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Customer, UserRole.Employee] },
       },
+      {
+        path: 'reports',
+        loadComponent: () =>
+          import('./features/settings/report/report.component').then((m) => m.ReportComponent),
+        canActivate: [RoleGuard],
+        data: { roles: [UserRole.Admin] },
+      },
     ],
   },
   {
