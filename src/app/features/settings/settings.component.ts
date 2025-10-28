@@ -102,6 +102,10 @@ export class SettingsComponent implements OnInit {
         () => {
           this.router.navigate(['/package-management']);
         };
+    } else {
+      this.settingItems = this.settingItems.filter(
+        (si) => si.identifier !== Identifier.PackageManagement,
+      );
     }
 
     // Logout

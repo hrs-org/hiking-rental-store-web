@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { selectPackageById } from '../../../../store/packages/packages.selector';
@@ -18,6 +18,8 @@ import { Item } from '../../../../core/models/item/item';
 import { loadItems } from '../../../../state/items/items.actions';
 import { selectItemList } from '../../../../state/items/items.selector';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 function showBottomSheet(bottomSheet: MatBottomSheet, title: string, description: string) {
   bottomSheet
@@ -43,6 +45,8 @@ function showBottomSheet(bottomSheet: MatBottomSheet, title: string, description
     MatTableModule,
     MatLabel,
     MatSelectModule,
+    MatButton,
+    MatIcon,
   ],
   templateUrl: './add-edit-package.component.html',
   styleUrl: './add-edit-package.component.scss',
@@ -53,6 +57,7 @@ export class AddEditPackageComponent implements OnInit {
   private readonly packageService = inject(PackageService);
   private readonly router = inject(Router);
   private readonly bottomSheet = inject(MatBottomSheet);
+  private readonly location = inject(Location);
 
   packageId = Number(this.route.snapshot.paramMap.get('id'));
   mode = this.packageId ? 'edit' : 'add';
@@ -119,7 +124,7 @@ export class AddEditPackageComponent implements OnInit {
         this.package.rates = this.package.rates.map((rate) => ({ ...rate, isActive: false }));
       }
       this.packageService.updatePackage(this.package).subscribe(() => {
-        this.router.navigate(['package-management']);
+        this.location.back();
       });
     } else {
       for (const rate of this.package.rates) {
@@ -127,15 +132,16 @@ export class AddEditPackageComponent implements OnInit {
       }
 
       this.packageService.addPackage(this.package).subscribe(() => {
-        this.router.navigate(['package-management']);
+        this.location.back();
       });
     }
   }
 
   addItem() {
+    const tempId = Math.random() + new Date().getTime();
     this.package = {
       ...this.package,
-      items: [...this.package.items, { itemId: 0, itemName: '', quantity: 0 }],
+      items: [...this.package.items, { itemId: tempId, itemName: '', quantity: 0 }],
     };
   }
 
@@ -146,7 +152,14 @@ export class AddEditPackageComponent implements OnInit {
     };
   }
 
-  deleteRate(rateId: number) {
+  removeItem(itemId: number | string) {
+    this.package = {
+      ...this.package,
+      items: this.package.items.filter((item) => item.itemId !== itemId),
+    };
+  }
+
+  deleteRate(rateId: number | string) {
     this.package = {
       ...this.package,
       rates: this.package.rates.filter((rate) => rate.id !== rateId),
