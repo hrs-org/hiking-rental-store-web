@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideStore } from '@ngrx/store';
 
 import { PackagesComponent } from './packages.component';
 
@@ -9,6 +11,7 @@ describe('PackagesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PackagesComponent],
+      providers: [provideStore({}), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PackagesComponent);
