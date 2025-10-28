@@ -38,8 +38,9 @@ export class CatalogService {
       catalogId: `item-${i.itemId}`,
       type: 'item',
       name: i.itemName,
-      dailyRate: i.dailyRate ?? i.dailyRate ?? 0,
-      available: i.availableQuantity ?? i.availableQuantity ?? 0,
+      dailyRate: i.dailyRate ?? 0,
+      available: i.availableQuantity ?? 0,
+      basePrice: i.basePrice ?? 0,
       children: i.children?.map((child) => this.mapItem(child, allItems)) ?? [],
     };
   }

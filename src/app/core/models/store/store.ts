@@ -6,10 +6,11 @@ export interface StoreViewModel {
 }
 
 export interface StoreItem {
-  itemId: 0;
+  itemId: number;
   itemName: string;
-  dailyRate: 0;
-  availableQuantity: 0;
+  dailyRate: number;
+  availableQuantity: number;
+  basePrice?: number;
   children: StoreItem[] | null;
 }
 
@@ -29,6 +30,7 @@ export interface CatalogEntry {
   name: string;
   dailyRate: number;
   available: number;
+  basePrice?: number;
 
   children?: CatalogEntry[];
   packageItems?: PackageContentEntry[];

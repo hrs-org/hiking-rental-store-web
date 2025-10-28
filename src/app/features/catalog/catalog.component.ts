@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 import moment from 'moment';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
+import { Checkout } from './checkout/checkout.component';
 
 @Component({
   selector: 'app-store',
@@ -36,23 +37,38 @@ import { Router } from '@angular/router';
 export class CatalogComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
-
+  checkout?: Checkout;
   catalog$ = this.store.select(selectCatalog);
   catalog?: CatalogEntry[];
 
   startDate = new Date();
   endDate = new Date();
+  today = new Date();
   selectedQuantities: Record<string, number> = {};
 
   showDateFilter = false;
 
   ngOnInit(): void {
-    this.endDate.setDate(this.endDate.getDate() + 5);
-
+    const checkoutStr = localStorage.getItem('checkoutItems');
+    this.today.setHours(0, 0, 0, 0);
+    this.startDate.setHours(0, 0, 0, 0);
+    if (checkoutStr) {
+      this.checkout = JSON.parse(checkoutStr) as Checkout;
+      this.startDate = new Date(this.checkout.startDate);
+      this.endDate = new Date(this.checkout.endDate);
+    } else {
+      this.endDate.setDate(this.endDate.getDate() + 5);
+    }
     this.store.dispatch(loadCatalog({ startDate: this.startDate, endDate: this.endDate }));
     this.catalog$.subscribe((catalog) => {
       this.catalog = catalog;
     });
+    if (this.checkout?.items) {
+      for (const item of this.checkout.items) {
+        this.selectedQuantities[item.catalogId] = item.selectedQty || 0;
+      }
+      localStorage.removeItem('checkoutItems');
+    }
   }
 
   updateQuantity(event: { catalogId: string; qty: number }) {
@@ -63,17 +79,20 @@ export class CatalogComponent implements OnInit {
   }
 
   createOrder() {
-    const items: CatalogEntry[] = Object.entries(this.selectedQuantities).map(([key, value]) => {
-      const catalogItem = (this.catalog?.find((item) => item.catalogId === key) ||
-        this.catalog
-          ?.flatMap((item) => item.children || [])
-          .find((child) => child.catalogId === key)) as CatalogEntry;
+    const items: CatalogEntry[] = Object.entries(this.selectedQuantities)
+      .filter(([, value]) => value > 0)
+      .map(([key, value]) => {
+        const catalogItem = (this.catalog?.find((item) => item.catalogId === key) ||
+          this.catalog
+            ?.flatMap((item) => item.children || [])
+            .find((child) => child.catalogId === key)) as CatalogEntry;
 
-      return {
-        ...catalogItem,
-        selectedQty: value,
-      };
-    });
+        return {
+          ...catalogItem,
+          selectedQty: value,
+          basePrice: catalogItem.basePrice ?? 0,
+        };
+      });
 
     const checkout = {
       startDate: this.startDate,

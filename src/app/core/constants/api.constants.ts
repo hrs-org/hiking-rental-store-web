@@ -36,6 +36,7 @@ export const ORDER_CANCEL = `${ORDER_PREFIX}/{0}/cancel`;
 export const ORDER_CONFIRM = `${ORDER_PREFIX}/{0}/confirm`;
 export const ORDER_RETURN = `${ORDER_PREFIX}/{0}/return`;
 export const ORDER_CLOSE = `${ORDER_PREFIX}/{0}/close`;
+export const ORDER_CUSTOMERID = `${ORDER_PREFIX}/customer/{0}`;
 
 // Payment endpoints
 export const PAYMENT_PREFIX = `${API_PREFIX}/payments`;

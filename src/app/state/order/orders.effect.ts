@@ -10,6 +10,9 @@ import {
   loadReturnPageOrders,
   loadReturnPageOrdersFailure,
   loadReturnPageOrdersSuccess,
+  loadTransactionHistoryOrders,
+  loadTransactionHistoryOrdersFailure,
+  loadTransactionHistoryOrdersSuccess,
 } from './orders.actions';
 
 @Injectable()
@@ -53,6 +56,25 @@ export class OrderEffects {
           }),
           finalize(() => this.loadingService.hide()),
           catchError((error) => of(loadBookingPageOrdersFailure({ error }))),
+        );
+      }),
+    ),
+  );
+  loadTransactionHistoryOrders$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadTransactionHistoryOrders),
+      mergeMap(({ customerId }) => {
+        this.loadingService.show();
+        return this.orderService.getOrderByCustomerId(customerId).pipe(
+          map((res) => {
+            if (res.data) {
+              return loadTransactionHistoryOrdersSuccess({ orders: res.data });
+            } else {
+              return loadTransactionHistoryOrdersFailure({ error: 'No Orders found' });
+            }
+          }),
+          finalize(() => this.loadingService.hide()),
+          catchError((error) => of(loadTransactionHistoryOrdersFailure({ error }))),
         );
       }),
     ),

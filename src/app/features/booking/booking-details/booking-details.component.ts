@@ -45,13 +45,16 @@ export class BookingDetailsComponent implements OnInit {
   isPending(): boolean {
     return this.order.status === OrderStatus.Pending;
   }
+  isPendingPayment(): boolean {
+    return this.order.status === OrderStatus.PendingPayment;
+  }
 
   isBooked(): boolean {
     return this.order.status === OrderStatus.Booked;
   }
 
   onCancel(): void {
-    if (this.isPending()) {
+    if (this.isPending() || this.isPendingPayment()) {
       this.loadingService.show();
       this.orderService
         .cancelOrder(this.order.id)

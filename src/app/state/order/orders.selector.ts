@@ -12,3 +12,7 @@ export const selectBookingPageOrderList = createSelector(
   selectOrderState,
   (state: OrderState) => state.bookingPages,
 );
+export const selectOrderById = createSelector(
+  selectOrderState,
+  (state: OrderState) => state.transactions,
+);

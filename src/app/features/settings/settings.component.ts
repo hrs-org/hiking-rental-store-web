@@ -85,6 +85,16 @@ export class SettingsComponent implements OnInit {
           si.identifier !== Identifier.ItemMaintenance,
       );
     }
+    if (user.role === 'Customer') {
+      this.settingItems.find((si) => si.identifier === Identifier.TransactionHistory)!.onClick =
+        () => {
+          this.router.navigate(['/transaction-history']);
+        };
+    } else {
+      this.settingItems = this.settingItems.filter(
+        (si) => si.identifier !== Identifier.TransactionHistory,
+      );
+    }
 
     // Package Management
     if (user.role === 'Admin' || user.role === 'Manager') {

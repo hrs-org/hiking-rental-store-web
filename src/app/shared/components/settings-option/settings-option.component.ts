@@ -21,6 +21,7 @@ export enum Identifier {
   PackageManagement = 'package-management',
   ItemMaintenance = 'item-maintenance',
   Logout = 'logout',
+  TransactionHistory = 'transaction-history',
 }
 
 export enum Section {
