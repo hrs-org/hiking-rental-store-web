@@ -5,7 +5,6 @@
       [showDelete]="true"
       (orderClick)="handleOrderClick($event)"
       (deleteClick)="deleteOrder($event, true)"
-      (countdownEnd)="onCountdownEnd()"
     ></app-order-item>
   }
   @if ((orderList$ | async)?.length === 0) {

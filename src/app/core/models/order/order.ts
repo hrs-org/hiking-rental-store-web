@@ -20,7 +20,6 @@ export interface Order extends BaseOrder {
   status: OrderStatus;
   items: OrderItem[];
   packages: OrderPackage[];
-  pendingSeconds?: number | null;
 }
 
 export enum OrderStatus {

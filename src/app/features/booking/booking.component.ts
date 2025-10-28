@@ -16,9 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookingComponent implements OnInit {
-  onCountdownEnd() {
-    this.store.dispatch(loadBookingPageOrders());
-  }
   private store = inject(Store);
   private router = inject(Router);
   private orderService = inject(OrderService);

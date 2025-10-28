@@ -12,9 +12,6 @@
   </div>
   <div style="display: flex; align-items: center; gap: 8px">
     <div class="order-amount">{{ order?.totalAmount | currency }}</div>
-    @if (order?.status === 'PendingPayment' && countdown !== null) {
-      <span class="pending-countdown">{{ countdownDisplay }}</span>
-    }
     @if (showDelete) {
       <button mat-stroked-button color="warn" (click)="onDeleteClick($event)">Delete</button>
     }
