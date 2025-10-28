@@ -22,6 +22,8 @@ export const MANAGERS = `${USER_PREFIX}/managers`;
 // Item endpoints
 export const ITEM_PREFIX = `${API_PREFIX}/items`;
 
+// Package endpoints
+export const PACKAGE_PREFIX = `${API_PREFIX}/packages`;
 // Catalog endpoints
 export const CATALOG_PREFIX = `${API_PREFIX}/catalogs`;
 

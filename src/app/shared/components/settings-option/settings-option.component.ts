@@ -18,6 +18,7 @@ export enum Identifier {
   Profile = 'profile',
   EmployeeManagement = 'employee-management',
   ItemManagement = 'item-management',
+  PackageManagement = 'package-management',
   ItemMaintenance = 'item-maintenance',
   Logout = 'logout',
   TransactionHistory = 'transaction-history',
