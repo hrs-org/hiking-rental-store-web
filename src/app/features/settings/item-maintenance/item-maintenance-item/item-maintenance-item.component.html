@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="content">
+    <div class="main-info">
+      <div class="header">
+        <span class="item-id">Item ID: {{ itemMaintenance?.itemId }}</span>
+        <span class="type-badge" [ngClass]="getTypeClass(itemMaintenance?.type!)">
+          {{ itemMaintenance?.type }}
+        </span>
+      </div>
+
+      <div class="details">
+        <div class="detail-row">
+          <span class="label">Rental Order ID:</span>
+          <span class="value">{{ itemMaintenance?.rentalOrderId ?? 'N/A' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Quantity:</span>
+          <span class="value">{{ itemMaintenance?.quantity }}</span>
+          @if (
+            itemMaintenance && itemMaintenance.quantityFixed && itemMaintenance.quantityFixed > 0
+          ) {
+            <span class="fixed-count">({{ itemMaintenance.quantityFixed }} fixed)</span>
+          }
+        </div>
+      </div>
+
+      @if (itemMaintenance?.remarks) {
+        <div class="remarks">
+          <span class="remarks-label">Remarks:</span>
+          <span class="remarks-text">{{ itemMaintenance?.remarks }}</span>
+        </div>
+      }
+    </div>
+
+    @if (itemMaintenance?.type === ItemMaintenanceType.Repair) {
+      <button
+        mat-raised-button
+        color="primary"
+        class="fix-button"
+        (click)="onFixClick($event)"
+        [disabled]="isFullyFixed()"
+      >
+        Fix
+      </button>
+    }
+  </div>
+</div>
