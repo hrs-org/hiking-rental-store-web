@@ -1,0 +1,40 @@
+<div class="main-page">
+  <app-pwa-header title="Report" [backButtonVisible]="true"></app-pwa-header>
+
+  <div class="content">
+    <div class="container">
+      <div class="card">
+        <div style="font-weight: 500; font-size: 24px">Sales</div>
+        <div>{{ dateRangeToString() }}</div>
+        <ag-charts [options]="options"></ag-charts>
+        <div class="more-info">
+          <div>Total Sales</div>
+          <div class="currency">{{ reportSummary?.totalSales | currency }}</div>
+        </div>
+        <div class="more-info">
+          <div>Max Sales</div>
+          <div class="currency">{{ reportSummary?.maxSales | currency }}</div>
+        </div>
+        <div class="more-info">
+          <div>Min Sales</div>
+          <div class="currency">{{ reportSummary?.minSales | currency }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Date Range Button -->
+  <button mat-fab extended class="floating-date-button" (click)="picker.open()">
+    <mat-icon>calendar_today</mat-icon>
+    <span>{{ simpleDateRangeToString() }}</span>
+  </button>
+
+  <!-- Hidden Date Range Picker -->
+  <mat-form-field style="display: none">
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate [(ngModel)]="startDate" (dateChange)="onDateChange()" />
+      <input matEndDate [(ngModel)]="endDate" (dateChange)="onDateChange()" />
+    </mat-date-range-input>
+    <mat-date-range-picker #picker panelClass="date-picker-above-button"></mat-date-range-picker>
+  </mat-form-field>
+</div>

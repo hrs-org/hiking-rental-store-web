@@ -104,6 +104,15 @@ export class SettingsComponent implements OnInit {
         };
     }
 
+    // Reporting
+    if (user.role === 'Admin') {
+      this.settingItems.find((si) => si.identifier === Identifier.Report)!.onClick = () => {
+        this.router.navigate(['/reports']);
+      };
+    } else {
+      this.settingItems = this.settingItems.filter((si) => si.identifier !== Identifier.Report);
+    }
+
     // Logout
     this.settingItems.find((si) => si.identifier === Identifier.Logout)!.onClick = () => {
       this.logout();

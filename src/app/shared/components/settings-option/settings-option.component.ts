@@ -20,6 +20,7 @@ export enum Identifier {
   ItemManagement = 'item-management',
   PackageManagement = 'package-management',
   ItemMaintenance = 'item-maintenance',
+  Report = 'reports',
   Logout = 'logout',
   TransactionHistory = 'transaction-history',
 }
@@ -27,6 +28,7 @@ export enum Identifier {
 export enum Section {
   Account = 'Account',
   Management = 'Management',
+  Reporting = 'Reporting',
   Settings = 'Settings',
 }
 
