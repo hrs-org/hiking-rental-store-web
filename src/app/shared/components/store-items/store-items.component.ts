@@ -34,4 +34,11 @@ export class StoreItemsComponent {
       ? this.selectedQty
       : (this.childQuantities?.[catalogId] ?? 0);
   }
+  getTotalSelectedQty(item: CatalogEntry): number {
+    if (!item.children || item.children.length === 0) return 0;
+    return item.children.reduce((total: number, child: CatalogEntry) => {
+      const qty = this.getQty(child.catalogId);
+      return total + (qty || 0);
+    }, 0);
+  }
 }

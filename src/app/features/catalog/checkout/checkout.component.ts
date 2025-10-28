@@ -86,7 +86,6 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
     this.checkout = navigation?.extras.state?.['checkout'];
-
     if (!this.checkout) {
       const checkoutStr = localStorage.getItem('checkoutItems');
       if (checkoutStr) {
@@ -137,6 +136,20 @@ export class CheckoutComponent implements OnInit {
         });
       }
     });
+    const OrderDetail = localStorage.getItem('OrderDetail');
+    if (OrderDetail) {
+      const detail = JSON.parse(OrderDetail);
+      this.guestForm.patchValue({
+        name: detail.guestName,
+        phoneNumber: detail.guestPhone,
+      });
+      this.orderForm.patchValue({
+        channel: detail.channel,
+      });
+      this.paymentTypeForm.patchValue({
+        paymentType: detail.paymentType,
+      });
+    }
   }
 
   onCancel(): void {
@@ -163,8 +176,15 @@ export class CheckoutComponent implements OnInit {
         if (!res.data) {
           return;
         }
-        localStorage.removeItem('checkoutItems');
-
+        localStorage.setItem(
+          'OrderDetail',
+          JSON.stringify({
+            guestName: this.orderRequest.guestName,
+            guestPhone: this.orderRequest.guestPhone,
+            channel: this.orderRequest.channel,
+            paymentType: this.orderRequest.paymentType,
+          }),
+        );
         if (this.orderRequest.paymentType === OrderPaymentType.Other) {
           this.loadingService.show();
           const request = {
@@ -183,6 +203,8 @@ export class CheckoutComponent implements OnInit {
             complete: () => this.loadingService.hide(),
           });
         } else {
+          localStorage.removeItem('OrderDetail');
+          localStorage.removeItem('checkoutItems');
           this.router.navigate(['/store']);
         }
       },

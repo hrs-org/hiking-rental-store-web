@@ -1,15 +1,21 @@
 import { createReducer, on } from '@ngrx/store';
 import { Order } from '../../core/models/order/order';
-import { loadBookingPageOrdersSuccess, loadReturnPageOrdersSuccess } from './orders.actions';
+import {
+  loadBookingPageOrdersSuccess,
+  loadReturnPageOrdersSuccess,
+  loadTransactionHistoryOrdersSuccess,
+} from './orders.actions';
 
 export interface OrderState {
   returnPages: Order[];
   bookingPages: Order[];
+  transactions: Order[];
 }
 
 export const initialState: OrderState = {
   returnPages: [],
   bookingPages: [],
+  transactions: [],
 };
 
 export const ordersReducer = createReducer(
@@ -21,5 +27,9 @@ export const ordersReducer = createReducer(
   on(
     loadBookingPageOrdersSuccess,
     (state, { orders }): OrderState => ({ ...state, bookingPages: orders }),
+  ),
+  on(
+    loadTransactionHistoryOrdersSuccess,
+    (state, { orders }): OrderState => ({ ...state, transactions: orders }),
   ),
 );

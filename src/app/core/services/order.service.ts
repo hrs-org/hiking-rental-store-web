@@ -7,6 +7,7 @@ import {
   ORDER_CANCEL,
   ORDER_CLOSE,
   ORDER_CONFIRM,
+  ORDER_CUSTOMERID,
   ORDER_PREFIX,
   ORDER_RENTS,
   ORDER_RETURN,
@@ -51,5 +52,11 @@ export class OrderService {
 
   closeOrder(orderId: number) {
     return this.http.put<ApiResponse<Order>>(ORDER_CLOSE.replace('{0}', `${orderId}`), {});
+  }
+  getOrderByCustomerId(customerId: number) {
+    return this.http.get<ApiResponse<Order[]>>(
+      ORDER_CUSTOMERID.replace('{0}', `${customerId}`),
+      {},
+    );
   }
 }
