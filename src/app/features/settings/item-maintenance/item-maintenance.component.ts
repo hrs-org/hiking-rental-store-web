@@ -19,7 +19,7 @@ import { InfoBottomSheetComponent } from '../../../shared/components/info-bottom
 export class ItemMaintenanceComponent implements OnInit {
   private itemMaintenanceService = inject(ItemMaintenanceService);
   private bottomSheet = inject(MatBottomSheet);
-  public loadingService = inject(LoadingService);
+  private loadingService = inject(LoadingService);
 
   itemMaintenance: ItemMaintenance[] = [];
 
