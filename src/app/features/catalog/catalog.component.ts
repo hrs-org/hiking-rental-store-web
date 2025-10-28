@@ -93,7 +93,7 @@ export class CatalogComponent implements OnInit {
           basePrice: catalogItem.basePrice ?? 0,
         };
       });
-    
+
     const checkout = {
       startDate: this.startDate,
       endDate: this.endDate,
