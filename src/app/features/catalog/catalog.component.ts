@@ -90,9 +90,10 @@ export class CatalogComponent implements OnInit {
         return {
           ...catalogItem,
           selectedQty: value,
+          basePrice: catalogItem.basePrice ?? 0,
         };
       });
-
+    
     const checkout = {
       startDate: this.startDate,
       endDate: this.endDate,

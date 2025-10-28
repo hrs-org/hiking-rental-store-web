@@ -217,7 +217,15 @@ export class CheckoutComponent implements OnInit {
 
     return this.checkout.items.reduce((total, item) => {
       const qty = item.selectedQty || 0;
-      return total + item.dailyRate * qty * this.totalDays();
+      let rate =
+        typeof item.dailyRate === 'number' && item.dailyRate > 0 ? item.dailyRate : undefined;
+      if (
+        rate === undefined &&
+        typeof (item as CatalogEntry & { basePrice?: number }).basePrice === 'number'
+      ) {
+        rate = (item as CatalogEntry & { basePrice?: number }).basePrice;
+      }
+      return total + (rate ?? 0) * qty * this.totalDays();
     }, 0);
   }
 
