@@ -123,43 +123,40 @@ describe('TransactionHistoryComponent', () => {
     store.overrideSelector(selectOrderById, []);
     store.refreshState();
 
+    const testDate1 = new Date('2025-10-28T16:31:09Z');
+    const testDate2 = new Date('2025-10-28T17:31:09Z');
+    const expectedOrder: Order = {
+      id: 11,
+      startDate: testDate1,
+      endDate: testDate2,
+      channel: OrderChannel.Online,
+      paymentType: OrderPaymentType.Cash,
+      totalAmount: 50,
+      status: OrderStatus.Completed,
+      items: [],
+      packages: [],
+    } as Order;
+
     const sub = component.orderList$.subscribe((orders) => {
       seq.push(orders as Order[]);
       // when we've collected two emissions, assert and finish
       if (seq.length === 2) {
         expect(seq[0]).toEqual([]);
-        expect(seq[1]).toEqual([
-          {
-            id: 11,
-            startDate: new Date(),
-            endDate: new Date(),
-            channel: OrderChannel.Online,
-            paymentType: OrderPaymentType.Cash,
-            totalAmount: 50,
-            status: OrderStatus.Completed,
-            items: [],
-            packages: [],
-          } as Order,
-        ]);
+        expect(seq[1].length).toBe(1);
+        expect(seq[1][0].id).toBe(expectedOrder.id);
+        expect(seq[1][0].startDate).toEqual(expectedOrder.startDate);
+        expect(seq[1][0].endDate).toEqual(expectedOrder.endDate);
+        expect(seq[1][0].channel).toBe(expectedOrder.channel);
+        expect(seq[1][0].paymentType).toBe(expectedOrder.paymentType);
+        expect(seq[1][0].totalAmount).toBe(expectedOrder.totalAmount);
+        expect(seq[1][0].status).toBe(expectedOrder.status);
         sub.unsubscribe();
         done();
       }
     });
 
     // emit new value
-    store.overrideSelector(selectOrderById, [
-      {
-        id: 11,
-        startDate: new Date(),
-        endDate: new Date(),
-        channel: OrderChannel.Online,
-        paymentType: OrderPaymentType.Cash,
-        totalAmount: 50,
-        status: OrderStatus.Completed,
-        items: [],
-        packages: [],
-      } as Order,
-    ]);
+    store.overrideSelector(selectOrderById, [expectedOrder]);
     store.refreshState();
   });
 
