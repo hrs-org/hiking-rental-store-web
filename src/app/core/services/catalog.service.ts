@@ -65,7 +65,7 @@ export class CatalogService {
       name: pi.itemName ?? fullItem?.itemName ?? 'Unknown Item',
       available: pi.availableQuantity ?? fullItem?.availableQuantity ?? 0,
       dailyRate: pi.dailyRate ?? fullItem?.dailyRate ?? 0,
-      rentingQuantity: pi.rentingQuantity,
+      rentingQuantity: pi.rentingQuantity ?? 0,
       items: fullItem?.children?.map((child) => this.mapItem(child, allItems)) ?? [],
     };
   }

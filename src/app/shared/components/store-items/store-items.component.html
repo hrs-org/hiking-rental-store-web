@@ -110,7 +110,7 @@
               <div class="child-name">{{ child.name }}</div>
             </div>
             <div class="qty-controls">
-              <span class="qty-value">x{{ child.rentingQuantity }}</span>
+              <span class="qty-value">x{{ child.rentingQuantity ?? 0 }}</span>
             </div>
           </div>
         }
