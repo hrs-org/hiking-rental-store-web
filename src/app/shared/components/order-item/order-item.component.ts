@@ -21,10 +21,6 @@ export class OrderItemComponent {
     return moment(date).format('MM/DD/YYYY');
   }
 
-  // ngOnInit removed (was empty)
-
-  // ngOnDestroy removed (was empty)
-
   onClick() {
     this.orderClick.emit(this.order?.id);
   }
