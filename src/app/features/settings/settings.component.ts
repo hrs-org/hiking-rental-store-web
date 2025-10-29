@@ -102,15 +102,10 @@ export class SettingsComponent implements OnInit {
         () => {
           this.router.navigate(['/package-management']);
         };
-    }
-
-    // Reporting
-    if (user.role === 'Admin') {
-      this.settingItems.find((si) => si.identifier === Identifier.Report)!.onClick = () => {
-        this.router.navigate(['/reports']);
-      };
     } else {
-      this.settingItems = this.settingItems.filter((si) => si.identifier !== Identifier.Report);
+      this.settingItems = this.settingItems.filter(
+        (si) => si.identifier !== Identifier.PackageManagement,
+      );
     }
 
     // Logout
