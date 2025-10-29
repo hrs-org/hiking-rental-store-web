@@ -88,8 +88,8 @@ export class AddEditPackageComponent implements OnInit {
       if (this.mode === 'edit') {
         this.package = {
           ...packages,
-          rates: [...(packages?.rates || [])],
-          items: [...(packages?.items || [])],
+          rates: packages?.rates?.map((rate) => ({ ...rate })) || [],
+          items: packages?.items?.map((item) => ({ ...item })) || [],
         } as Package;
         this.is_active = this.package.rates.some((rate) => rate.isActive);
       } else {
