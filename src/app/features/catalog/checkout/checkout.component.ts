@@ -111,9 +111,15 @@ export class CheckoutComponent implements OnInit {
           startDate: checkout.startDate,
           endDate: checkout.endDate,
           items: checkout.items
-            .filter((item) => item.selectedQty && item.selectedQty > 0)
+            .filter((item) => item.type === 'item' && item.selectedQty && item.selectedQty > 0)
             .map((item) => ({
               itemId: item.itemId as number,
+              quantity: item.selectedQty || 0,
+            })),
+          packages: checkout.items
+            .filter((item) => item.type === 'package' && item.selectedQty && item.selectedQty > 0)
+            .map((item) => ({
+              packageId: item.packageId as number,
               quantity: item.selectedQty || 0,
             })),
         };
@@ -200,6 +206,9 @@ export class CheckoutComponent implements OnInit {
                 });
               }
             },
+            error: () => {
+              this.loadingService.hide();
+            },
             complete: () => this.loadingService.hide(),
           });
         } else {
@@ -207,6 +216,9 @@ export class CheckoutComponent implements OnInit {
           localStorage.removeItem('checkoutItems');
           this.router.navigate(['/store']);
         }
+      },
+      error: () => {
+        this.loadingService.hide();
       },
       complete: () => this.loadingService.hide(),
     });
@@ -231,7 +243,8 @@ export class CheckoutComponent implements OnInit {
 
   isValid(): boolean {
     if (!this.orderRequest) return false;
-    if (this.orderRequest.items && this.orderRequest.items.length === 0) return false;
+    if (this.orderRequest.items?.length === 0 && this.orderRequest.packages?.length === 0)
+      return false;
 
     if (this.orderForm.invalid) return false;
 
