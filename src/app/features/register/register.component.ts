@@ -131,6 +131,9 @@ export class RegisterComponent {
             () => this.navigateToLogin(),
           );
         },
+        error: () => {
+          this.loadingService.hide();
+        },
         complete: () => this.loadingService.hide(),
       });
   }

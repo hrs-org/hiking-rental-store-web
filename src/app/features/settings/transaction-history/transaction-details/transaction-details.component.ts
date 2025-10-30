@@ -33,6 +33,9 @@ export class TransactionDetailsComponent implements OnInit {
         if (res.data) this.order = res.data;
         this.title = this.isPending() ? 'Pending Booking' : 'Booking Details';
       },
+      error: () => {
+        this.loadingService.hide();
+      },
       complete: () => this.loadingService.hide(),
     });
   }

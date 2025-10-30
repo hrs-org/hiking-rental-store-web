@@ -153,7 +153,7 @@ describe('TransactionDetailsComponent', () => {
     expect(orderService.getOrderById).toHaveBeenCalledWith(7);
   });
 
-  it('should keep loading visible when orderService errors (no complete)', () => {
+  it('should hide loading when orderService errors', () => {
     // Make service error synchronously on subscribe
     (orderService.getOrderById as jasmine.Spy).and.returnValue(throwError(() => new Error('boom')));
 
@@ -172,8 +172,8 @@ describe('TransactionDetailsComponent', () => {
 
     // show should be called when starting to load
     expect(loadingService.show).toHaveBeenCalled();
-    // complete handler is not invoked on error, so hide must not be called
-    expect(loadingService.hide).not.toHaveBeenCalled();
+    // error handler calls hide, so it should be called
+    expect(loadingService.hide).toHaveBeenCalled();
   });
 
   it('getStatusClass returns "order-status-" when status is undefined', () => {
