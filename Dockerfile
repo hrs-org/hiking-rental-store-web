@@ -34,6 +34,12 @@ RUN echo 'server { \
     add_header X-Content-Type-Options "nosniff" always; \
     add_header X-XSS-Protection "1; mode=block" always; \
     add_header Referrer-Policy "strict-origin-when-cross-origin" always; \
+    add_header Content-Security-Policy "default-src '\''self'\''; script-src '\''self'\'' '\''unsafe-inline'\'' '\''unsafe-eval'\''; style-src '\''self'\'' '\''unsafe-inline'\'' https://fonts.googleapis.com; font-src '\''self'\'' https://fonts.gstatic.com; img-src '\''self'\'' data: https:; connect-src '\''self'\'' https://js.stripe.com https://api.stripe.com; frame-src https://js.stripe.com;" always; \
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always; \
+    add_header Cross-Origin-Embedder-Policy "require-corp" always; \
+    add_header Cross-Origin-Opener-Policy "same-origin" always; \
+    add_header Cross-Origin-Resource-Policy "same-origin" always; \
+    server_tokens off; \
     \
     # Angular routing support \
     location / { \
