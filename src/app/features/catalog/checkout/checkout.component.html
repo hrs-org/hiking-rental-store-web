@@ -93,10 +93,14 @@
           </div>
           <div class="item-right-section">
             <div class="item-price-calculation">
-              {{ item.dailyRate | currency }} x {{ item.selectedQty }} x {{ totalDays() }} =
+              {{ item.dailyRate || item.basePrice | currency }} x {{ item.selectedQty }} x
+              {{ totalDays() }} =
             </div>
             <div class="item-price">
-              {{ (item.dailyRate || 0) * (item.selectedQty || 0) * totalDays() | currency }}
+              {{
+                (item.dailyRate || item.basePrice || 0) * (item.selectedQty || 0) * totalDays()
+                  | currency
+              }}
             </div>
           </div>
         </div>
