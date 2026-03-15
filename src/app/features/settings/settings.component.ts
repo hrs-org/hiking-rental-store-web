@@ -44,7 +44,7 @@ export class SettingsComponent implements OnInit {
   logout() {
     this.authService.logout().subscribe(() => {
       localStorage.removeItem('authToken');
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
     });
   }
 

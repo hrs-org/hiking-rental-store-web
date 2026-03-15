@@ -4,13 +4,9 @@ import { inject, Injectable } from '@angular/core';
 import {
   ACTIVE_USER,
   CHANGE_PASSWORD,
-  FORGOT_PASSWORD,
   LOGIN,
   LOGOUT,
   REFRESH_TOKEN,
-  RESEND_VERIFICATION,
-  RESET_PASSWORD,
-  VERIFY_EMAIL,
 } from '../constants/api.constants';
 import { ApiResponse } from '../models/api-response';
 import {
@@ -19,10 +15,6 @@ import {
   LoginResponse,
   LogOutResponse,
 } from '../models/auth/auth';
-import { EmailVerificationRequest } from '../models/auth/email-verification-request';
-import { ResendVerificationRequest } from '../models/auth/resend-verification-request';
-import { ForgotPasswordRequest } from '../models/auth/forgot-password-request';
-import { ResetPasswordRequest } from '../models/auth/reset-password-request';
 import { User } from '../models/user/user';
 import { SKIP_AUTH } from '../tokens/auth.token';
 
@@ -62,22 +54,6 @@ export class AuthService {
     return this.http.post<ApiResponse<LogOutResponse>>(CHANGE_PASSWORD, request);
   }
 
-  resendVerificationEmail(request: ResendVerificationRequest) {
-    return this.http.post<ApiResponse<boolean>>(RESEND_VERIFICATION, request, {
-      context: new HttpContext().set(SKIP_AUTH, true),
-    });
-  }
-
-  verifyEmail(request: EmailVerificationRequest) {
-    return this.http.post<ApiResponse<{ isVerified: boolean; message: string }>>(
-      VERIFY_EMAIL,
-      request,
-      {
-        context: new HttpContext().set(SKIP_AUTH, true),
-      },
-    );
-  }
-
   isTokenExpired(token: string): boolean {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -87,17 +63,5 @@ export class AuthService {
     } catch (_) {
       return true;
     }
-  }
-
-  resetPassword(request: ResetPasswordRequest) {
-    return this.http.post<ApiResponse<string>>(RESET_PASSWORD, request, {
-      context: new HttpContext().set(SKIP_AUTH, true),
-    });
-  }
-
-  forgotPassword(request: ForgotPasswordRequest) {
-    return this.http.post<ApiResponse<string>>(FORGOT_PASSWORD, request, {
-      context: new HttpContext().set(SKIP_AUTH, true),
-    });
   }
 }
