@@ -37,7 +37,7 @@ function handle401Error(
         return next(retryReq);
       } else {
         localStorage.removeItem('authToken');
-        window.location.href = '/login';
+        window.location.href = '/';
         showBottomSheet(
           bottomSheet,
           'Session Expired',
@@ -48,7 +48,7 @@ function handle401Error(
     }),
     catchError(() => {
       localStorage.removeItem('authToken');
-      window.location.href = '/login';
+      window.location.href = '/';
       showBottomSheet(
         bottomSheet,
         'Session Expired',

@@ -27,7 +27,7 @@ export class RoleRedirectComponent implements OnInit {
       this.loadingService.hide();
 
       if (!user) {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
         return;
       }
 
