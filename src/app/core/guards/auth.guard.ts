@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { CanActivate, UrlTree } from '@angular/router';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { Observable, of, switchMap, take, catchError, map } from 'rxjs';
 import { AuthService } from '../services/auth.service';
@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 export class AuthGuard implements CanActivate {
   private auth = inject(AuthService);
   private auth0 = inject(Auth0Service);
+  private router = inject(Router);
 
   canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     if (environment.auth0?.enabled) {
@@ -30,6 +31,6 @@ export class AuthGuard implements CanActivate {
     if (this.auth.isLoggedIn()) {
       return true;
     }
-    return false;
+    return this.router.parseUrl('/login');
   }
 }
