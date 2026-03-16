@@ -77,11 +77,8 @@ jobs:
 
       - name: Rewrite Angular environment.uat.ts
         run: |
-          echo "Using API URL: ${{ secrets.API_URL }}"
-          echo "Using Stripe Public Key: ${{ secrets.STRIPE_PUBLIC_KEY }}"
-          echo "Using Auth0 Enabled: ${{ vars.AUTH0_ENABLED }}"
-          echo "Using Auth0 Domain: ${{ vars.AUTH0_DOMAIN }}"
-          echo "Using Auth0 Client ID: ${{ secrets.AUTH0_CLIENT_ID }}"
+          echo "Rewriting Angular UAT environment configuration."
+          echo "Auth0 configuration flags and domain are set."
           cat > src/environments/environment.uat.ts << 'EOF'
           export const environment = {
             production: true,
