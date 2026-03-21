@@ -231,6 +231,18 @@ jobs:
             security-audit.txt
             snyk.sarif
           retention-days: 30
+  secret-scan:
+    name: Scan for Secrets
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Gitleaks Scan
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: detect --source . --verbose --redact --exit-code 1
 
   Container-Security-Scan:
     name: Run Trivy Scan- Container Security Scan
