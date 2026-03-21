@@ -16,6 +16,8 @@ jobs:
     name: Build & Deploy to Azure Static Web App (UAT)
     runs-on: ubuntu-latest
     environment: ms-uat
+    outputs:
+      swa_url: ${{ steps.get-swa-token.outputs.swa_url }}
 
     steps:
       - uses: actions/checkout@v4
@@ -135,6 +137,11 @@ jobs:
             --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
             --query "[0].name" -o tsv)
 
+          default_hostname=$(az staticwebapp show \
+            --name "$swa_name" \
+            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --query "defaultHostname" -o tsv)
+
           token=$(az staticwebapp secrets list \
             --name "$swa_name" \
             --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
@@ -142,6 +149,7 @@ jobs:
 
           echo "::add-mask::$token"
           echo "token=$token" >> "$GITHUB_OUTPUT"
+          echo "swa_url=https://$default_hostname" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
@@ -151,3 +159,53 @@ jobs:
           action: 'upload'
           app_location: 'dist/hiking-rental-store-web/browser'
           skip_app_build: true
+
+  integrate-tests:
+    name: Integrate Tests (UAT)
+    runs-on: ubuntu-latest
+    needs: deploy-uat
+    environment: ms-uat
+    steps:
+      - name: Run web and API integration checks
+        run: |
+          set -euo pipefail
+
+          WEB_URL="${{ needs.deploy-uat.outputs.swa_url }}"
+          API_URL="${{ secrets.API_URL }}"
+
+          if [ -z "$WEB_URL" ]; then
+            echo "SWA URL output is empty"
+            exit 1
+          fi
+
+          if [ -z "$API_URL" ]; then
+            echo "API_URL secret is not set"
+            exit 1
+          fi
+
+          WEB_URL="${WEB_URL%/}"
+          API_URL="${API_URL%/}"
+
+          echo "Checking web URL: $WEB_URL"
+          HOME_HTML=$(curl -sSf "$WEB_URL/")
+          echo "$HOME_HTML" | grep -qi "<html"
+
+          echo "Checking API health URL: $API_URL/health"
+          curl -sSf "$API_URL/health" >/dev/null
+
+          echo "Integration checks passed"
+
+      - name: Post integration summary
+        if: always()
+        run: |
+          echo "## Web Integration Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Web URL | ${{ needs.deploy-uat.outputs.swa_url }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| API URL | ${{ secrets.API_URL }} |" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "| Status | Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Status | Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
