@@ -194,7 +194,7 @@ jobs:
             -Dsonar.projectVersion=1.0
 
   security-scan:
-    name: Security Scan
+    name: Security Scan - Software Composition Analysis (SCA)
     runs-on: ubuntu-latest
     needs: install
     if: github.event_name != 'release'
@@ -231,6 +231,49 @@ jobs:
             security-audit.txt
             snyk.sarif
           retention-days: 30
+
+  Container-Security-Scan:
+    name: Run Trivy Scan- Container Security Scan
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy FS Scan
+        uses: aquasecurity/trivy-action@v0.20.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1' # ❗ fail pipeline if vulnerabilities found
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+
+      - name: Build Docker Image
+        run: docker build -t my-app:latest .
+
+      - name: Run Trivy Image Scan
+        uses: aquasecurity/trivy-action@v0.20.0
+        with:
+          image-ref: 'my-app:latest'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+
+      - name: Generate SARIF Report
+        uses: aquasecurity/trivy-action@v0.20.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
 
   docker-build:
     name: Build & Push Docker Image
