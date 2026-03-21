@@ -290,7 +290,16 @@ jobs:
   docker-build:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
-    needs: [build, test, code-quality, security-scan, lint-and-format]
+    needs:
+      [
+        build,
+        test,
+        code-quality,
+        security-scan,
+        lint-and-format,
+        secret-scan,
+        Container-Security-Scan,
+      ]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     environment: staging
 
