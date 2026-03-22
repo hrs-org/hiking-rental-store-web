@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18.20.4-alpine AS build
+FROM node:22.12.0-alpine AS build
 
 WORKDIR /app
 
@@ -18,6 +18,9 @@ RUN npm run build:uat
 
 # Production stage
 FROM nginx:alpine
+
+# Apply security updates for runtime OS packages to remediate image CVEs.
+RUN apk update && apk upgrade --no-cache libexpat zlib
 
 # Copy built application
 COPY --from=build /app/dist/hiking-rental-store-web /usr/share/nginx/html
