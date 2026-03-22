@@ -16,7 +16,7 @@ permissions:
   checks: write
 
 env:
-  NODE_VERSION: '18.20.4'
+  NODE_VERSION: '22.12.0'
   CACHE_VERSION: v1
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
