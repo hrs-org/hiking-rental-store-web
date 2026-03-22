@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, develop-ms]
   push:
-    branches: [develop]
+    branches: [develop, develop-ms]
   release:
     types: [published]
 
