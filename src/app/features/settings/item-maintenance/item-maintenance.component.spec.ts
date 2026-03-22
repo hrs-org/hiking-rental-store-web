@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { ItemMaintenanceComponent } from './item-maintenance.component';
 
 describe('ItemMaintenanceComponent', () => {
@@ -8,7 +9,17 @@ describe('ItemMaintenanceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ItemMaintenanceComponent],
+      imports: [ItemMaintenanceComponent, HttpClientTestingModule],
+      providers: [
+        provideMockStore({
+          initialState: {
+            store: {
+              id: 'store-1',
+              name: 'Test Store',
+            },
+          },
+        }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ItemMaintenanceComponent);
