@@ -148,7 +148,14 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'register',
+    path: 'register-choice',
+    loadComponent: () =>
+      import('./features/registration-choice/registration-choice.component').then(
+        (m) => m.RegistrationChoiceComponent,
+      ),
+  },
+  {
+    path: 'register/store',
     loadComponent: () =>
       import('./features/register/register.component').then((m) => m.RegisterComponent),
   },

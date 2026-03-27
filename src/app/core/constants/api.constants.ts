@@ -12,6 +12,8 @@ export const CHANGE_PASSWORD = `${AUTH_PREFIX}/change-password`;
 // User endpoints
 export const USER_PREFIX = `${API_PREFIX}/users`;
 export const REGISTER_USER = `${USER_PREFIX}/register`;
+export const ASSIGN_CUSTOMER_ROLE = `${USER_PREFIX}/onboarding/customer`;
+export const USER_ONBOARDING_STATUS = `${USER_PREFIX}/onboarding/status`;
 export const EMPLOYEES = `${USER_PREFIX}/employees`;
 export const MANAGERS = `${USER_PREFIX}/managers`;
 
@@ -44,4 +46,5 @@ export const ITEM_MAINTENANCE_FIX = `${ITEM_MAINTENANCE_PREFIX}/{0}/fix`;
 export const STORE_PREFIX = `${API_PREFIX}/stores`;
 export const STORE_GETBYID = `${STORE_PREFIX}/{0}`;
 export const STORE_REGISTER = `${STORE_PREFIX}/register`;
+export const STORE_ONBOARDING = `${STORE_PREFIX}/onboarding`;
 export const STORE_USER = `${STORE_PREFIX}/users/{0}`;

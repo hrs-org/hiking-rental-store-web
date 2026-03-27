@@ -60,3 +60,14 @@ export interface RegisterStoreDto extends RegisterRequest {
   address?: string;
   phoneNumber?: string;
 }
+
+export interface StoreOnboardingRequest {
+  auth0UserId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  name: string;
+  description: string;
+  address: string;
+  phoneNumber: string;
+}

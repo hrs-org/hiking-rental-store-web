@@ -1,205 +1,89 @@
 <div class="register-container">
-  <h1 class="register-title">Register</h1>
+  <h1 class="register-title">Store Registration</h1>
 
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="storeForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <mat-label class="form-label">
-        First Name
-        <span class="asterisk">*</span>
-      </mat-label>
-      <input
-        class="form-input"
-        [class.error]="hasError('firstName')"
-        formControlName="firstName"
-        required
-        placeholder="Enter your first name"
-      />
-      @if (hasError('firstName')) {
-        <div class="error-message">
-          {{ getErrorMessage('firstName') }}
-        </div>
-      }
-    </div>
-
-    <div class="form-group">
-      <mat-label class="form-label">
-        Last Name
-        <span class="asterisk">*</span>
-      </mat-label>
-      <input
-        class="form-input"
-        [class.error]="hasError('lastName')"
-        formControlName="lastName"
-        required
-        placeholder="Enter your last name"
-      />
-      @if (hasError('lastName')) {
-        <div class="error-message">
-          {{ getErrorMessage('lastName') }}
-        </div>
-      }
-    </div>
-
-    <div class="form-group">
-      <mat-label class="form-label">
-        Email
-        <span class="asterisk">*</span>
-      </mat-label>
-      <input
-        class="form-input"
-        [class.error]="hasError('email')"
-        formControlName="email"
-        type="email"
-        required
-        placeholder="Enter your email"
-      />
-      @if (hasError('email')) {
-        <div class="error-message">
-          {{ getErrorMessage('email') }}
-        </div>
-      }
-    </div>
-
-    <div class="form-group">
-      <mat-label class="form-label">
-        Password
-        <span class="asterisk">*</span>
-      </mat-label>
-      <div class="password-input-container">
-        <input
-          class="form-input password-input"
-          [class.error]="hasError('password')"
-          [type]="hidePassword ? 'password' : 'text'"
-          formControlName="password"
-          required
-          placeholder="Minimum 8 characters"
-        />
-        <button
-          type="button"
-          class="password-toggle-btn"
-          (click)="togglePasswordVisibility()"
-          [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'"
-        >
-          <mat-icon>
-            {{ hidePassword ? 'visibility_off' : 'visibility' }}
-          </mat-icon>
-        </button>
-      </div>
-      @if (hasError('password')) {
-        <div class="error-message">
-          {{ getErrorMessage('password') }}
-        </div>
-      }
-    </div>
-
-    <div class="form-group">
-      <mat-label class="form-label">
-        Confirm Password
-        <span class="asterisk">*</span>
-      </mat-label>
-      <div class="password-input-container">
-        <input
-          class="form-input password-input"
-          [class.error]="hasError('confirmPassword') || getPasswordMatchError()"
-          [type]="hideConfirmPassword ? 'password' : 'text'"
-          formControlName="confirmPassword"
-          required
-          placeholder="Confirm your password"
-        />
-        <button
-          type="button"
-          class="password-toggle-btn"
-          (click)="toggleConfirmPasswordVisibility()"
-          [attr.aria-label]="hideConfirmPassword ? 'Show password' : 'Hide password'"
-        >
-          <mat-icon>
-            {{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}
-          </mat-icon>
-        </button>
-      </div>
-      @if (hasError('confirmPassword')) {
-        <div class="error-message">
-          {{ getErrorMessage('confirmPassword') }}
-        </div>
-      }
-      @if (getPasswordMatchError()) {
-        <div class="error-message">
-          {{ getPasswordMatchError() }}
-        </div>
-      }
-    </div>
-
-    <div class="form-group">
-      <mat-label class="form-label">
-        Register As
-        <span class="asterisk">*</span>
-      </mat-label>
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-select formControlName="option">
-          <mat-option *ngFor="let r of options" [value]="r.value">{{ r.viewValue }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div class="form-group" *ngIf="registerForm.get('option')?.value === 'Store'">
-      <mat-label class="form-label">
+      <label class="form-label" for="storeName">
         Store Name
         <span class="asterisk">*</span>
-      </mat-label>
+      </label>
       <input
+        id="storeName"
         class="form-input"
         [class.error]="hasError('storeName')"
         formControlName="storeName"
+        required
         placeholder="Enter your store name"
       />
-      <div *ngIf="hasError('storeName')" class="error-message">
-        {{ getErrorMessage('storeName') }}
-      </div>
+      @if (hasError('storeName')) {
+        <div class="error-message">
+          {{ getErrorMessage('storeName') }}
+        </div>
+      }
     </div>
 
-    <div class="form-group" *ngIf="registerForm.get('option')?.value === 'Store'">
-      <mat-label class="form-label">
+    <div class="form-group">
+      <label class="form-label" for="storeDescription">
+        Store Description
+        <span class="asterisk">*</span>
+      </label>
+      <textarea
+        id="storeDescription"
+        class="form-input"
+        [class.error]="hasError('storeDescription')"
+        formControlName="storeDescription"
+        placeholder="Describe your store"
+        rows="3"
+      ></textarea>
+      @if (hasError('storeDescription')) {
+        <div class="error-message">
+          {{ getErrorMessage('storeDescription') }}
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="storeAddress">
         Store Address
         <span class="asterisk">*</span>
-      </mat-label>
+      </label>
       <input
+        id="storeAddress"
         class="form-input"
         [class.error]="hasError('storeAddress')"
         formControlName="storeAddress"
+        required
         placeholder="Enter store address"
       />
-      <div *ngIf="hasError('storeAddress')" class="error-message">
-        {{ getErrorMessage('storeAddress') }}
-      </div>
+      @if (hasError('storeAddress')) {
+        <div class="error-message">
+          {{ getErrorMessage('storeAddress') }}
+        </div>
+      }
     </div>
 
-    <div class="form-group" *ngIf="registerForm.get('option')?.value === 'Store'">
-      <mat-label class="form-label">Store Description</mat-label>
-      <textarea
-        class="form-input"
-        formControlName="storeDescription"
-        placeholder="Optional: describe your store"
-        rows="3"
-      ></textarea>
-    </div>
-
-    <div class="form-group" *ngIf="registerForm.get('option')?.value === 'Store'">
-      <mat-label class="form-label">Store Phone Number</mat-label>
+    <div class="form-group">
+      <label class="form-label" for="storePhoneNumber">
+        Store Phone Number
+        <span class="asterisk">*</span>
+      </label>
       <input
+        id="storePhoneNumber"
         class="form-input"
         [class.error]="hasError('storePhoneNumber')"
         formControlName="storePhoneNumber"
+        required
         placeholder="Enter store phone number"
       />
-      <div *ngIf="hasError('storePhoneNumber')" class="error-message">
-        {{ getErrorMessage('storePhoneNumber') }}
-      </div>
+      @if (hasError('storePhoneNumber')) {
+        <div class="error-message">
+          {{ getErrorMessage('storePhoneNumber') }}
+        </div>
+      }
     </div>
 
-    <br />
-
-    <button class="register-btn" type="submit">Register</button>
+    <button class="register-btn" type="submit">Submit</button>
   </form>
 
-  <a href="#" class="back-link" (click)="handleBackToLogin($event)">← Back To Login</a>
+  <a href="#" class="back-link" (click)="handleBack($event)">← Back</a>
 </div>
