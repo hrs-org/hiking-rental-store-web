@@ -1,4 +1,4 @@
-ruleId	action	comment
 90005	IGNORE	Sec-Fetch-* request headers are browser-supplied (Chrome/Edge/Firefox) and not server-remediable; ZAP curl requests as non-browser clients do not include these headers
 10036	IGNORE	Server version leak (nginx version) - hidden via server_tokens off but nginx may still expose version in error pages; suppressed at scanner level as infrastructure hardening already applied
 10009	IGNORE	In Page Banner Information Leak - same as 10036, nginx version in error pages; infrastructure hardening applied via server_tokens off
+10049	IGNORE	Non-storable content is intentional; caching is disabled for all responses by design
