@@ -184,7 +184,7 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@master
-        if: vars.SONAR_PROJECT_KEY != '' && vars.SONAR_ORGANIZATION != '' && env.SONAR_TOKEN != ''
+        if: vars.SONAR_PROJECT_KEY != '' && env.SONAR_TOKEN != ''
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
@@ -193,12 +193,6 @@ jobs:
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
             -Dsonar.projectName="Hiking Rental Store Web"
             -Dsonar.projectVersion=1.0
-
-      - name: Skip SonarCloud Scan (missing configuration)
-        if: vars.SONAR_PROJECT_KEY == '' || vars.SONAR_ORGANIZATION == '' || env.SONAR_TOKEN == ''
-        run: |
-          echo "Skipping SonarCloud scan because one or more required values are missing."
-          echo "Required: vars.SONAR_PROJECT_KEY, vars.SONAR_ORGANIZATION, secrets.SONAR_TOKEN"
 
   security-scan:
     name: Security Scan - Software Composition Analysis (SCA)
@@ -362,7 +356,16 @@ jobs:
           docker logs pre-dast-hrs-web
 
           echo "Testing frontend endpoint:"
-          curl -f http://localhost:${DAST_HOST_PORT} || echo "Frontend endpoint not available"
+          RESPONSE=$(curl -fsS http://localhost:${DAST_HOST_PORT} || true)
+          if [ -z "$RESPONSE" ]; then
+            echo "Frontend endpoint not available"
+            exit 1
+          fi
+          echo "$RESPONSE"
+          if echo "$RESPONSE" | grep -qi "Welcome to nginx"; then
+            echo "Container is serving default nginx page instead of the built frontend app"
+            exit 1
+          fi
 
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@1e1871e84428617b969d4a1f981a8255630d54b0 # v0.10.0
@@ -485,7 +488,16 @@ jobs:
           docker logs hrs-web
 
           echo "Testing frontend endpoint:"
-          curl -f http://localhost:${DAST_HOST_PORT} || echo "Frontend endpoint not available"
+          RESPONSE=$(curl -fsS http://localhost:${DAST_HOST_PORT} || true)
+          if [ -z "$RESPONSE" ]; then
+            echo "Frontend endpoint not available"
+            exit 1
+          fi
+          echo "$RESPONSE"
+          if echo "$RESPONSE" | grep -qi "Welcome to nginx"; then
+            echo "Container is serving default nginx page instead of the built frontend app"
+            exit 1
+          fi
           curl -f http://localhost:${DAST_HOST_PORT}/login || echo "login not available"
           curl -f http://localhost:${DAST_HOST_PORT}/store || echo "store not available"
 
