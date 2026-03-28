@@ -1,3 +1,4 @@
+ruleId	action	comment
 90005	IGNORE	Sec-Fetch-* request headers (Dest/Mode/Site/User) are browser-supplied and only sent by modern browsers; ZAP curl requests do not include these headers (non-browser clients)
 10049	IGNORE	Storable favicon.ico - static asset with 1-year immutable cache is intentional for performance; no sensitive data
 
