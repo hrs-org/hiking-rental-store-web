@@ -184,14 +184,21 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@master
-        if: vars.SONAR_PROJECT_KEY != ''
-        continue-on-error: true
+        if: vars.SONAR_PROJECT_KEY != '' && vars.SONAR_ORGANIZATION != '' && env.SONAR_TOKEN != ''
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
             -Dsonar.projectName="Hiking Rental Store Web"
             -Dsonar.projectVersion=1.0
+
+      - name: Skip SonarCloud Scan (missing configuration)
+        if: vars.SONAR_PROJECT_KEY == '' || vars.SONAR_ORGANIZATION == '' || env.SONAR_TOKEN == ''
+        run: |
+          echo "Skipping SonarCloud scan because one or more required values are missing."
+          echo "Required: vars.SONAR_PROJECT_KEY, vars.SONAR_ORGANIZATION, secrets.SONAR_TOKEN"
 
   security-scan:
     name: Security Scan - Software Composition Analysis (SCA)
@@ -361,6 +368,7 @@ jobs:
         uses: zaproxy/action-baseline@1e1871e84428617b969d4a1f981a8255630d54b0 # v0.10.0
         with:
           target: 'http://localhost:4200'
+          rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a -j -l WARN -T 10 -I'
 
       - name: Upload DAST scan results
@@ -485,6 +493,7 @@ jobs:
         uses: zaproxy/action-baseline@1e1871e84428617b969d4a1f981a8255630d54b0 # v0.10.0
         with:
           target: 'http://localhost:${{ env.DAST_HOST_PORT }}'
+          rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a -j -l WARN -T 10 -I'
 
       - name: Upload DAST scan results
