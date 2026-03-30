@@ -84,6 +84,8 @@ jobs:
 
       - name: Rewrite Angular environment.uat.ts
         uses: ./.github/actions/rewrite-environment-uat
+        with:
+          target-file: src/environments/environment.uat.ts
 
       - name: Build Angular app (UAT)
         run: npm run build:uat
