@@ -289,17 +289,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Trivy FS Scan
-        uses: aquasecurity/trivy-action@b2933f565dbc598b29947660e66259e3c7bc8561
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'table'
-          exit-code: '1' # ❗ fail pipeline if vulnerabilities found
-          severity: 'CRITICAL,HIGH'
-          ignore-unfixed: true
+      - name: Rewrite Angular environment.uat.ts
+        run: |
+          echo "Using API URL: ${{ secrets.API_URL }}"
+          echo "Using Stripe Public Key: ${{ secrets.STRIPE_PUBLIC_KEY }}"
+          echo "Using Auth0 Enabled: ${{ vars.AUTH0_ENABLED }}"
+          echo "Using Auth0 Domain: ${{ vars.AUTH0_DOMAIN }}"
+          echo "Using Auth0 Client ID: ${{ secrets.AUTH0_CLIENT_ID }}"
+          echo "Using Auth0 Audience: ${{ secrets.AUTH0_AUDIENCE }}"
+          echo "Using Auth0 Database Connection: ${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}"
+          cat > src/environments/environment.uat.ts << 'EOF'
+          export const environment = {
+            production: true,
+            apiUrl: '${{ secrets.API_URL }}',
+            stripePublicKey: '${{ secrets.STRIPE_PUBLIC_KEY }}',
+            auth0: {
+              enabled: '${{ vars.AUTH0_ENABLED }}' === 'true',
+              domain: '${{ vars.AUTH0_DOMAIN }}',
+              clientId: '${{ secrets.AUTH0_CLIENT_ID }}',
+              audience: '${{ secrets.AUTH0_AUDIENCE }}',
+              databaseConnection: '${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}'
+            }
+          };
+          EOF
 
       - name: Build Docker Image
+        env:
+          PACKAGES_READ_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: docker build --pull --secret id=github_packages_token,env=PACKAGES_READ_TOKEN -t my-app:latest -f ./Dockerfile .
 
       - name: Run Trivy Image Scan
@@ -308,6 +324,16 @@ jobs:
           image-ref: 'my-app:latest'
           format: 'table'
           exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+
+      - name: Run Trivy FS Scan
+        uses: aquasecurity/trivy-action@b2933f565dbc598b29947660e66259e3c7bc8561
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1' # fail pipeline if vulnerabilities found
           severity: 'CRITICAL,HIGH'
           ignore-unfixed: true
 
@@ -360,6 +386,30 @@ jobs:
 
       - name: Log in to Azure Container Registry
         run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Rewrite Angular environment.uat.ts
+        run: |
+          echo "Using API URL: ${{ secrets.API_URL }}"
+          echo "Using Stripe Public Key: ${{ secrets.STRIPE_PUBLIC_KEY }}"
+          echo "Using Auth0 Enabled: ${{ vars.AUTH0_ENABLED }}"
+          echo "Using Auth0 Domain: ${{ vars.AUTH0_DOMAIN }}"
+          echo "Using Auth0 Client ID: ${{ secrets.AUTH0_CLIENT_ID }}"
+          echo "Using Auth0 Audience: ${{ secrets.AUTH0_AUDIENCE }}"
+          echo "Using Auth0 Database Connection: ${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}"
+          cat > src/environments/environment.uat.ts << 'EOF'
+          export const environment = {
+            production: true,
+            apiUrl: '${{ secrets.API_URL }}',
+            stripePublicKey: '${{ secrets.STRIPE_PUBLIC_KEY }}',
+            auth0: {
+              enabled: '${{ vars.AUTH0_ENABLED }}' === 'true',
+              domain: '${{ vars.AUTH0_DOMAIN }}',
+              clientId: '${{ secrets.AUTH0_CLIENT_ID }}',
+              audience: '${{ secrets.AUTH0_AUDIENCE }}',
+              databaseConnection: '${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}'
+            }
+          };
+          EOF
 
       - name: Build and push Docker image
         uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
