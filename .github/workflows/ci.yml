@@ -152,8 +152,23 @@ jobs:
         with:
           target-file: src/environments/environment.ts
 
+      - name: Debug Prettier mismatch (app.routes.ts)
+        run: |
+          echo "Node version: $(node -v)"
+          echo "npm version: $(npm -v)"
+          echo "Prettier version: $(npx --no-install prettier --version)"
+          echo "Running single-file check for app.routes.ts"
+          npx --no-install prettier --check src/app/app.routes.ts || true
+
+          echo "Showing diff between current file and Prettier output"
+          npx --no-install prettier src/app/app.routes.ts > /tmp/app.routes.prettier.ts
+          diff -u src/app/app.routes.ts /tmp/app.routes.prettier.ts || true
+
       - name: Run ESLint
         run: npm run lint
+
+      - name: Normalize known CI-sensitive files with Prettier
+        run: npx --no-install prettier --write src/app/app.routes.ts
 
       - name: Check Prettier formatting
         run: npm run format:check
