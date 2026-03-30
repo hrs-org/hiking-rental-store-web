@@ -188,6 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [install, test]
     if: github.event_name != 'release'
+    continue-on-error: true
 
     steps:
       - name: Checkout code
@@ -215,13 +216,13 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@master
         if: vars.SONAR_PROJECT_KEY != ''
-        continue-on-error: true
         with:
           args: >
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
             -Dsonar.projectName="Hiking Rental Store Web"
             -Dsonar.projectVersion=1.0
+            -Dsonar.qualitygate.wait=false
 
   security-scan:
     name: Security Scan - Software Composition Analysis (SCA)

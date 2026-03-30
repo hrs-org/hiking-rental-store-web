@@ -121,18 +121,18 @@ export const routes: Routes = [
       {
         path: 'add-edit-item',
         loadComponent: () =>
-          import(
-            './features/settings/inventory-management/add-edit-item/add-edit-item.component'
-          ).then((m) => m.AddEditItemComponent),
+          import('./features/settings/inventory-management/add-edit-item/add-edit-item.component').then(
+            (m) => m.AddEditItemComponent,
+          ),
         canActivate: [RoleGuard],
         data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'add-edit-item/:id',
         loadComponent: () =>
-          import(
-            './features/settings/inventory-management/add-edit-item/add-edit-item.component'
-          ).then((m) => m.AddEditItemComponent),
+          import('./features/settings/inventory-management/add-edit-item/add-edit-item.component').then(
+            (m) => m.AddEditItemComponent,
+          ),
         canActivate: [RoleGuard],
         data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
