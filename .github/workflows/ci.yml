@@ -61,7 +61,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node_modules-node${{ env.NODE_VERSION }}-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
 
   build:
     name: Build Application
@@ -111,8 +111,10 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache-version: ${{ env.CACHE_VERSION }}
 
-      - name: Rewrite Angular environment.uat.ts
+      - name: Rewrite Angular environment.ts for tests
         uses: ./.github/actions/rewrite-environment-uat
+        with:
+          target-file: src/environments/environment.ts
 
       - name: Run unit tests with coverage
         run: npm run test:ci
@@ -142,6 +144,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache-version: ${{ env.CACHE_VERSION }}
+
+      - name: Rewrite Angular environment.ts for tests
+        uses: ./.github/actions/rewrite-environment-uat
+        with:
+          target-file: src/environments/environment.ts
 
       - name: Run ESLint
         run: npm run lint
@@ -176,6 +183,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache-version: ${{ env.CACHE_VERSION }}
+
+      - name: Rewrite Angular environment.ts for tests
+        uses: ./.github/actions/rewrite-environment-uat
+        with:
+          target-file: src/environments/environment.ts
 
       - name: Download test results
         uses: actions/download-artifact@v4

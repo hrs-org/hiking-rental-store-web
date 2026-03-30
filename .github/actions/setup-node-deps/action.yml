@@ -23,7 +23,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: node_modules
-        key: ${{ runner.os }}-node_modules-${{ inputs.cache-version }}-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node_modules-node${{ inputs.node-version }}-${{ inputs.cache-version }}-${{ hashFiles('**/package-lock.json') }}
 
     - name: Install dependencies if cache miss
       shell: bash

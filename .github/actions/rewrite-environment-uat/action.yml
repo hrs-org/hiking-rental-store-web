@@ -1,6 +1,12 @@
 name: Rewrite Angular environment.uat.ts
 description: Generate src/environments/environment.uat.ts from CI/CD environment variables.
 
+inputs:
+  target-file:
+    description: Destination environment file path to generate.
+    required: false
+    default: src/environments/environment.uat.ts
+
 runs:
   using: composite
   steps:
@@ -9,7 +15,7 @@ runs:
       run: |
         DB_CONNECTION="${AUTH0_DATABASE_CONNECTION:-Username-Password-Authentication}"
 
-        cat > src/environments/environment.uat.ts <<EOF
+        cat > "${{ inputs.target-file }}" <<EOF
         export const environment = {
           production: true,
           apiUrl: '${API_URL}',
