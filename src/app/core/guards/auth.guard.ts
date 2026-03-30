@@ -70,26 +70,12 @@ export class AuthGuard implements CanActivate {
                 }),
                 catchError(() => {
                   localStorage.removeItem('authToken');
-                  return of(this.router.createUrlTree(['/register-choice']));
+                  return this.redirectToLogin(state.url || '/');
                 }),
               );
           }
 
-          return this.auth0
-            .loginWithRedirect({
-              appState: {
-                target: state.url || '/',
-              },
-              authorizationParams: {
-                redirect_uri: globalThis.location.origin,
-                audience: environment.auth0.audience,
-                scope: 'openid profile email offline_access',
-              },
-            })
-            .pipe(
-              map(() => false),
-              catchError(() => of(false)),
-            );
+          return this.redirectToLogin(state.url || '/');
         }),
       );
     }
@@ -98,6 +84,24 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     return false;
+  }
+
+  private redirectToLogin(target: string): Observable<boolean> {
+    return this.auth0
+      .loginWithRedirect({
+        appState: {
+          target,
+        },
+        authorizationParams: {
+          redirect_uri: globalThis.location.origin,
+          audience: environment.auth0.audience,
+          scope: 'openid profile email offline_access',
+        },
+      })
+      .pipe(
+        map(() => false),
+        catchError(() => of(false)),
+      );
   }
 
   private hasUserIdClaim(token: string): boolean {

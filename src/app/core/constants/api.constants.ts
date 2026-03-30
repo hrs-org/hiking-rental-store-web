@@ -1,8 +1,5 @@
 export const API_PREFIX = '/api';
 
-// Authentication endpoints
-export const AUTH_PREFIX = `${API_PREFIX}/auth`;
-
 // User endpoints
 export const USER_PREFIX = `${API_PREFIX}/users`;
 export const REGISTER_USER = `${USER_PREFIX}/register`;
