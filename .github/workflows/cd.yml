@@ -10,6 +10,13 @@ permissions:
 env:
   NODE_VERSION: '18.20.4'
   AZURE_RESOURCE_GROUP: 'rg-hrsm-uat'
+  API_URL: ${{ secrets.API_URL }}
+  STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+  AUTH0_ENABLED: ${{ vars.AUTH0_ENABLED }}
+  AUTH0_DOMAIN: ${{ vars.AUTH0_DOMAIN }}
+  AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+  AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+  AUTH0_DATABASE_CONNECTION: ${{ vars.AUTH0_DATABASE_CONNECTION }}
 
 jobs:
   deploy-uat:
@@ -31,28 +38,7 @@ jobs:
         run: npm ci
 
       - name: Rewrite environment.uat.ts
-        run: |
-          echo "Using API URL: ${{ secrets.API_URL }}"
-          echo "Using Stripe Public Key: ${{ secrets.STRIPE_PUBLIC_KEY }}"
-          echo "Using Auth0 Enabled: ${{ vars.AUTH0_ENABLED }}"
-          echo "Using Auth0 Domain: ${{ vars.AUTH0_DOMAIN }}"
-          echo "Using Auth0 Client ID: ${{ secrets.AUTH0_CLIENT_ID }}"
-          echo "Using Auth0 Audience: ${{ secrets.AUTH0_AUDIENCE }}"
-          echo "Using Auth0 Database Connection: ${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}"
-          cat > src/environments/environment.uat.ts << 'EOF'
-          export const environment = {
-            production: true,
-            apiUrl: '${{ secrets.API_URL }}',
-            stripePublicKey: '${{ secrets.STRIPE_PUBLIC_KEY }}',
-            auth0: {
-              enabled: '${{ vars.AUTH0_ENABLED }}' === 'true',
-              domain: '${{ vars.AUTH0_DOMAIN }}',
-              clientId: '${{ secrets.AUTH0_CLIENT_ID }}',
-              audience: '${{ secrets.AUTH0_AUDIENCE }}',
-              databaseConnection: '${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}'
-            }
-          };
-          EOF
+        uses: ./.github/actions/rewrite-environment-uat
 
       - name: Rewrite ngsw-config.json with API URL from secret
         run: |
