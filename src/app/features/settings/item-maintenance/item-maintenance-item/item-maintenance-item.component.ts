@@ -12,8 +12,6 @@ export class ItemMaintenanceItemComponent {
   @Input() itemMMaintenance?: ItemMaintenance;
 
   onItemClick() {
-    if (this.itemMMaintenance) {
-      console.log('Item clicked:', this.itemMMaintenance);
-    }
+    if (!this.itemMMaintenance) return;
   }
 }

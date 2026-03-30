@@ -11,6 +11,8 @@ import { Observable, of, switchMap, take, catchError, map } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../../environments/environment';
 import { UserService } from '../services/user.service';
+import { Store } from '@ngrx/store';
+import { loadUser } from '../../state/user/user.actions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -18,6 +20,7 @@ export class AuthGuard implements CanActivate {
   private readonly auth0 = inject(Auth0Service);
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
+  private readonly store = inject(Store);
 
   canActivate(
     _route: ActivatedRouteSnapshot,
@@ -32,14 +35,31 @@ export class AuthGuard implements CanActivate {
               .getAccessTokenSilently({
                 authorizationParams: {
                   audience: environment.auth0.audience,
+                  scope: 'openid profile email offline_access',
                 },
+                cacheMode: 'off',
               })
               .pipe(
                 take(1),
-                switchMap((token) => this.userService.getOnboardingStatus(token)),
-                map((res) => {
+                switchMap((token) => {
+                  localStorage.setItem('authToken', token);
+
+                  const hasUserIdClaim = this.hasUserIdClaim(token);
+                  return this.userService
+                    .validateUserExists()
+                    .pipe(map((res) => ({ res, hasUserIdClaim })));
+                }),
+                map(({ res, hasUserIdClaim }) => {
                   const alreadyOnboarded = !!res.data;
-                  if (alreadyOnboarded) return true;
+                  if (alreadyOnboarded) {
+                    if (!hasUserIdClaim) {
+                      this.store.dispatch(loadUser());
+                      return true;
+                    }
+
+                    this.store.dispatch(loadUser());
+                    return true;
+                  }
 
                   const path = state.url || '/';
                   if (path.startsWith('/register-choice') || path.startsWith('/register/store')) {
@@ -48,7 +68,10 @@ export class AuthGuard implements CanActivate {
 
                   return this.router.createUrlTree(['/register-choice']);
                 }),
-                catchError(() => of(true)),
+                catchError(() => {
+                  localStorage.removeItem('authToken');
+                  return of(this.router.createUrlTree(['/register-choice']));
+                }),
               );
           }
 
@@ -60,6 +83,7 @@ export class AuthGuard implements CanActivate {
               authorizationParams: {
                 redirect_uri: globalThis.location.origin,
                 audience: environment.auth0.audience,
+                scope: 'openid profile email offline_access',
               },
             })
             .pipe(
@@ -74,5 +98,22 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     return false;
+  }
+
+  private hasUserIdClaim(token: string): boolean {
+    try {
+      const payloadPart = token.split('.')[1];
+      if (!payloadPart) {
+        return false;
+      }
+
+      const payload = JSON.parse(atob(payloadPart.replace(/-/g, '+').replace(/_/g, '/')));
+      const userIdClaimKey = `${environment.auth0.audience}/userId`;
+      const userId = Number(payload?.[userIdClaimKey]);
+
+      return Number.isInteger(userId) && userId > 0;
+    } catch {
+      return false;
+    }
   }
 }

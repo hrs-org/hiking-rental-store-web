@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -11,6 +12,7 @@ import {
 import { selectUser } from '../../state/user/user.selector';
 import { settingItems } from './settingItems';
 import { User } from '../../core/models/user/user';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -22,6 +24,7 @@ import { User } from '../../core/models/user/user';
 export class SettingsComponent implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
+  private auth0 = inject(Auth0Service);
   private store = inject(Store);
 
   user$ = this.store.select(selectUser);
@@ -42,10 +45,22 @@ export class SettingsComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().subscribe(() => {
-      localStorage.removeItem('authToken');
-      this.router.navigate(['/']);
-    });
+    this.clearLocalAuthState();
+
+    if (environment.auth0?.enabled) {
+      this.auth0.logout({
+        logoutParams: {
+          returnTo: globalThis.location.origin,
+        },
+      });
+      return;
+    }
+
+    void this.router.navigate(['/']);
+  }
+
+  private clearLocalAuthState() {
+    localStorage.removeItem('authToken');
   }
 
   generateSettings(user: User) {
@@ -58,7 +73,7 @@ export class SettingsComponent implements OnInit {
     };
 
     // Employee Management
-    if (user.role === 'Admin' || user.role === 'Manager') {
+    if (user.role === 'Owner' || user.role === 'Manager') {
       this.settingItems.find((si) => si.identifier === Identifier.EmployeeManagement)!.onClick =
         () => {
           this.router.navigate(['/employees-management']);
@@ -70,7 +85,7 @@ export class SettingsComponent implements OnInit {
     }
 
     // Item Management
-    if (user.role === 'Admin' || user.role === 'Manager') {
+    if (user.role === 'Owner' || user.role === 'Manager') {
       this.settingItems.find((si) => si.identifier === Identifier.ItemManagement)!.onClick = () => {
         this.router.navigate(['/inventory-management']);
       };
@@ -87,7 +102,7 @@ export class SettingsComponent implements OnInit {
     }
 
     // Store Profile
-    if (user.role === 'Admin' || user.role === 'Manager') {
+    if (user.role === 'Owner' || user.role === 'Manager') {
       this.settingItems.find((si) => si.identifier === Identifier.StoreProfile)!.onClick = () => {
         this.router.navigate(['/settings/store-profile']);
       };

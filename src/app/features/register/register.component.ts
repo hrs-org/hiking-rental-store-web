@@ -130,30 +130,37 @@ export class RegisterComponent implements OnInit {
       .getAccessTokenSilently({
         authorizationParams: {
           audience: environment.auth0.audience,
+          scope: 'openid profile email offline_access',
         },
       })
       .pipe(
         take(1),
-        switchMap((token) =>
-          this.storeService.completeStoreOnboarding(
-            {
-              auth0UserId: this.auth0UserId,
-              email: this.email,
-              firstName: this.firstName,
-              lastName: this.lastName,
-              name: storeName!,
-              address: storeAddress!,
-              description: storeDescription!,
-              phoneNumber: storePhoneNumber!,
+        switchMap(() =>
+          this.storeService.registerStore({
+            email: this.email,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            name: storeName!,
+            address: storeAddress!,
+            description: storeDescription!,
+            phoneNumber: storePhoneNumber!,
+          }),
+        ),
+        switchMap(() =>
+          this.auth0.getAccessTokenSilently({
+            authorizationParams: {
+              audience: environment.auth0.audience,
+              scope: 'openid profile email offline_access',
             },
-            token,
-          ),
+            cacheMode: 'off',
+          }),
         ),
       )
       .subscribe({
-        next: () => {
+        next: (token) => {
+          localStorage.setItem('authToken', token);
           this.openInfoSheet('Registration Successful', 'Please log in to continue.', () => {
-            this.redirectToAuth0Login();
+            this.router.navigate(['/']);
           });
         },
         error: () => this.loadingService.hide(),
@@ -177,11 +184,15 @@ export class RegisterComponent implements OnInit {
   }
 
   private redirectToAuth0Login(): void {
+    localStorage.removeItem('authToken');
+
     this.auth0
       .loginWithRedirect({
         authorizationParams: {
           screen_hint: 'login',
           audience: environment.auth0.audience,
+          scope: 'openid profile email offline_access',
+          prompt: 'login',
         },
       })
       .subscribe({
@@ -200,6 +211,7 @@ export class RegisterComponent implements OnInit {
           screen_hint: 'signup',
           redirect_uri: `${globalThis.location.origin}/register-choice`,
           audience: environment.auth0.audience,
+          scope: 'openid profile email offline_access',
         },
       })
       .subscribe({

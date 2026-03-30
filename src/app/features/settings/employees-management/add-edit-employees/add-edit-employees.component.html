@@ -17,7 +17,7 @@
     </mat-form-field>
 
     <ng-container [ngSwitch]="userRole">
-      <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Admin'">
+      <mat-form-field appearance="fill" class="full-width" *ngSwitchCase="'Owner'">
         <mat-label>Role</mat-label>
         <mat-select formControlName="role">
           <mat-option value="Manager">Manager</mat-option>

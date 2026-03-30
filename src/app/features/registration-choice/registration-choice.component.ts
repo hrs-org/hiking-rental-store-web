@@ -31,6 +31,14 @@ export class RegistrationChoiceComponent {
       this.auth0UserId = user?.sub ?? '';
       this.email = user?.email ?? '';
 
+      // Pre-populate form with Auth0 data if available
+      if (user?.given_name) {
+        this.registrationChoiceForm.get('firstName')?.setValue(user.given_name);
+      }
+      if (user?.family_name) {
+        this.registrationChoiceForm.get('lastName')?.setValue(user.family_name);
+      }
+
       if (!this.auth0UserId || !this.email) {
         this.redirectToAuth0Signup();
       }
@@ -73,30 +81,30 @@ export class RegistrationChoiceComponent {
     const { firstName, lastName } = this.registrationChoiceForm.value;
     this.loadingService.show();
 
-    this.auth0
-      .getAccessTokenSilently({
-        authorizationParams: {
-          audience: environment.auth0.audience,
-        },
+    this.userService
+      .registerAsCustomer({
+        email: this.email,
+        firstName: firstName!,
+        lastName: lastName!,
+        auth0UserId: this.auth0UserId,
       })
       .pipe(
         take(1),
-        switchMap((token) =>
-          this.userService.assignCustomerRole(
-            {
-              auth0UserId: this.auth0UserId,
-              email: this.email,
-              firstName: firstName!,
-              lastName: lastName!,
+        switchMap(() =>
+          this.auth0.getAccessTokenSilently({
+            authorizationParams: {
+              audience: environment.auth0.audience,
+              scope: 'openid profile email offline_access',
             },
-            token,
-          ),
+            cacheMode: 'off',
+          }),
         ),
       )
       .subscribe({
-        next: () => {
+        next: (token) => {
+          localStorage.setItem('authToken', token);
           this.openInfoSheet('Registration Completed', 'Please log in to continue.', () => {
-            this.redirectToAuth0Login();
+            this.router.navigate(['/']);
           });
         },
         error: () => this.loadingService.hide(),
@@ -145,11 +153,15 @@ export class RegistrationChoiceComponent {
   }
 
   private redirectToAuth0Login(): void {
+    localStorage.removeItem('authToken');
+
     this.auth0
       .loginWithRedirect({
         authorizationParams: {
           screen_hint: 'login',
           audience: environment.auth0.audience,
+          scope: 'openid profile email offline_access',
+          prompt: 'login',
         },
       })
       .subscribe({
@@ -170,6 +182,7 @@ export class RegistrationChoiceComponent {
           screen_hint: 'signup',
           redirect_uri: `${globalThis.location.origin}/register-choice`,
           audience: environment.auth0.audience,
+          scope: 'openid profile email offline_access',
         },
       })
       .subscribe({

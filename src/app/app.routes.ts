@@ -37,14 +37,14 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/booking/booking.component').then((m) => m.BookingComponent),
             canActivate: [RoleGuard],
-            data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+            data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
           },
           {
             path: 'return',
             loadComponent: () =>
               import('./features/return/return.component').then((m) => m.ReturnComponent),
             canActivate: [RoleGuard],
-            data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+            data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
           },
           {
             path: 'settings',
@@ -77,7 +77,7 @@ export const routes: Routes = [
             (m) => m.BookingDetailsComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+        data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
       },
       {
         path: 'return/:id',
@@ -86,7 +86,7 @@ export const routes: Routes = [
             (m) => m.ReturnDetailsComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+        data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
       },
       {
         path: 'profile',
@@ -107,7 +107,7 @@ export const routes: Routes = [
             (m) => m.EmployeeManagementPageComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'inventory-management',
@@ -116,7 +116,7 @@ export const routes: Routes = [
             (m) => m.InventoryManagementComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'add-edit-item',
@@ -125,7 +125,7 @@ export const routes: Routes = [
             (m) => m.AddEditItemComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'add-edit-item/:id',
@@ -134,7 +134,7 @@ export const routes: Routes = [
             (m) => m.AddEditItemComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'item-maintenance',
@@ -143,7 +143,7 @@ export const routes: Routes = [
             (m) => m.ItemMaintenanceComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
     ],
   },

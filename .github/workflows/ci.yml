@@ -82,6 +82,8 @@ jobs:
           echo "Using Auth0 Enabled: ${{ vars.AUTH0_ENABLED }}"
           echo "Using Auth0 Domain: ${{ vars.AUTH0_DOMAIN }}"
           echo "Using Auth0 Client ID: ${{ secrets.AUTH0_CLIENT_ID }}"
+          echo "Using Auth0 Audience: ${{ secrets.AUTH0_AUDIENCE }}"
+          echo "Using Auth0 Database Connection: ${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}"
           cat > src/environments/environment.uat.ts << 'EOF'
           export const environment = {
             production: true,
@@ -90,7 +92,9 @@ jobs:
             auth0: {
               enabled: '${{ vars.AUTH0_ENABLED }}' === 'true',
               domain: '${{ vars.AUTH0_DOMAIN }}',
-              clientId: '${{ secrets.AUTH0_CLIENT_ID }}'
+              clientId: '${{ secrets.AUTH0_CLIENT_ID }}',
+              audience: '${{ secrets.AUTH0_AUDIENCE }}',
+              databaseConnection: '${{ vars.AUTH0_DATABASE_CONNECTION || 'Username-Password-Authentication' }}'
             }
           };
           EOF

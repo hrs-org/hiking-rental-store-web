@@ -32,9 +32,13 @@ export const appConfig: ApplicationConfig = {
           provideAuth0({
             domain: environment.auth0.domain,
             clientId: environment.auth0.clientId,
+            useRefreshTokens: true,
+            useRefreshTokensFallback: true,
+            cacheLocation: 'localstorage',
             authorizationParams: {
               redirect_uri: globalThis.location.origin,
               audience: environment.auth0.audience,
+              scope: 'openid profile email offline_access',
             },
           }),
         ]

@@ -2,20 +2,15 @@ export const API_PREFIX = '/api';
 
 // Authentication endpoints
 export const AUTH_PREFIX = `${API_PREFIX}/auth`;
-export const LOGIN = `${AUTH_PREFIX}/login`;
-export const REGISTER = `${AUTH_PREFIX}/register`;
-export const REFRESH_TOKEN = `${AUTH_PREFIX}/refresh-token`;
-export const ACTIVE_USER = `${AUTH_PREFIX}/active-user`;
-export const LOGOUT = `${AUTH_PREFIX}/logout`;
-export const CHANGE_PASSWORD = `${AUTH_PREFIX}/change-password`;
 
 // User endpoints
 export const USER_PREFIX = `${API_PREFIX}/users`;
 export const REGISTER_USER = `${USER_PREFIX}/register`;
-export const ASSIGN_CUSTOMER_ROLE = `${USER_PREFIX}/onboarding/customer`;
-export const USER_ONBOARDING_STATUS = `${USER_PREFIX}/onboarding/status`;
+export const ENSURE_USER_EXISTS = `${USER_PREFIX}/validate`;
+export const REGISTER_AS_CUSTOMER = `${USER_PREFIX}/register/customer`;
 export const EMPLOYEES = `${USER_PREFIX}/employees`;
 export const MANAGERS = `${USER_PREFIX}/managers`;
+export const ACTIVE_USER = `${USER_PREFIX}/active-user`;
 
 // Item endpoints
 export const ITEM_PREFIX = `${API_PREFIX}/items`;
@@ -46,5 +41,4 @@ export const ITEM_MAINTENANCE_FIX = `${ITEM_MAINTENANCE_PREFIX}/{0}/fix`;
 export const STORE_PREFIX = `${API_PREFIX}/stores`;
 export const STORE_GETBYID = `${STORE_PREFIX}/{0}`;
 export const STORE_REGISTER = `${STORE_PREFIX}/register`;
-export const STORE_ONBOARDING = `${STORE_PREFIX}/onboarding`;
 export const STORE_USER = `${STORE_PREFIX}/users/{0}`;

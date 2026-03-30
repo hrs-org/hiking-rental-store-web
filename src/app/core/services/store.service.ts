@@ -1,15 +1,13 @@
-import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ApiResponse } from '../models/api-response';
 import {
   STORE_GETBYID,
-  STORE_ONBOARDING,
   STORE_PREFIX,
   STORE_REGISTER,
   STORE_USER,
 } from '../constants/api.constants';
-import { RegisterStoreDto, StoreDto, StoreOnboardingRequest } from '../models/store/store';
-import { SKIP_AUTH } from '../tokens/auth.token';
+import { RegisterStoreDto, StoreDto } from '../models/store/store';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
@@ -33,12 +31,5 @@ export class StoreService {
   // register store
   registerStore(dto: RegisterStoreDto) {
     return this.http.post<ApiResponse<boolean>>(STORE_REGISTER, dto);
-  }
-
-  completeStoreOnboarding(dto: StoreOnboardingRequest, token: string) {
-    return this.http.post<ApiResponse<boolean>>(STORE_ONBOARDING, dto, {
-      context: new HttpContext().set(SKIP_AUTH, true),
-      headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
-    });
   }
 }

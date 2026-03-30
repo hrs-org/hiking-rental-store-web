@@ -1,13 +1,13 @@
-import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { SKIP_AUTH } from '../tokens/auth.token';
 import { ApiResponse } from '../models/api-response';
 import { RegisterRequest } from '../models/user/registerUserReq';
 import {
-  ASSIGN_CUSTOMER_ROLE,
+  REGISTER_AS_CUSTOMER,
   EMPLOYEES,
+  ENSURE_USER_EXISTS as VALIDATE_USER_EXISTS,
   REGISTER_USER,
-  USER_ONBOARDING_STATUS,
 } from '../constants/api.constants';
 import { Employee } from '../models/user/employee';
 
@@ -21,26 +21,17 @@ export class UserService {
     });
   }
 
-  assignCustomerRole(
-    payload: {
-      auth0UserId: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-    },
-    token: string,
-  ) {
-    return this.http.post<ApiResponse<boolean>>(ASSIGN_CUSTOMER_ROLE, payload, {
-      context: new HttpContext().set(SKIP_AUTH, true),
-      headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
-    });
+  registerAsCustomer(payload: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    auth0UserId: string;
+  }) {
+    return this.http.post<ApiResponse<boolean>>(REGISTER_AS_CUSTOMER, payload);
   }
 
-  getOnboardingStatus(token: string) {
-    return this.http.get<ApiResponse<boolean>>(USER_ONBOARDING_STATUS, {
-      context: new HttpContext().set(SKIP_AUTH, true),
-      headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
-    });
+  validateUserExists() {
+    return this.http.get<ApiResponse<boolean>>(VALIDATE_USER_EXISTS);
   }
 
   loadEmployees() {
