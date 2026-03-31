@@ -37,14 +37,14 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/booking/booking.component').then((m) => m.BookingComponent),
             canActivate: [RoleGuard],
-            data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+            data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
           },
           {
             path: 'return',
             loadComponent: () =>
               import('./features/return/return.component').then((m) => m.ReturnComponent),
             canActivate: [RoleGuard],
-            data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+            data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
           },
           {
             path: 'settings',
@@ -77,7 +77,7 @@ export const routes: Routes = [
             (m) => m.BookingDetailsComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+        data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
       },
       {
         path: 'return/:id',
@@ -86,7 +86,7 @@ export const routes: Routes = [
             (m) => m.ReturnDetailsComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager, UserRole.Employee] },
+        data: { roles: [UserRole.Owner, UserRole.Manager, UserRole.Employee] },
       },
       {
         path: 'profile',
@@ -107,7 +107,7 @@ export const routes: Routes = [
             (m) => m.EmployeeManagementPageComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'inventory-management',
@@ -116,7 +116,7 @@ export const routes: Routes = [
             (m) => m.InventoryManagementComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'add-edit-item',
@@ -125,7 +125,7 @@ export const routes: Routes = [
             (m) => m.AddEditItemComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'add-edit-item/:id',
@@ -134,7 +134,7 @@ export const routes: Routes = [
             (m) => m.AddEditItemComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
       {
         path: 'item-maintenance',
@@ -143,39 +143,21 @@ export const routes: Routes = [
             (m) => m.ItemMaintenanceComponent,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [UserRole.Admin, UserRole.Manager] },
+        data: { roles: [UserRole.Owner, UserRole.Manager] },
       },
     ],
   },
   {
-    path: 'login',
-    loadComponent: () => import('./features/login/login.component').then((m) => m.LoginComponent),
+    path: 'register-choice',
+    loadComponent: () =>
+      import('./features/registration-choice/registration-choice.component').then(
+        (m) => m.RegistrationChoiceComponent,
+      ),
   },
   {
-    path: 'register',
+    path: 'register/store',
     loadComponent: () =>
       import('./features/register/register.component').then((m) => m.RegisterComponent),
-  },
-  {
-    path: 'verify-email',
-    loadComponent: () =>
-      import('./features/email-verification-result/email-verification-result.component').then(
-        (m) => m.EmailVerificationResultComponent,
-      ),
-  },
-  {
-    path: 'forget-password',
-    loadComponent: () =>
-      import('./features/forget-password/forget-password.component').then(
-        (m) => m.ForgetPasswordComponent,
-      ),
-  },
-  {
-    path: 'reset-password',
-    loadComponent: () =>
-      import('./features/reset-password/reset-password.component').then(
-        (m) => m.ResetPasswordComponent,
-      ),
   },
   {
     path: '**',

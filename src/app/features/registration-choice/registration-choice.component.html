@@ -1,0 +1,54 @@
+<div class="register-container">
+  <h1 class="register-title">Complete Registration</h1>
+
+  <form [formGroup]="registrationChoiceForm">
+    <div class="form-group">
+      <label class="form-label" for="firstName">
+        First Name
+        <span class="asterisk">*</span>
+      </label>
+      <input
+        id="firstName"
+        class="form-input"
+        [class.error]="hasError('firstName')"
+        formControlName="firstName"
+        required
+        placeholder="Enter your first name"
+      />
+      @if (hasError('firstName')) {
+        <div class="error-message">
+          {{ getErrorMessage('firstName') }}
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="lastName">
+        Last Name
+        <span class="asterisk">*</span>
+      </label>
+      <input
+        id="lastName"
+        class="form-input"
+        [class.error]="hasError('lastName')"
+        formControlName="lastName"
+        required
+        placeholder="Enter your last name"
+      />
+      @if (hasError('lastName')) {
+        <div class="error-message">
+          {{ getErrorMessage('lastName') }}
+        </div>
+      }
+    </div>
+
+    <div class="action-group">
+      <button class="register-btn" type="button" (click)="continueAsUser()">
+        Continue as User
+      </button>
+      <button class="secondary-btn" type="button" (click)="continueAsStore()">
+        Continue as Store
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,23 +1,13 @@
 export const API_PREFIX = '/api';
 
-// Authentication endpoints
-export const AUTH_PREFIX = `${API_PREFIX}/auth`;
-export const LOGIN = `${AUTH_PREFIX}/login`;
-export const REGISTER = `${AUTH_PREFIX}/register`;
-export const REFRESH_TOKEN = `${AUTH_PREFIX}/refresh-token`;
-export const ACTIVE_USER = `${AUTH_PREFIX}/active-user`;
-export const LOGOUT = `${AUTH_PREFIX}/logout`;
-export const CHANGE_PASSWORD = `${AUTH_PREFIX}/change-password`;
-export const RESEND_VERIFICATION = `${AUTH_PREFIX}/resend-verification`;
-export const VERIFY_EMAIL = `${AUTH_PREFIX}/verify-email`;
-export const FORGOT_PASSWORD = `${AUTH_PREFIX}/forgot-password`;
-export const RESET_PASSWORD = `${AUTH_PREFIX}/reset-password`;
-
 // User endpoints
 export const USER_PREFIX = `${API_PREFIX}/users`;
 export const REGISTER_USER = `${USER_PREFIX}/register`;
+export const ENSURE_USER_EXISTS = `${USER_PREFIX}/validate`;
+export const REGISTER_AS_CUSTOMER = `${USER_PREFIX}/register/customer`;
 export const EMPLOYEES = `${USER_PREFIX}/employees`;
 export const MANAGERS = `${USER_PREFIX}/managers`;
+export const ACTIVE_USER = `${USER_PREFIX}/active-user`;
 
 // Item endpoints
 export const ITEM_PREFIX = `${API_PREFIX}/items`;

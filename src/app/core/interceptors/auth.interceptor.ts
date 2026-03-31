@@ -1,11 +1,9 @@
 import { HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, shareReplay, switchMap, throwError } from 'rxjs';
 import { SKIP_AUTH } from '../tokens/auth.token';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { LoginResponse } from '../models/auth/auth';
-import { ApiResponse } from '../models/api-response';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { InfoBottomSheetComponent } from '../../shared/components/info-bottom-sheet/info-bottom-sheet.component';
 
@@ -18,6 +16,21 @@ function showBottomSheet(bottomSheet: MatBottomSheet, title: string, description
     .subscribe();
 }
 
+let refreshAccessToken$: Observable<string | null> | null = null;
+
+function getOrStartRefresh(authService: AuthService): Observable<string | null> {
+  if (!refreshAccessToken$) {
+    refreshAccessToken$ = authService.refreshAccessToken().pipe(
+      finalize(() => {
+        refreshAccessToken$ = null;
+      }),
+      shareReplay(1),
+    );
+  }
+
+  return refreshAccessToken$;
+}
+
 function handle401Error(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   err: any,
@@ -26,29 +39,28 @@ function handle401Error(
   authService: AuthService,
   bottomSheet: MatBottomSheet,
 ) {
-  return authService.refreshToken().pipe(
-    switchMap((refreshRes: ApiResponse<LoginResponse>) => {
-      const newToken = refreshRes?.data?.token;
+  return getOrStartRefresh(authService).pipe(
+    switchMap((newToken) => {
       if (newToken) {
         localStorage.setItem('authToken', newToken);
         const retryReq = apiReq.clone({
           setHeaders: { Authorization: `Bearer ${newToken}` },
         });
         return next(retryReq);
-      } else {
-        localStorage.removeItem('authToken');
-        window.location.href = '/login';
-        showBottomSheet(
-          bottomSheet,
-          'Session Expired',
-          'Your session has expired. Please log in again.',
-        );
-        return throwError(() => err);
       }
+
+      localStorage.removeItem('authToken');
+      window.location.href = '/';
+      showBottomSheet(
+        bottomSheet,
+        'Session Expired',
+        'Your session has expired. Please log in again.',
+      );
+      return throwError(() => err);
     }),
     catchError(() => {
       localStorage.removeItem('authToken');
-      window.location.href = '/login';
+      window.location.href = '/';
       showBottomSheet(
         bottomSheet,
         'Session Expired',

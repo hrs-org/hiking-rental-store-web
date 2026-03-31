@@ -15,7 +15,11 @@
           <div class="email-label">Email</div>
           <div class="email-detail">{{ user.email }}</div>
         </div>
-        <button mat-flat-button color="primary" (click)="openDialog()">Change Password</button>
+        @if (canChangePassword$ | async) {
+          <button mat-flat-button color="primary" (click)="changePassword(user.email)">
+            Change Password
+          </button>
+        }
       }
     </mat-card-content>
   </mat-card>
