@@ -5,10 +5,9 @@ import { Store } from '@ngrx/store';
 import { selectUser } from '../../../state/user/user.selector';
 import { AsyncPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
-import { ChangePasswordDialogComponent } from './change-password-dialog/change-password-dialog.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -21,26 +20,25 @@ export class ProfileComponent {
   private store = inject(Store);
   private authService = inject(AuthService);
   private _snackBar = inject(MatSnackBar);
-  readonly dialog = inject(MatDialog);
 
   user$ = this.store.select(selectUser);
+  canChangePassword$ = this.authService.canChangePasswordWithAuth0();
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(ChangePasswordDialogComponent, {
-      data: {},
-      width: '300px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
-        this.authService.changePassword(result).subscribe({
-          next: () => {
-            this._snackBar.open('Password changed successfully', 'Close', {
-              duration: 2500,
-            });
-          },
-        });
-      }
-    });
+  changePassword(email: string): void {
+    this.authService
+      .requestAuth0PasswordChange(email)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this._snackBar.open('Please check your email to change your password', 'Close', {
+            duration: 3000,
+          });
+        },
+        error: () => {
+          this._snackBar.open('Unable to start password change. Please try again.', 'Close', {
+            duration: 3000,
+          });
+        },
+      });
   }
 }
