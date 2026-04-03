@@ -7,5 +7,6 @@ export const environment = {
     domain: '',
     clientId: '',
     audience: '',
+    databaseConnection: '',
   },
 };
