@@ -20,7 +20,7 @@ RUN npm run build:uat
 FROM nginx:alpine
 
 # Apply security updates for runtime OS packages to remediate image CVEs.
-RUN apk update && apk upgrade --no-cache libexpat zlib libpng
+RUN apk update && apk upgrade --no-cache libcrypto3 openssl libexpat zlib libpng
 
 # Copy built application
 COPY --from=build /app/dist/hiking-rental-store-web /usr/share/nginx/html
